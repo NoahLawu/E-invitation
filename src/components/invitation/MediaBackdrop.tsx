@@ -43,43 +43,41 @@ export function MediaBackdrop({
   alt,
   priority = false,
 }: MediaBackdropProps) {
-  const [imageReady, setImageReady] = useState(false);
-  const [videoReady, setVideoReady] = useState(false);
+  const [imageFailed, setImageFailed] = useState(false);
+  const [videoFailed, setVideoFailed] = useState(false);
+  const showImage = Boolean(image) && !imageFailed;
+  const showVideo = Boolean(video) && !videoFailed;
 
-  if (!image && !video) {
+  if (!showImage && !showVideo) {
     return null;
   }
 
   return (
     <div className="absolute inset-0">
-      {image ? (
+      {showImage ? (
         <Image
-          src={image}
+          src={image ?? ""}
           alt={alt}
           fill
           sizes="430px"
-          className={`object-cover ${imageReady ? "opacity-100" : "opacity-0"}`}
-          onLoad={() => setImageReady(true)}
-          onError={() => setImageReady(false)}
-          priority={priority}
+          className="object-cover"
+          onError={() => setImageFailed(true)}
+          {...(priority ? { priority: true } : { loading: "eager" as const })}
         />
       ) : null}
-      {video ? (
+      {showVideo ? (
         <video
-          className={`absolute inset-0 h-full w-full object-cover ${
-            videoReady ? "opacity-100" : "opacity-0"
-          }`}
+          className="absolute inset-0 h-full w-full object-cover"
           src={video}
           autoPlay
           muted
           loop
           playsInline
-          poster={imageReady ? image : undefined}
-          onLoadedData={() => setVideoReady(true)}
-          onError={() => setVideoReady(false)}
+          poster={showImage ? image : undefined}
+          onError={() => setVideoFailed(true)}
         />
       ) : null}
-      {imageReady || videoReady ? <BackdropTint /> : null}
+      <BackdropTint />
     </div>
   );
 }
