@@ -12,6 +12,7 @@ type InvitationSectionProps = {
   video?: string;
   mediaAlt?: string;
   priority?: boolean;
+  contentAlign?: "center" | "bottom-left";
 };
 
 export function InvitationSection({
@@ -21,6 +22,7 @@ export function InvitationSection({
   video,
   mediaAlt = "",
   priority = false,
+  contentAlign = "center",
 }: InvitationSectionProps) {
   const visuals = useInviteVisuals();
   const backdrop = section ? visuals?.backdrops[section] : undefined;
@@ -33,7 +35,13 @@ export function InvitationSection({
         alt={mediaAlt}
         priority={priority}
       />
-      <div className="relative z-10 flex h-full w-full flex-col items-center justify-center px-8 text-center">
+      <div
+        className={`relative z-10 flex h-full w-full flex-col px-8 ${
+          contentAlign === "bottom-left"
+            ? "items-start justify-end pb-16 text-left"
+            : "items-center justify-center text-center"
+        }`}
+      >
         {children}
       </div>
     </section>

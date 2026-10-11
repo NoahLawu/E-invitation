@@ -67,8 +67,8 @@ export function InviteMediaGroup({ settings }: { settings: SiteSettings }) {
       <div className="mt-8 border-t border-zinc-100 pt-8">
         <ItemHeading>Bride and groom portraits</ItemHeading>
         <p className="mb-3 text-xs text-zinc-500">
-          Same photos on the couple screen and the bride / groom detail
-          screens.
+          These faces are only on the couple screen. Bride and groom detail
+          screens use their own background photos under Section backdrops.
         </p>
         <div className="grid gap-4 sm:grid-cols-2">
           <VisualSlot

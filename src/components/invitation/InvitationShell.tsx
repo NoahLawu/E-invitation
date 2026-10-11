@@ -110,7 +110,6 @@ export function InvitationShell({
               fullName: couple.brideFullName,
               parents: couple.brideParents,
             }}
-            photo={visuals.bride}
           />
         );
       case "groom":
@@ -122,7 +121,6 @@ export function InvitationShell({
               fullName: couple.groomFullName,
               parents: couple.groomParents,
             }}
-            photo={visuals.groom}
           />
         );
       case "loveStory":
