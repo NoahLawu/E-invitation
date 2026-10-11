@@ -162,13 +162,3 @@ body {
   background: color-mix(in srgb, var(--accent) 25%, transparent);
 }
 
-.invitation-snap {
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior: none;
-  scrollbar-width: none;
-  touch-action: pan-y;
-}
-
-.invitation-snap::-webkit-scrollbar {
-  display: none;
-}

@@ -17,6 +17,7 @@ import { InviteVisualsProvider } from "@/components/invitation/InviteVisualsCont
 import { LiveStreamSection } from "@/components/invitation/LiveStreamSection";
 import { LocationSection } from "@/components/invitation/LocationSection";
 import { SharedSectionVideo } from "@/components/invitation/MediaBackdrop";
+import { SectionPager } from "@/components/invitation/SectionPager";
 import { LoveStorySection } from "@/components/invitation/LoveStorySection";
 import {
   MusicToggle,
@@ -197,13 +198,17 @@ export function InvitationShell({
       className="h-dvh bg-[var(--chrome)]"
       style={inviteThemeStyle(settings.colors)}
     >
-      <div
-        className={`invitation-snap relative isolate mx-auto h-dvh w-full max-w-[430px] bg-background shadow-[0_0_40px_color-mix(in_srgb,var(--foreground)_12%,transparent)] ${
-          opened ? "snap-y snap-mandatory overflow-y-auto" : "overflow-hidden"
-        }`}
-      >
-        <InviteBusyProvider>
-          <InviteVisualsProvider visuals={visuals}>
+      <InviteBusyProvider>
+        <InviteVisualsProvider visuals={visuals}>
+          <SectionPager
+            enabled={opened}
+            className="relative isolate mx-auto h-dvh w-full max-w-[430px] bg-background shadow-[0_0_40px_color-mix(in_srgb,var(--foreground)_12%,transparent)]"
+            background={
+              opened && visuals.backgroundVideo ? (
+                <SharedSectionVideo src={visuals.backgroundVideo} />
+              ) : null
+            }
+          >
             <Cover
               guestName={guestName}
               brideName={couple.brideName}
@@ -219,26 +224,22 @@ export function InvitationShell({
               }}
             />
 
-            {opened && visuals.backgroundVideo ? (
-              <SharedSectionVideo src={visuals.backgroundVideo} />
-            ) : null}
-
-            {settings.musicUrl ? (
-              <MusicToggle
-                ref={musicRef}
-                src={settings.musicUrl}
-                visible={opened}
-              />
-            ) : null}
-
             {opened
               ? orderedInviteSections(settings).map((id) => (
                   <Fragment key={id}>{renderSection(id)}</Fragment>
                 ))
               : null}
-          </InviteVisualsProvider>
-        </InviteBusyProvider>
-      </div>
+          </SectionPager>
+
+          {settings.musicUrl ? (
+            <MusicToggle
+              ref={musicRef}
+              src={settings.musicUrl}
+              visible={opened}
+            />
+          ) : null}
+        </InviteVisualsProvider>
+      </InviteBusyProvider>
     </div>
   );
 }

@@ -13,7 +13,7 @@ type MediaBackdropProps = {
 
 export function SharedSectionVideo({ src }: { src: string }) {
   return (
-    <div className="pointer-events-none sticky top-0 -mb-[100dvh] h-dvh w-full">
+    <div className="pointer-events-none absolute inset-0 z-0">
       <video
         className="h-full w-full object-cover"
         src={src}
