@@ -7,9 +7,15 @@ type PhotoSlotProps = {
   src: string;
   alt: string;
   className?: string;
+  sizes?: string;
 };
 
-export function PhotoSlot({ src, alt, className = "" }: PhotoSlotProps) {
+export function PhotoSlot({
+  src,
+  alt,
+  className = "",
+  sizes = "200px",
+}: PhotoSlotProps) {
   const [ready, setReady] = useState(false);
 
   if (!src) {
@@ -28,7 +34,7 @@ export function PhotoSlot({ src, alt, className = "" }: PhotoSlotProps) {
         src={src}
         alt={alt}
         fill
-        sizes="200px"
+        sizes={sizes}
         className={`object-cover ${ready ? "opacity-100" : "opacity-0"}`}
         onLoad={() => setReady(true)}
         onError={() => setReady(false)}

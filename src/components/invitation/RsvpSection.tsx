@@ -15,6 +15,7 @@ type RsvpSectionProps = {
   rsvpCount?: number | null;
   rsvpOpensAt?: string;
   rsvpClosesAt?: string;
+  rsvpEditable?: boolean;
 };
 
 export function RsvpSection({
@@ -24,6 +25,7 @@ export function RsvpSection({
   rsvpCount,
   rsvpOpensAt = "",
   rsvpClosesAt = "",
+  rsvpEditable = true,
 }: RsvpSectionProps) {
   const windowState = rsvpWindowState(rsvpOpensAt, rsvpClosesAt);
   const defaultName = guestName === "Guest" ? "" : guestName;
@@ -76,6 +78,11 @@ export function RsvpSection({
       ) : !guestToken ? (
         <p className="mt-5 max-w-xs text-sm text-muted">
           Open your personal invite link to send an RSVP.
+        </p>
+      ) : saved && !rsvpEditable ? (
+        <p className="mt-5 max-w-xs text-sm text-muted">
+          Saved: {attending === "yes" ? "attending" : "cannot attend"}
+          {attending === "yes" ? ` · ${guests}` : ""}
         </p>
       ) : (
         <form
@@ -146,7 +153,7 @@ export function RsvpSection({
         </form>
       )}
       {error ? <p className="mt-3 text-sm text-accent">{error}</p> : null}
-      {saved && guestToken ? (
+      {saved && guestToken && rsvpEditable ? (
         <p className="mt-3 text-sm text-muted">
           Saved: {attending === "yes" ? "attending" : "cannot attend"}
         </p>

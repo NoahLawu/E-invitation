@@ -16,11 +16,13 @@ export type InviteVisuals = {
   coverVideo: string;
   closingImage: string;
   closingVideo: string;
+  backgroundVideo: string;
   bride: string;
   groom: string;
   gallery: string[];
   party: string[];
   backdrops: Record<InviteSectionId, InviteBackdrop>;
+  backdropTint: number;
 };
 
 export const SECTION_BACKDROP_IDS = INVITE_SECTIONS.map((section) => section.id).filter(
@@ -72,45 +74,62 @@ export function uploadedBackdrop(
   };
 }
 
+function sectionBackdrop(
+  id: InviteSectionId,
+  media: InviteMedia,
+  coverImage: string,
+  backgroundVideo: string,
+): InviteBackdrop {
+  const bundled = BUNDLED_BACKDROPS[id];
+  const uploadedImage =
+    id === "closing"
+      ? media.backdrops.closing?.image || media.closingImage
+      : (media.backdrops[id]?.image ?? "");
+
+  if (id === "qr") {
+    return backgroundVideo
+      ? { image: "", video: "" }
+      : { image: coverImage, video: "" };
+  }
+
+  if (uploadedImage) {
+    return { image: uploadedImage, video: "" };
+  }
+
+  if (backgroundVideo) {
+    return { image: "", video: "" };
+  }
+
+  if (id === "closing") {
+    return {
+      image: invitationMedia.closing.image,
+      video: invitationMedia.closing.video,
+    };
+  }
+
+  return { image: bundled.image, video: bundled.video };
+}
+
 export function inviteVisuals(settings: SiteSettings): InviteVisuals {
   const media = settings.media;
   const coverImage = media.coverImage || invitationMedia.cover.image;
   const coverVideo = media.coverVideo || invitationMedia.cover.video;
-  const closingImage =
-    media.backdrops.closing?.image ||
-    media.closingImage ||
-    invitationMedia.closing.image;
-  const closingVideo =
-    media.backdrops.closing?.video ||
-    media.closingVideo ||
-    invitationMedia.closing.video;
+  const backgroundVideo = media.backgroundVideo;
+  const closing = sectionBackdrop("closing", media, coverImage, backgroundVideo);
 
   const backdrops = Object.fromEntries(
-    INVITE_SECTIONS.map((section) => {
-      const id = section.id;
-      const bundled = BUNDLED_BACKDROPS[id];
-      const uploaded = media.backdrops[id];
-      if (id === "qr") {
-        return [id, { image: coverImage, video: "" }];
-      }
-      if (id === "closing") {
-        return [id, { image: closingImage, video: closingVideo }];
-      }
-      return [
-        id,
-        {
-          image: uploaded?.image || bundled.image,
-          video: uploaded?.video || bundled.video,
-        },
-      ];
-    }),
+    INVITE_SECTIONS.map((section) => [
+      section.id,
+      sectionBackdrop(section.id, media, coverImage, backgroundVideo),
+    ]),
   ) as Record<InviteSectionId, InviteBackdrop>;
 
   return {
     coverImage,
     coverVideo,
-    closingImage,
-    closingVideo,
+    closingImage: closing.image,
+    closingVideo: closing.video,
+    backgroundVideo,
     bride: media.bride || invitationMedia.couple.bride,
     groom: media.groom || invitationMedia.couple.groom,
     gallery:
@@ -120,5 +139,6 @@ export function inviteVisuals(settings: SiteSettings): InviteVisuals {
         media.party[index] || invitationMedia.party.portraits[index] || "",
     ),
     backdrops,
+    backdropTint: settings.backdropTint,
   };
 }

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { useInviteVisuals } from "@/components/invitation/InviteVisualsContext";
 
 type MediaBackdropProps = {
   image?: string;
@@ -9,6 +10,32 @@ type MediaBackdropProps = {
   alt: string;
   priority?: boolean;
 };
+
+export function SharedSectionVideo({ src }: { src: string }) {
+  return (
+    <div className="pointer-events-none sticky top-0 -mb-[100dvh] h-dvh w-full">
+      <video
+        className="h-full w-full object-cover"
+        src={src}
+        autoPlay
+        muted
+        loop
+        playsInline
+      />
+      <BackdropTint />
+    </div>
+  );
+}
+
+function BackdropTint() {
+  const tint = useInviteVisuals()?.backdropTint ?? 0.45;
+  return (
+    <div
+      className="absolute inset-0 bg-background"
+      style={{ opacity: tint }}
+    />
+  );
+}
 
 export function MediaBackdrop({
   image,
@@ -52,9 +79,7 @@ export function MediaBackdrop({
           onError={() => setVideoReady(false)}
         />
       ) : null}
-      {imageReady || videoReady ? (
-        <div className="absolute inset-0 bg-background/45" />
-      ) : null}
+      {imageReady || videoReady ? <BackdropTint /> : null}
     </div>
   );
 }

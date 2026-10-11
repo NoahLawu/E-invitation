@@ -638,6 +638,14 @@ export function GoLiveGroup({ settings }: { settings: SiteSettings }) {
         <p className="text-xs text-zinc-500">
           Leave a date empty to skip that limit.
         </p>
+        <label className="flex items-center gap-2 text-sm">
+          <input
+            type="checkbox"
+            name="rsvpEditable"
+            defaultChecked={settings.rsvpEditable}
+          />
+          Guests can update their RSVP after sending it
+        </label>
         <SaveButton />
       </form>
     </Group>

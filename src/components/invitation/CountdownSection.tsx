@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { InvitationSection } from "@/components/invitation/InvitationSection";
-import { countdownTarget, formatWeddingWhen } from "@/lib/site-settings";
+import { countdownTarget } from "@/lib/site-settings";
 
 export function CountdownSection({ weddingAt }: { weddingAt: string }) {
   const remaining = useCountdown(weddingAt);
@@ -16,9 +16,6 @@ export function CountdownSection({ weddingAt }: { weddingAt: string }) {
         <TimeBox value={remaining?.mins ?? "--"} label="Mins" />
         <TimeBox value={remaining?.secs ?? "--"} label="Secs" />
       </div>
-      <p className="mt-4 text-xs text-muted">
-        {formatWeddingWhen(weddingAt) ?? "Date to be announced"}
-      </p>
     </InvitationSection>
   );
 }

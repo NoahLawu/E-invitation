@@ -37,10 +37,12 @@ export function InviteMediaGroup({ settings }: { settings: SiteSettings }) {
   return (
     <Group id="media" title="Photos and video">
       <p className="mb-6 text-sm text-zinc-600">
-        Cover, each snap-section backdrop, portraits, gallery, and wedding-party
-        faces. Empty slots use the bundled <code>public/media</code> files.
-        QR reuses the cover photo. Photos: JPEG, PNG, or WebP, up to 2 MB.
-        Videos: MP4, muted loop, up to 8 MB. Run{" "}
+        Cover, one background video for every snap section, section photos,
+        portraits, gallery, and wedding-party faces. A section photo covers
+        the background video. With no video, each section uses its file in{" "}
+        <code>public/media</code>. QR uses the cover photo until a background
+        video is set. Photos: JPEG, PNG, or WebP, up to 2 MB. Videos: MP4,
+        muted loop, up to 8 MB. Run{" "}
         <code>supabase/migrate-invite-media.sql</code> if upload fails.
       </p>
 
@@ -116,10 +118,21 @@ export function InviteMediaGroup({ settings }: { settings: SiteSettings }) {
       <div className="mt-8 border-t border-zinc-100 pt-8">
         <ItemHeading>Section backdrops</ItemHeading>
         <p className="mb-4 text-xs text-zinc-500">
-          Full-bleed photo behind each screen, plus an optional muted looping
-          video. QR is not listed — it uses the cover photo.
+          One muted looping video plays behind every snap section and keeps
+          its place as you scroll. A photo uploaded for a section covers that
+          video. With no video, each section keeps its file in{" "}
+          <code>public/media</code>. QR is not listed — it uses the cover photo
+          until this video is set.
         </p>
-        <div className="space-y-8">
+        <VisualSlot
+          label="Background video"
+          slot="backgroundVideo"
+          accept={INVITE_VIDEO_ACCEPT}
+          currentUrl={media.backgroundVideo}
+          kind="video"
+          emptyHint="No video yet. Each section uses its photo in public/media."
+        />
+        <div className="mt-8 space-y-8">
           {SECTION_BACKDROP_IDS.map((id) => {
             const current = uploadedBackdrop(media, id);
             return (
@@ -127,24 +140,14 @@ export function InviteMediaGroup({ settings }: { settings: SiteSettings }) {
                 <p className="mb-3 text-sm font-medium text-zinc-800">
                   {inviteSectionLabel(id)}
                 </p>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <VisualSlot
-                    label="Photo"
-                    slot="backdropImage"
-                    sectionId={id}
-                    accept={INVITE_IMAGE_ACCEPT}
-                    currentUrl={current.image}
-                    kind="image"
-                  />
-                  <VisualSlot
-                    label="Video"
-                    slot="backdropVideo"
-                    sectionId={id}
-                    accept={INVITE_VIDEO_ACCEPT}
-                    currentUrl={current.video}
-                    kind="video"
-                  />
-                </div>
+                <VisualSlot
+                  label="Photo"
+                  slot="backdropImage"
+                  sectionId={id}
+                  accept={INVITE_IMAGE_ACCEPT}
+                  currentUrl={current.image}
+                  kind="image"
+                />
               </div>
             );
           })}
@@ -249,7 +252,7 @@ function GallerySlots({ urls }: { urls: string[] }) {
   );
 }
 
-function VisualSlot({
+export function VisualSlot({
   label,
   slot,
   index,
@@ -257,6 +260,7 @@ function VisualSlot({
   accept,
   currentUrl,
   kind,
+  emptyHint = "No upload yet. The invite uses the bundled file if it exists.",
 }: {
   label: string;
   slot: InviteVisualSlot;
@@ -265,6 +269,7 @@ function VisualSlot({
   accept: string;
   currentUrl: string;
   kind: "image" | "video";
+  emptyHint?: string;
 }) {
   const [busy, setBusy] = useState(false);
 
@@ -341,9 +346,7 @@ function VisualSlot({
           />
         )
       ) : (
-        <p className="text-xs text-zinc-500">
-          No upload yet. The invite uses the bundled file if it exists.
-        </p>
+        <p className="text-xs text-zinc-500">{emptyHint}</p>
       )}
       <label className="block text-sm">
         <span className="sr-only">{label} file</span>

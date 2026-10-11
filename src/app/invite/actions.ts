@@ -34,6 +34,9 @@ export async function submitRsvp(formData: FormData) {
   if (windowState === "closed") {
     return { ok: false, error: "RSVP is closed." };
   }
+  if (!settings.rsvpEditable && guest.rsvp_status !== "pending") {
+    return { ok: false, error: "RSVP can no longer be changed." };
+  }
 
   const { error } = await createServiceClient()
     .from("guests")

@@ -16,6 +16,7 @@ import { InviteBusyProvider } from "@/components/invitation/InviteBusy";
 import { InviteVisualsProvider } from "@/components/invitation/InviteVisualsContext";
 import { LiveStreamSection } from "@/components/invitation/LiveStreamSection";
 import { LocationSection } from "@/components/invitation/LocationSection";
+import { SharedSectionVideo } from "@/components/invitation/MediaBackdrop";
 import { LoveStorySection } from "@/components/invitation/LoveStorySection";
 import {
   MusicToggle,
@@ -142,7 +143,12 @@ export function InvitationShell({
       case "rundown":
         return <RundownSection items={copy.rundown} />;
       case "dressCode":
-        return <DressCodeSection dressCode={settings.dressCode} />;
+        return (
+          <DressCodeSection
+            dressCode={settings.dressCode}
+            tint={settings.backdropTint}
+          />
+        );
       case "stay":
         return <StaySection stay={copy.stay} />;
       case "liveStream":
@@ -158,6 +164,7 @@ export function InvitationShell({
             rsvpCount={rsvpCount}
             rsvpOpensAt={settings.rsvpOpensAt}
             rsvpClosesAt={settings.rsvpClosesAt}
+            rsvpEditable={settings.rsvpEditable}
           />
         );
       case "gallery":
@@ -213,6 +220,10 @@ export function InvitationShell({
                 musicRef.current?.start();
               }}
             />
+
+            {opened && visuals.backgroundVideo ? (
+              <SharedSectionVideo src={visuals.backgroundVideo} />
+            ) : null}
 
             {settings.musicUrl ? (
               <MusicToggle

@@ -12,6 +12,7 @@ import { allocateDoorCodes, getGuestByDoorCode, getGuestById, getGuestByToken, g
 import {
   INVITE_SECTIONS,
   mergeSectionOrder,
+  clampBackdropTint,
   combineDateTime,
   dropMatchingPresetColors,
   isInviteSectionId,
@@ -512,6 +513,9 @@ export async function saveInvitationSettings(formData: FormData) {
           theme,
           sanitizeThemeColors(parseJsonPayload(formData.get("payload"))),
         ),
+        backdropTint: clampBackdropTint(
+          Number(formData.get("backdropTint") ?? "") / 100,
+        ),
       };
     } else if (section === "events") {
       next = {
@@ -574,6 +578,7 @@ export async function saveInvitationSettings(formData: FormData) {
       next = {
         ...next,
         dressCode: {
+          ...next.dressCode,
           label: String(formData.get("label") ?? "").trim(),
           note: String(formData.get("note") ?? "").trim(),
           colors: payload.map((item) => ({
@@ -650,6 +655,7 @@ export async function saveInvitationSettings(formData: FormData) {
         published: formData.get("published") === "on",
         rsvpOpensAt: String(formData.get("rsvpOpensAt") ?? "").trim(),
         rsvpClosesAt: String(formData.get("rsvpClosesAt") ?? "").trim(),
+        rsvpEditable: formData.get("rsvpEditable") === "on",
       };
     } else {
       redirect("/admin/invitation?error=settings");
@@ -768,7 +774,7 @@ export async function prepareInviteVisualUpload(formData: FormData) {
     return { ok: false as const, error: "media-type" as const };
   }
   if (
-    (slot === "backdropImage" || slot === "backdropVideo") &&
+    slot === "backdropImage" &&
     (!isInviteSectionId(sectionId) || sectionId === "qr")
   ) {
     return { ok: false as const, error: "media-type" as const };
@@ -784,10 +790,7 @@ export async function prepareInviteVisualUpload(formData: FormData) {
   const path = inviteVisualObjectPath(slot, ext, {
     index: slot === "party" ? index : undefined,
     id: slot === "gallery" ? crypto.randomUUID() : undefined,
-    section:
-      slot === "backdropImage" || slot === "backdropVideo"
-        ? sectionId
-        : undefined,
+    section: slot === "backdropImage" ? sectionId : undefined,
   });
   const contentType = inviteVisualContentType(ext);
 
@@ -825,16 +828,19 @@ export async function commitInviteVisual(formData: FormData) {
   const slot = slotValue;
   const sectionId = String(formData.get("sectionId") ?? "");
   if (
-    !/^(cover|closing|people|party|gallery|sections)\//.test(path)
+    !/^(cover|closing|people|party|gallery|sections|dress)\//.test(path)
   ) {
     redirect("/admin/invitation?error=media-type");
   }
   if (
-    (slot === "backdropImage" || slot === "backdropVideo") &&
+    slot === "backdropImage" &&
     (!isInviteSectionId(sectionId) ||
       sectionId === "qr" ||
       !path.startsWith(`sections/${sectionId}/`))
   ) {
+    redirect("/admin/invitation?error=media-type");
+  }
+  if (slot === "backgroundVideo" && !path.startsWith("sections/background/")) {
     redirect("/admin/invitation?error=media-type");
   }
 
@@ -931,7 +937,14 @@ function applyVisualUrl(
     }
     party[index] = url;
     media.party = party;
-  } else if (slot === "backdropImage" || slot === "backdropVideo") {
+  } else if (slot === "backgroundVideo") {
+    media.backgroundVideo = url;
+  } else if (slot === "dressCodeImage") {
+    return {
+      ...settings,
+      dressCode: { ...settings.dressCode, image: url },
+    };
+  } else if (slot === "backdropImage") {
     if (!sectionId) {
       return settings;
     }
@@ -940,15 +953,11 @@ function applyVisualUrl(
       ...media.backdrops,
       [sectionId]: {
         ...current,
-        [slot === "backdropImage" ? "image" : "video"]: url,
+        image: url,
       },
     };
     if (sectionId === "closing") {
-      if (slot === "backdropImage") {
-        media.closingImage = url;
-      } else {
-        media.closingVideo = url;
-      }
+      media.closingImage = url;
     }
   } else {
     media[slot] = url;
@@ -980,23 +989,37 @@ function clearVisualUrl(
       party[index] = "";
       media.party = party;
     }
-  } else if (slot === "backdropImage" || slot === "backdropVideo") {
+  } else if (slot === "backgroundVideo") {
+    if (media.backgroundVideo) {
+      removed.push(media.backgroundVideo);
+    }
+    media.backgroundVideo = "";
+  } else if (slot === "dressCodeImage") {
+    if (settings.dressCode.image) {
+      removed.push(settings.dressCode.image);
+    }
+    return {
+      next: {
+        ...settings,
+        dressCode: { ...settings.dressCode, image: "" },
+      },
+      removed,
+    };
+  } else if (slot === "backdropImage") {
     if (sectionId) {
       const current = media.backdrops[sectionId] ?? { image: "", video: "" };
-      const key = slot === "backdropImage" ? "image" : "video";
-      if (current[key]) {
-        removed.push(current[key]);
+      if (current.image) {
+        removed.push(current.image);
       }
       media.backdrops = {
         ...media.backdrops,
-        [sectionId]: { ...current, [key]: "" },
+        [sectionId]: { ...current, image: "" },
       };
       if (sectionId === "closing") {
-        const legacy = slot === "backdropImage" ? "closingImage" : "closingVideo";
-        if (media[legacy] && media[legacy] !== current[key]) {
-          removed.push(media[legacy]);
+        if (media.closingImage && media.closingImage !== current.image) {
+          removed.push(media.closingImage);
         }
-        media[legacy] = "";
+        media.closingImage = "";
       }
     }
   } else if (media[slot]) {

@@ -117,6 +117,7 @@ export type InviteMedia = {
   coverVideo: string;
   closingImage: string;
   closingVideo: string;
+  backgroundVideo: string;
   bride: string;
   groom: string;
   gallery: string[];
@@ -142,6 +143,7 @@ export type SiteSettings = {
     label: string;
     note: string;
     colors: DressColor[];
+    image: string;
   };
   whatsappTemplates: WhatsAppTemplate[];
   colors: ThemeColorOverrides;
@@ -154,6 +156,8 @@ export type SiteSettings = {
   published: boolean;
   rsvpOpensAt: string;
   rsvpClosesAt: string;
+  rsvpEditable: boolean;
+  backdropTint: number;
 };
 
 export const THEME_PRESETS: Record<
@@ -234,6 +238,7 @@ export const defaultSiteSettings: SiteSettings = {
     label: dressCode.label,
     note: dressCode.note,
     colors: dressCode.colors.map((color) => ({ ...color })),
+    image: "",
   },
   whatsappTemplates: [
     {
@@ -284,6 +289,7 @@ export const defaultSiteSettings: SiteSettings = {
     coverVideo: "",
     closingImage: "",
     closingVideo: "",
+    backgroundVideo: "",
     bride: "",
     groom: "",
     gallery: [],
@@ -293,6 +299,8 @@ export const defaultSiteSettings: SiteSettings = {
   published: true,
   rsvpOpensAt: "",
   rsvpClosesAt: "",
+  rsvpEditable: true,
+  backdropTint: 0.45,
   colors: {},
 };
 
@@ -308,6 +316,14 @@ export function eventsForInvite(
     return allEvents;
   }
   return allEvents.filter((event) => event.id === invitedTo);
+}
+
+export function clampBackdropTint(value: unknown) {
+  const tint = typeof value === "number" ? value : Number(value);
+  if (!Number.isFinite(tint)) {
+    return defaultSiteSettings.backdropTint;
+  }
+  return Math.min(1, Math.max(0, tint));
 }
 
 export function mergeSiteSettings(raw: unknown): SiteSettings {
@@ -341,6 +357,10 @@ export function mergeSiteSettings(raw: unknown): SiteSettings {
       ...defaultSiteSettings.dressCode,
       ...parsed.dressCode,
       colors: parsed.dressCode?.colors ?? defaultSiteSettings.dressCode.colors,
+      image:
+        typeof parsed.dressCode?.image === "string"
+          ? parsed.dressCode.image
+          : "",
     },
     whatsappTemplates:
       Array.isArray(parsed.whatsappTemplates) &&
@@ -368,6 +388,11 @@ export function mergeSiteSettings(raw: unknown): SiteSettings {
       typeof parsed.rsvpClosesAt === "string"
         ? parsed.rsvpClosesAt
         : defaultSiteSettings.rsvpClosesAt,
+    rsvpEditable:
+      typeof parsed.rsvpEditable === "boolean"
+        ? parsed.rsvpEditable
+        : defaultSiteSettings.rsvpEditable,
+    backdropTint: clampBackdropTint(parsed.backdropTint),
     colors: sanitizeThemeColors(parsed.colors),
   };
 }
@@ -383,6 +408,8 @@ function mergeInviteMedia(raw: InviteMedia | undefined): InviteMedia {
       typeof parsed.closingImage === "string" ? parsed.closingImage : "",
     closingVideo:
       typeof parsed.closingVideo === "string" ? parsed.closingVideo : "",
+    backgroundVideo:
+      typeof parsed.backgroundVideo === "string" ? parsed.backgroundVideo : "",
     bride: typeof parsed.bride === "string" ? parsed.bride : "",
     groom: typeof parsed.groom === "string" ? parsed.groom : "",
     gallery: Array.isArray(parsed.gallery)

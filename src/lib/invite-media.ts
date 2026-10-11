@@ -19,7 +19,8 @@ export const INVITE_VISUAL_SLOTS = [
   "gallery",
   "party",
   "backdropImage",
-  "backdropVideo",
+  "backgroundVideo",
+  "dressCodeImage",
 ] as const;
 
 export type InviteVisualSlot = (typeof INVITE_VISUAL_SLOTS)[number];
@@ -85,7 +86,7 @@ export function isVisualImageSlot(slot: InviteVisualSlot) {
   return (
     slot !== "coverVideo" &&
     slot !== "closingVideo" &&
-    slot !== "backdropVideo"
+    slot !== "backgroundVideo"
   );
 }
 
@@ -97,8 +98,8 @@ export function inviteVisualObjectPath(
   if (slot === "backdropImage" && extra?.section) {
     return `sections/${extra.section}/image.${ext}`;
   }
-  if (slot === "backdropVideo" && extra?.section) {
-    return `sections/${extra.section}/video.${ext}`;
+  if (slot === "backgroundVideo") {
+    return `sections/background/video.${ext}`;
   }
   if (slot === "coverImage") {
     return `cover/image.${ext}`;
@@ -111,6 +112,9 @@ export function inviteVisualObjectPath(
   }
   if (slot === "closingVideo") {
     return `closing/video.${ext}`;
+  }
+  if (slot === "dressCodeImage") {
+    return `dress/image.${ext}`;
   }
   if (slot === "bride") {
     return `people/bride.${ext}`;
@@ -128,8 +132,8 @@ export function inviteVisualSiblingPaths(
   slot: InviteVisualSlot,
   extra?: { index?: number; section?: string },
 ) {
-  if (slot === "backdropVideo" && extra?.section) {
-    return [`sections/${extra.section}/video.mp4`];
+  if (slot === "backgroundVideo") {
+    return ["sections/background/video.mp4"];
   }
   if (slot === "backdropImage" && extra?.section) {
     return IMAGE_EXTS.map(
@@ -143,6 +147,11 @@ export function inviteVisualSiblingPaths(
   }
   if (slot === "gallery") {
     return [];
+  }
+  if (slot === "dressCodeImage") {
+    return IMAGE_EXTS.map(
+      (ext) => `dress/image.${ext === "jpeg" ? "jpg" : ext}`,
+    );
   }
   const prefix =
     slot === "coverImage"

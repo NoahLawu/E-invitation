@@ -26,7 +26,7 @@ export function InvitationSection({
   const backdrop = section ? visuals?.backdrops[section] : undefined;
 
   return (
-    <section className="relative flex h-dvh w-full shrink-0 snap-start snap-always flex-col items-center overflow-hidden">
+    <section className="relative z-10 flex h-dvh w-full shrink-0 snap-start snap-always flex-col items-center overflow-hidden">
       <MediaBackdrop
         image={image ?? backdrop?.image}
         video={video ?? backdrop?.video}

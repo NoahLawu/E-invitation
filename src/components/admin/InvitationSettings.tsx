@@ -9,7 +9,7 @@ import {
   StatusBadge,
   fieldClass,
 } from "@/components/admin/InvitationChrome";
-import { InviteMediaGroup } from "@/components/admin/InvitationMedia";
+import { InviteMediaGroup, VisualSlot } from "@/components/admin/InvitationMedia";
 import {
   DangerGroup,
   GoLiveGroup,
@@ -35,6 +35,7 @@ import {
   type ThemeId,
   type WhatsAppTemplate,
 } from "@/lib/site-settings";
+import { INVITE_IMAGE_ACCEPT } from "@/lib/invite-media";
 import { GUEST_TYPES, type GuestType } from "@/lib/types";
 
 const MODULES = [
@@ -46,7 +47,7 @@ const MODULES = [
   {
     href: "#look",
     title: "Look",
-    live: ["Theme presets", "Custom colors"],
+    live: ["Theme presets", "Custom colors", "Background tint"],
   },
   {
     href: "#messages",
@@ -61,7 +62,7 @@ const MODULES = [
   {
     href: "#guide",
     title: "Guest guide",
-    live: ["FAQ", "Dress code"],
+    live: ["FAQ", "Dress code", "Dress code photo"],
   },
   {
     href: "#guest-types",
@@ -275,6 +276,9 @@ function CoupleForm({ settings }: { settings: SiteSettings }) {
 
 function ThemeForm({ settings }: { settings: SiteSettings }) {
   const [theme, setTheme] = useState<ThemeId>(settings.theme);
+  const [backdropTint, setBackdropTint] = useState(
+    Math.round(settings.backdropTint * 100),
+  );
   const [colors, setColors] = useState<ThemeColorOverrides>(
     settings.colors ?? {},
   );
@@ -358,6 +362,24 @@ function ThemeForm({ settings }: { settings: SiteSettings }) {
               Reset to preset
             </button>
           ) : null}
+        </div>
+        <div>
+          <ItemHeading>Background tint</ItemHeading>
+          <p className="mb-3 text-sm text-zinc-600">
+            One veil over every section background photo and the shared video.
+          </p>
+          <label className="block text-sm">
+            {backdropTint}%
+            <input
+              name="backdropTint"
+              type="range"
+              min={0}
+              max={100}
+              value={backdropTint}
+              onChange={(event) => setBackdropTint(Number(event.target.value))}
+              className="mt-1 block w-full"
+            />
+          </label>
         </div>
         <SaveButton />
       </form>
@@ -731,6 +753,14 @@ function DressForm({ settings }: { settings: SiteSettings }) {
   return (
     <form action={saveInvitationSettings} className="space-y-3">
       <ItemHeading>Dress code</ItemHeading>
+      <VisualSlot
+        label="Photo"
+        slot="dressCodeImage"
+        accept={INVITE_IMAGE_ACCEPT}
+        currentUrl={settings.dressCode.image}
+        kind="image"
+        emptyHint="No photo. The section stays text and colors only."
+      />
       <input type="hidden" name="section" value="dress" />
       <input type="hidden" name="payload" value={JSON.stringify(colors)} />
       <label className="block text-sm">
