@@ -3,7 +3,8 @@ export const INVITE_MUSIC_MAX_BYTES = 10 * 1024 * 1024;
 export const INVITE_MUSIC_ACCEPT = ".mp3,.m4a,audio/mpeg,audio/mp4,audio/x-m4a";
 export const INVITE_MUSIC_OBJECT_BASE = "music/background";
 export const INVITE_IMAGE_MAX_BYTES = 2 * 1024 * 1024;
-export const INVITE_VIDEO_MAX_BYTES = 8 * 1024 * 1024;
+export const INVITE_VIDEO_MAX_BYTES = 40 * 1024 * 1024;
+export const INVITE_COVER_VIDEO_MAX_BYTES = INVITE_VIDEO_MAX_BYTES;
 export const INVITE_GALLERY_MAX = 12;
 export const INVITE_IMAGE_ACCEPT =
   ".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp";
@@ -88,6 +89,16 @@ export function isVisualImageSlot(slot: InviteVisualSlot) {
     slot !== "closingVideo" &&
     slot !== "backgroundVideo"
   );
+}
+
+export function inviteVisualMaxBytes(slot: InviteVisualSlot) {
+  if (isVisualImageSlot(slot)) {
+    return INVITE_IMAGE_MAX_BYTES;
+  }
+  if (slot === "coverVideo") {
+    return INVITE_COVER_VIDEO_MAX_BYTES;
+  }
+  return INVITE_VIDEO_MAX_BYTES;
 }
 
 export function inviteVisualObjectPath(

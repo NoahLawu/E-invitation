@@ -27,8 +27,6 @@ import { createGuestToken, parseInviteToken } from "@/lib/guest-token";
 import {
   INVITE_MEDIA_BUCKET,
   INVITE_MUSIC_MAX_BYTES,
-  INVITE_IMAGE_MAX_BYTES,
-  INVITE_VIDEO_MAX_BYTES,
   INVITE_GALLERY_MAX,
   classifyInviteMusic,
   classifyInviteImage,
@@ -36,6 +34,7 @@ import {
   inviteMusicContentType,
   inviteMusicObjectPath,
   inviteVisualContentType,
+  inviteVisualMaxBytes,
   inviteVisualObjectPath,
   inviteVisualSiblingPaths,
   isInviteVisualSlot,
@@ -761,7 +760,7 @@ export async function prepareInviteVisualUpload(formData: FormData) {
   const header = bytesFromBase64(String(formData.get("header") ?? ""));
 
   const image = isVisualImageSlot(slot);
-  const maxBytes = image ? INVITE_IMAGE_MAX_BYTES : INVITE_VIDEO_MAX_BYTES;
+  const maxBytes = inviteVisualMaxBytes(slot);
   if (!fileSize || fileSize > maxBytes) {
     return { ok: false as const, error: "media-size" as const };
   }

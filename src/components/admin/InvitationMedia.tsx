@@ -18,6 +18,7 @@ import {
   INVITE_GALLERY_MAX,
   INVITE_IMAGE_ACCEPT,
   INVITE_VIDEO_ACCEPT,
+  inviteVisualMaxBytes,
   type InviteVisualSlot,
 } from "@/lib/invite-media";
 import {
@@ -42,7 +43,7 @@ export function InviteMediaGroup({ settings }: { settings: SiteSettings }) {
         the background video. With no video, each section uses its file in{" "}
         <code>public/media</code>. QR uses the cover photo until a background
         video is set. Photos: JPEG, PNG, or WebP, up to 2 MB. Videos: MP4,
-        muted loop, up to 8 MB. Run{" "}
+        muted loop, up to 40 MB. Run{" "}
         <code>supabase/migrate-invite-media.sql</code> if upload fails.
       </p>
 
@@ -61,6 +62,7 @@ export function InviteMediaGroup({ settings }: { settings: SiteSettings }) {
           accept={INVITE_VIDEO_ACCEPT}
           currentUrl={media.coverVideo}
           kind="video"
+          emptyHint="No upload yet. MP4 up to 40 MB. The invite uses the bundled file if it exists."
         />
       </div>
 
@@ -272,6 +274,7 @@ export function VisualSlot({
   emptyHint?: string;
 }) {
   const [busy, setBusy] = useState(false);
+  const maxMb = Math.round(inviteVisualMaxBytes(slot) / (1024 * 1024));
 
   async function onFile(file: File) {
     setBusy(true);
@@ -328,6 +331,7 @@ export function VisualSlot({
   return (
     <div className="space-y-3 rounded-lg border border-zinc-200 px-3 py-3">
       <p className="text-sm font-medium text-zinc-800">{label}</p>
+      <p className="text-xs text-zinc-500">Up to {maxMb} MB</p>
       {currentUrl ? (
         kind === "video" ? (
           <video
