@@ -13,6 +13,7 @@ type InvitationSectionProps = {
   mediaAlt?: string;
   priority?: boolean;
   contentAlign?: "center" | "bottom-left";
+  veil?: "tint" | "bottom";
 };
 
 export function InvitationSection({
@@ -23,6 +24,7 @@ export function InvitationSection({
   mediaAlt = "",
   priority = false,
   contentAlign = "center",
+  veil = "tint",
 }: InvitationSectionProps) {
   const visuals = useInviteVisuals();
   const backdrop = section ? visuals?.backdrops[section] : undefined;
@@ -34,6 +36,7 @@ export function InvitationSection({
         video={video ?? backdrop?.video}
         alt={mediaAlt}
         priority={priority}
+        veil={veil}
       />
       <div
         className={`relative z-10 flex h-full w-full flex-col px-8 ${

@@ -23,7 +23,12 @@ function PersonDetailSection({
   section: "bride" | "groom";
 }) {
   return (
-    <InvitationSection section={section} mediaAlt="" contentAlign="bottom-left">
+    <InvitationSection
+      section={section}
+      mediaAlt={person.name}
+      contentAlign="bottom-left"
+      veil="bottom"
+    >
       <p className="text-xs tracking-[0.3em] text-muted uppercase">
         {person.role}
       </p>

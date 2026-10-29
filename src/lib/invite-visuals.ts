@@ -26,7 +26,7 @@ export type InviteVisuals = {
 };
 
 export const SECTION_BACKDROP_IDS = INVITE_SECTIONS.map((section) => section.id).filter(
-  (id) => id !== "qr",
+  (id) => id !== "qr" && id !== "bride" && id !== "groom",
 );
 
 const BUNDLED_BACKDROPS: Record<InviteSectionId, InviteBackdrop> = {

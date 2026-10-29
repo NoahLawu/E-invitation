@@ -69,8 +69,8 @@ export const INVITE_SECTIONS = [
   { id: "verse", label: "Verse" },
   { id: "parents", label: "Parents" },
   { id: "countdown", label: "Countdown" },
-  { id: "bride", label: "Bride detail" },
-  { id: "groom", label: "Groom detail" },
+  { id: "groom", label: "Groom" },
+  { id: "bride", label: "Bride" },
   { id: "loveStory", label: "Love story" },
   { id: "weddingParty", label: "Wedding party" },
   { id: "events", label: "Event details" },
@@ -517,7 +517,24 @@ export function mergeSectionOrder(raw: unknown): InviteSectionId[] {
       order.push(section.id);
     }
   }
-  return order;
+  return groomBeforeBrideWhenStock(order);
+}
+
+function groomBeforeBrideWhenStock(order: InviteSectionId[]) {
+  const bride = order.indexOf("bride");
+  const groom = order.indexOf("groom");
+  if (
+    bride === -1 ||
+    groom !== bride + 1 ||
+    order[bride - 1] !== "countdown" ||
+    order[groom + 1] !== "loveStory"
+  ) {
+    return order;
+  }
+  const next = [...order];
+  next[bride] = "groom";
+  next[groom] = "bride";
+  return next;
 }
 
 export function orderedInviteSections(settings: SiteSettings) {

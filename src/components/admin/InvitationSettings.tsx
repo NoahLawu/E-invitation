@@ -42,7 +42,11 @@ const MODULES = [
   {
     href: "#wedding",
     title: "Wedding",
-    live: ["Couple names and date", "Event times and venues"],
+    live: [
+      "Couple names and date",
+      "Groom and bride full-page photos",
+      "Event times and venues",
+    ],
   },
   {
     href: "#look",
@@ -270,6 +274,34 @@ function CoupleForm({ settings }: { settings: SiteSettings }) {
         </div>
         <SaveButton />
       </form>
+      <div className="mt-8 border-t border-zinc-100 pt-8">
+        <ItemHeading>Full-page photos</ItemHeading>
+        <p className="mb-3 text-xs text-zinc-500">
+          Guests see the groom as one full-screen photo, then the bride as the
+          next full-screen photo. Names stay along the bottom. The smaller
+          faces on the couple screen are uploaded under Photos and video.
+        </p>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <VisualSlot
+            label="Groom"
+            slot="backdropImage"
+            sectionId="groom"
+            accept={INVITE_IMAGE_ACCEPT}
+            currentUrl={settings.media.backdrops.groom?.image ?? ""}
+            kind="image"
+            emptyHint="No photo yet. The groom page uses the bundled image until you upload one."
+          />
+          <VisualSlot
+            label="Bride"
+            slot="backdropImage"
+            sectionId="bride"
+            accept={INVITE_IMAGE_ACCEPT}
+            currentUrl={settings.media.backdrops.bride?.image ?? ""}
+            kind="image"
+            emptyHint="No photo yet. The bride page uses the bundled image until you upload one."
+          />
+        </div>
+      </div>
     </div>
   );
 }

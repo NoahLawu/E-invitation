@@ -42,7 +42,7 @@ export function InviteMediaGroup({ settings }: { settings: SiteSettings }) {
         portraits, gallery, and wedding-party faces. A section photo covers
         the background video. With no video, each section uses its file in{" "}
         <code>public/media</code>. QR uses the cover photo until a background
-        video is set. Photos: JPEG, PNG, or WebP, up to 2 MB. Videos: MP4,
+        video is set. Photos: JPEG, PNG, or WebP, up to 10 MB. Videos: MP4,
         muted loop, up to 40 MB. Run{" "}
         <code>supabase/migrate-invite-media.sql</code> if upload fails.
       </p>
@@ -69,8 +69,8 @@ export function InviteMediaGroup({ settings }: { settings: SiteSettings }) {
       <div className="mt-8 border-t border-zinc-100 pt-8">
         <ItemHeading>Bride and groom portraits</ItemHeading>
         <p className="mb-3 text-xs text-zinc-500">
-          These faces are only on the couple screen. Bride and groom detail
-          screens use their own background photos under Section backdrops.
+          These faces are only on the couple screen. Full-page groom and bride
+          photos are on the Wedding form.
         </p>
         <div className="grid gap-4 sm:grid-cols-2">
           <VisualSlot
@@ -123,8 +123,9 @@ export function InviteMediaGroup({ settings }: { settings: SiteSettings }) {
           One muted looping video plays behind every snap section and keeps
           its place as you scroll. A photo uploaded for a section covers that
           video. With no video, each section keeps its file in{" "}
-          <code>public/media</code>. QR is not listed — it uses the cover photo
-          until this video is set.
+          <code>public/media</code>. Groom and bride full-page photos are on
+          the Wedding form. QR is not listed — it uses the cover photo until
+          this video is set.
         </p>
         <VisualSlot
           label="Background video"

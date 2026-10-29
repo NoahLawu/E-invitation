@@ -95,7 +95,7 @@ export function flashFromSearchParams(
     return {
       tone: "error",
       message:
-        "Keep photos under 2 MB and videos under 40 MB.",
+        "Keep photos under 10 MB and videos under 40 MB.",
     };
   }
 
