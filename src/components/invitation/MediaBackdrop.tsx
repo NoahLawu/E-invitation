@@ -62,6 +62,8 @@ export function MediaBackdrop({
           alt={alt}
           fill
           sizes="430px"
+          quality={veil === "bottom" ? 95 : 75}
+          unoptimized={veil === "bottom"}
           className={
             veil === "bottom" ? "object-cover object-top" : "object-cover"
           }
@@ -84,7 +86,7 @@ export function MediaBackdrop({
         />
       ) : null}
       {veil === "bottom" ? (
-        <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-background via-background/75 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background/70 to-transparent" />
       ) : (
         <BackdropTint />
       )}
