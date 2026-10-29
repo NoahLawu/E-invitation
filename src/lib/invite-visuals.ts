@@ -85,6 +85,9 @@ function sectionBackdrop(
     id === "closing"
       ? media.backdrops.closing?.image || media.closingImage
       : (media.backdrops[id]?.image ?? "");
+  const portrait =
+    id === "bride" ? media.bride : id === "groom" ? media.groom : "";
+  const image = uploadedImage || portrait;
 
   if (id === "qr") {
     return backgroundVideo
@@ -92,8 +95,8 @@ function sectionBackdrop(
       : { image: coverImage, video: "" };
   }
 
-  if (uploadedImage) {
-    return { image: uploadedImage, video: "" };
+  if (image) {
+    return { image, video: "" };
   }
 
   if (backgroundVideo) {
