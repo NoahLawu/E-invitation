@@ -9,12 +9,12 @@ export function CountdownSection({ weddingAt }: { weddingAt: string }) {
 
   return (
     <InvitationSection section="countdown" mediaAlt="">
-      <p className="text-xs tracking-[0.3em] text-white/80 uppercase">Countdown</p>
-      <div className="mt-8 grid w-full grid-cols-4 gap-2">
+      <p className="text-xs tracking-[0.3em] text-muted uppercase">Countdown</p>
+      <div className="mt-6 grid w-full grid-cols-4 gap-2">
         <TimeBox value={remaining?.days ?? "--"} label="Days" />
         <TimeBox value={remaining?.hours ?? "--"} label="Hours" />
-        <TimeBox value={remaining?.mins ?? "--"} label="Minutes" />
-        <TimeBox value={remaining?.secs ?? "--"} label="Seconds" />
+        <TimeBox value={remaining?.mins ?? "--"} label="Mins" />
+        <TimeBox value={remaining?.secs ?? "--"} label="Secs" />
       </div>
     </InvitationSection>
   );
@@ -47,11 +47,9 @@ function useCountdown(weddingAt: string) {
 
 function TimeBox({ value, label }: { value: string; label: string }) {
   return (
-    <div>
-      <p className="font-display text-5xl leading-none font-light tracking-wide text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.28)]">
-        {value}
-      </p>
-      <p className="mt-3 text-[11px] font-light tracking-[0.14em] text-white/80">
+    <div className="rounded-xl border border-line bg-card/90 px-2 py-4">
+      <p className="font-display text-2xl font-light">{value}</p>
+      <p className="mt-1 text-[10px] tracking-wider text-muted uppercase">
         {label}
       </p>
     </div>
