@@ -65,7 +65,9 @@ export function MediaBackdrop({
           quality={veil === "bottom" ? 95 : 75}
           unoptimized={veil === "bottom"}
           className={
-            veil === "bottom" ? "object-cover object-top" : "object-cover"
+            veil === "bottom"
+              ? "origin-top scale-[1.1] object-cover object-top"
+              : "object-cover"
           }
           onError={() => setImageFailed(true)}
           {...(priority ? { priority: true } : { loading: "eager" as const })}
