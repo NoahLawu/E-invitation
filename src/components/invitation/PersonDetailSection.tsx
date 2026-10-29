@@ -29,12 +29,16 @@ function PersonDetailSection({
       contentAlign="bottom-left"
       veil="bottom"
     >
-      <p className="text-xs tracking-[0.3em] text-muted uppercase">
+      <p className="text-xs tracking-[0.3em] text-white/90 uppercase drop-shadow-[0_1px_2px_rgba(0,0,0,0.85)]">
         {person.role}
       </p>
-      <h2 className="font-display mt-3 text-4xl">{person.name}</h2>
-      <p className="mt-2 text-sm text-foreground">{person.fullName}</p>
-      <p className="mt-3 max-w-xs text-sm leading-relaxed text-muted">
+      <h2 className="font-display mt-3 text-4xl text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.85)]">
+        {person.name}
+      </h2>
+      <p className="mt-2 text-sm text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.85)]">
+        {person.fullName}
+      </p>
+      <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.85)]">
         {person.parents}
       </p>
     </InvitationSection>
