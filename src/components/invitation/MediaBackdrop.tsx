@@ -10,6 +10,7 @@ type MediaBackdropProps = {
   alt: string;
   priority?: boolean;
   veil?: "tint" | "bottom";
+  cropBottom?: boolean;
 };
 
 export function SharedSectionVideo({ src }: { src: string }) {
@@ -44,11 +45,16 @@ export function MediaBackdrop({
   alt,
   priority = false,
   veil = "tint",
+  cropBottom = false,
 }: MediaBackdropProps) {
   const [imageFailed, setImageFailed] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
   const showImage = Boolean(image) && !imageFailed;
   const showVideo = Boolean(video) && !videoFailed;
+  const frame =
+    veil === "bottom" || cropBottom
+      ? "origin-top scale-[1.1] object-cover object-top"
+      : "object-cover";
 
   if (!showImage && !showVideo) {
     return null;
@@ -64,20 +70,14 @@ export function MediaBackdrop({
           sizes="430px"
           quality={veil === "bottom" ? 95 : 75}
           unoptimized={veil === "bottom"}
-          className={
-            veil === "bottom"
-              ? "origin-top scale-[1.1] object-cover object-top"
-              : "object-cover"
-          }
+          className={frame}
           onError={() => setImageFailed(true)}
           {...(priority ? { priority: true } : { loading: "eager" as const })}
         />
       ) : null}
       {showVideo ? (
         <video
-          className={`absolute inset-0 h-full w-full object-cover ${
-            veil === "bottom" ? "object-top" : ""
-          }`}
+          className={`absolute inset-0 h-full w-full ${frame}`}
           src={video}
           autoPlay
           muted

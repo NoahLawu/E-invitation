@@ -34,6 +34,7 @@ export function Cover({
       video={video}
       mediaAlt=""
       priority
+      cropBottom
     >
       <p className="text-xs tracking-[0.35em] text-muted uppercase">
         The wedding of
