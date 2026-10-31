@@ -66,7 +66,7 @@ export function RsvpSection({
   return (
     <InvitationSection section="rsvp" mediaAlt="">
       <p className="text-xs tracking-[0.3em] text-muted uppercase">RSVP</p>
-      <h2 className="font-display mt-3 text-3xl">Will you join us?</h2>
+      <h2 className="font-display mt-3 text-3xl text-white">Will you join us?</h2>
       {windowState === "soon" ? (
         <p className="mt-5 max-w-xs text-sm text-muted">
           RSVP opens {formatWeddingWhen(rsvpOpensAt) ?? "soon"}.
@@ -76,7 +76,7 @@ export function RsvpSection({
           RSVP closed{rsvpClosesAt ? ` ${formatWeddingWhen(rsvpClosesAt)}` : ""}.
         </p>
       ) : !guestToken ? (
-        <p className="mt-5 max-w-xs text-sm text-muted">
+        <p className="mt-5 max-w-xs text-sm text-white">
           Open your personal invite link to send an RSVP.
         </p>
       ) : saved && !rsvpEditable ? (
