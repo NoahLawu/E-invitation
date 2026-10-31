@@ -12,7 +12,7 @@ export function EventsSection({
   const visible = eventsForInvite(events, invitedTo);
   return (
     <InvitationSection section="events" mediaAlt="" contentAlign="top-left">
-      <p className="font-display text-3xl leading-tight text-white">
+      <p className="font-display text-[1.40625rem] leading-tight text-white">
         Join us in celebrating
       </p>
       <div className="mt-6 w-full text-white">
@@ -23,24 +23,24 @@ export function EventsSection({
               index > 0 ? "mt-6 border-t-2 border-white/70 pt-6" : undefined
             }
           >
-            <h2 className="font-display text-4xl leading-tight">{event.title}</h2>
+            <h2 className="font-display text-[1.6875rem] leading-tight">{event.title}</h2>
             {eventDateLabel(event.date) ? (
-              <p className="font-display mt-3 text-xl leading-snug">
+              <p className="font-display mt-3 text-[0.9375rem] leading-snug">
                 {eventDateLabel(event.date)}
               </p>
             ) : null}
             {eventTimeLabel(event.time) ? (
-              <p className="font-display text-xl leading-snug">
+              <p className="font-display text-[0.9375rem] leading-snug">
                 {eventTimeLabel(event.time)}
               </p>
             ) : null}
             {event.place ? (
-              <p className="font-display mt-4 text-xl leading-snug whitespace-pre-line">
+              <p className="font-display mt-4 text-[0.9375rem] leading-snug whitespace-pre-line">
                 {event.place}
               </p>
             ) : null}
             {event.address ? (
-              <p className="mt-2 text-sm leading-relaxed whitespace-pre-line text-white/90">
+              <p className="mt-2 text-[0.65625rem] leading-relaxed whitespace-pre-line text-white/90">
                 {event.address}
               </p>
             ) : null}
@@ -51,7 +51,7 @@ export function EventsSection({
                     href={event.mapsUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex min-h-10 items-center bg-white/80 px-4 text-sm text-foreground"
+                    className="inline-flex min-h-10 items-center bg-white/80 px-4 text-[0.65625rem] text-foreground"
                   >
                     Google Maps
                   </a>
@@ -61,7 +61,7 @@ export function EventsSection({
                     href={event.wazeUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex min-h-10 items-center bg-white/80 px-4 text-sm text-foreground"
+                    className="inline-flex min-h-10 items-center bg-white/80 px-4 text-[0.65625rem] text-foreground"
                   >
                     Waze
                   </a>
