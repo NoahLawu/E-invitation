@@ -31,6 +31,7 @@ export type InviteEventDetails = {
   date: string;
   time: string;
   place: string;
+  address: string;
   mapsUrl: string;
   wazeUrl: string;
 };
@@ -231,6 +232,8 @@ export const defaultSiteSettings: SiteSettings = {
     ...event,
     date: "",
     time: /^\d{2}:\d{2}/.test(event.time) ? event.time.slice(0, 5) : "",
+    address:
+      "Jalan Raya Cikole No.KM 22, Cikole, Kec. Lembang, Kabupaten Bandung Barat, Jawa Barat 40391",
   })),
   bankAccounts: bankAccounts.map((account) => ({ ...account })),
   faq: faq.map((item) => ({ ...item })),

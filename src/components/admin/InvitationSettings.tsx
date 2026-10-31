@@ -487,6 +487,14 @@ function EventFields({
         />
       </label>
       <label className="block text-sm">
+        Street address
+        <input
+          name={`${prefix}_address`}
+          defaultValue={event.address}
+          className={fieldClass}
+        />
+      </label>
+      <label className="block text-sm">
         Google Maps URL
         <input
           name={`${prefix}_maps`}

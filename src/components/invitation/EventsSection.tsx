@@ -12,27 +12,36 @@ export function EventsSection({
   const visible = eventsForInvite(events, invitedTo);
   return (
     <InvitationSection section="events" mediaAlt="" contentAlign="top-left">
-      <p className="font-display text-3xl leading-tight">Join us in celebrating</p>
-      <div className="mt-6 w-full">
+      <p className="font-display text-3xl leading-tight text-white">
+        Join us in celebrating
+      </p>
+      <div className="mt-6 w-full text-white">
         {visible.map((event, index) => (
           <article
             key={event.id}
             className={
-              index > 0 ? "mt-6 border-t-2 border-foreground/35 pt-6" : undefined
+              index > 0 ? "mt-6 border-t-2 border-white/70 pt-6" : undefined
             }
           >
             <h2 className="font-display text-4xl leading-tight">{event.title}</h2>
             {eventDateLabel(event.date) ? (
-              <p className="mt-3 text-sm font-semibold">
+              <p className="font-display mt-3 text-xl leading-snug">
                 {eventDateLabel(event.date)}
               </p>
             ) : null}
             {eventTimeLabel(event.time) ? (
-              <p className="text-sm font-semibold">{eventTimeLabel(event.time)}</p>
+              <p className="font-display text-xl leading-snug">
+                {eventTimeLabel(event.time)}
+              </p>
             ) : null}
             {event.place ? (
-              <p className="mt-4 text-sm leading-relaxed whitespace-pre-line text-muted">
+              <p className="font-display mt-4 text-xl leading-snug whitespace-pre-line">
                 {event.place}
+              </p>
+            ) : null}
+            {event.address ? (
+              <p className="mt-2 text-sm leading-relaxed whitespace-pre-line text-white/90">
+                {event.address}
               </p>
             ) : null}
             {event.mapsUrl || event.wazeUrl ? (
