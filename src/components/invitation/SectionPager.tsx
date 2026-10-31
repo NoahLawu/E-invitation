@@ -8,7 +8,7 @@ import {
 } from "react";
 
 const SWIPE_PX = 48;
-const MOVE_MS = 320;
+const MOVE_MS = 420;
 
 type SectionPagerProps = {
   enabled: boolean;
@@ -33,20 +33,9 @@ export function SectionPager({
     null,
   );
   const wheelLockRef = useRef(0);
-  const originYRef = useRef(0);
-
-  function readY(track: HTMLElement) {
-    const transform = getComputedStyle(track).transform;
-    if (!transform || transform === "none") {
-      return 0;
-    }
-    return new DOMMatrix(transform).m42;
-  }
 
   function writeY(track: HTMLElement, y: number, animate: boolean) {
-    track.style.transition = animate
-      ? `transform ${MOVE_MS}ms cubic-bezier(0.22, 1, 0.36, 1)`
-      : "none";
+    track.style.transition = animate ? `transform ${MOVE_MS}ms ease-out` : "none";
     track.style.transform = `translate3d(0, ${y}px, 0)`;
   }
 
@@ -66,19 +55,25 @@ export function SectionPager({
     if (!root || !track) {
       return;
     }
-    if (direction !== 0) {
-      const max = Math.max(0, track.children.length - 1);
-      indexRef.current = Math.min(
-        max,
-        Math.max(0, indexRef.current + direction),
-      );
+    let step = direction;
+    if (step !== 0) {
+      const now = performance.now();
+      if (now < wheelLockRef.current) {
+        step = 0;
+      } else {
+        wheelLockRef.current = now + MOVE_MS + 30;
+        const max = Math.max(0, track.children.length - 1);
+        indexRef.current = Math.min(
+          max,
+          Math.max(0, indexRef.current + step),
+        );
+      }
     }
     dragRef.current = 0;
     const y = -indexRef.current * root.clientHeight;
-    const from = readY(track);
-    writeY(track, from, false);
-    void track.offsetHeight;
-    writeY(track, y, true);
+    requestAnimationFrame(() => {
+      writeY(track, y, true);
+    });
   }
 
   useEffect(() => {
@@ -108,13 +103,16 @@ export function SectionPager({
       if (Math.abs(event.deltaY) < 12) {
         return;
       }
-      const now = performance.now();
-      if (now < wheelLockRef.current) {
+      const source = (
+        event as WheelEvent & {
+          sourceCapabilities?: { firesTouchEvents?: boolean };
+        }
+      ).sourceCapabilities;
+      if (source?.firesTouchEvents) {
         event.preventDefault();
         return;
       }
       event.preventDefault();
-      wheelLockRef.current = now + MOVE_MS;
       settle(event.deltaY > 0 ? 1 : -1);
     }
     function onTouchMove(event: TouchEvent) {
@@ -143,10 +141,9 @@ export function SectionPager({
     }
     const track = trackRef.current;
     if (track) {
-      const y = readY(track);
-      originYRef.current = y;
-      writeY(track, y, false);
+      track.style.transition = "none";
     }
+    dragRef.current = 0;
     startRef.current = {
       x: event.clientX,
       y: event.clientY,
@@ -172,12 +169,10 @@ export function SectionPager({
     if (axisRef.current !== "y") {
       return;
     }
-    const track = trackRef.current;
-    if (!track) {
-      return;
-    }
-    dragRef.current = dy;
-    writeY(track, originYRef.current + dy, false);
+    const root = rootRef.current;
+    const height = root?.clientHeight || 1;
+    dragRef.current = Math.max(-height, Math.min(height, dy));
+    paint(false);
   }
 
   function onPointerUp(event: ReactPointerEvent<HTMLDivElement>) {
