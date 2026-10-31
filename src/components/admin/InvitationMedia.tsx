@@ -371,21 +371,29 @@ export function VisualSlot({
       </label>
       {busy ? <p className="text-xs text-zinc-500">Uploading…</p> : null}
       {currentUrl ? (
-        <form action={clearInviteVisual}>
-          <input type="hidden" name="slot" value={slot} />
-          {index != null ? (
-            <input type="hidden" name="index" value={index} />
-          ) : null}
-          {sectionId ? (
-            <input type="hidden" name="sectionId" value={sectionId} />
-          ) : null}
-          <ConfirmSubmit
-            label="Remove upload"
-            confirmLabel={`Remove this ${kind}?`}
-            pendingLabel="Removing…"
-            className="rounded-md border border-zinc-300 px-3 py-2 text-sm hover:bg-zinc-50"
-          />
-        </form>
+        <button
+          type="button"
+          disabled={busy}
+          onClick={() => {
+            if (!window.confirm(`Remove this ${kind}?`)) {
+              return;
+            }
+            const data = new FormData();
+            data.set("slot", slot);
+            data.set("url", currentUrl);
+            if (index != null) {
+              data.set("index", String(index));
+            }
+            if (sectionId) {
+              data.set("sectionId", sectionId);
+            }
+            setBusy(true);
+            void clearInviteVisual(data);
+          }}
+          className="rounded-md border border-zinc-300 px-3 py-2 text-sm hover:bg-zinc-50 disabled:opacity-60"
+        >
+          {busy ? "Removing…" : "Remove upload"}
+        </button>
       ) : null}
     </div>
   );

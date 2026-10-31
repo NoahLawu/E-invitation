@@ -920,7 +920,13 @@ export async function clearInviteVisual(formData: FormData) {
     .map(objectPathFromPublicUrl)
     .filter((value): value is string => Boolean(value));
   if (paths.length > 0) {
-    await createServiceClient().storage.from(INVITE_MEDIA_BUCKET).remove(paths);
+    try {
+      await createServiceClient()
+        .storage.from(INVITE_MEDIA_BUCKET)
+        .remove(paths);
+    } catch {
+      // The saved logo is still cleared if the file is already gone.
+    }
   }
 
   try {
