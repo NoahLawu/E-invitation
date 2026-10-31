@@ -81,7 +81,7 @@ export function GallerySection({ photos }: { photos: string[] }) {
 
   return (
     <InvitationSection section="gallery">
-      <p className="text-xs tracking-[0.3em] text-muted uppercase">Gallery</p>
+      <p className="text-xs tracking-[0.3em] text-white uppercase">Gallery</p>
       {photos.length === 0 ? null : (
         <div className="relative mt-6 w-full">
           <div

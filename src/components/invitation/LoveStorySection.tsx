@@ -8,7 +8,7 @@ export function LoveStorySection({
 }) {
   return (
     <InvitationSection section="loveStory" mediaAlt="">
-      <p className="text-xs tracking-[0.3em] text-muted uppercase">Our story</p>
+      <p className="text-xs tracking-[0.3em] text-white uppercase">Our story</p>
       <div className="mt-6 w-full space-y-3">
         {beats.map((beat, index) => (
           <article

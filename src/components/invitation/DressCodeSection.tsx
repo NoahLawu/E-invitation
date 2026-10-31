@@ -11,7 +11,7 @@ export function DressCodeSection({
 }) {
   const content = (
     <>
-      <p className="text-xs tracking-[0.3em] text-muted uppercase">
+      <p className="text-xs tracking-[0.3em] text-white uppercase">
         Dress code
       </p>
       <h2 className="font-display mt-3 text-3xl">{dressCode.label}</h2>

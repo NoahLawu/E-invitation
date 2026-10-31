@@ -68,7 +68,7 @@ export function CommentsSection({
 
   return (
     <InvitationSection section="comments" mediaAlt="">
-      <p className="text-xs tracking-[0.3em] text-muted uppercase">
+      <p className="text-xs tracking-[0.3em] text-white uppercase">
         Guest book
       </p>
       <h2 className="font-display mt-3 text-3xl">Leave a wish</h2>

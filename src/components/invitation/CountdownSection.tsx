@@ -9,7 +9,7 @@ export function CountdownSection({ weddingAt }: { weddingAt: string }) {
 
   return (
     <InvitationSection section="countdown" mediaAlt="">
-      <p className="text-xs tracking-[0.3em] text-muted uppercase">Countdown</p>
+      <p className="text-xs tracking-[0.3em] text-white uppercase">Countdown</p>
       <div className="mt-6 grid w-full grid-cols-4 gap-2">
         <TimeBox value={remaining?.days ?? "--"} label="Days" />
         <TimeBox value={remaining?.hours ?? "--"} label="Hours" />

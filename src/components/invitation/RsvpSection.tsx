@@ -65,7 +65,7 @@ export function RsvpSection({
 
   return (
     <InvitationSection section="rsvp" mediaAlt="">
-      <p className="text-xs tracking-[0.3em] text-muted uppercase">RSVP</p>
+      <p className="text-xs tracking-[0.3em] text-white uppercase">RSVP</p>
       <h2 className="font-display mt-3 text-3xl text-white">Will you join us?</h2>
       {windowState === "soon" ? (
         <p className="mt-5 max-w-xs text-sm text-muted">

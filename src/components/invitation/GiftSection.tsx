@@ -7,7 +7,7 @@ import type { BankAccount } from "@/lib/site-settings";
 export function GiftSection({ accounts }: { accounts: BankAccount[] }) {
   return (
     <InvitationSection section="gifts" mediaAlt="">
-      <p className="text-xs tracking-[0.3em] text-muted uppercase">
+      <p className="text-xs tracking-[0.3em] text-white uppercase">
         Wedding gift
       </p>
       <h2 className="font-display mt-3 text-3xl">Angpao</h2>
