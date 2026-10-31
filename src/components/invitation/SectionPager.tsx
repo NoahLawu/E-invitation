@@ -8,6 +8,7 @@ import {
 } from "react";
 
 const SWIPE_PX = 48;
+const MOVE_MS = 320;
 
 type SectionPagerProps = {
   enabled: boolean;
@@ -32,6 +33,22 @@ export function SectionPager({
     null,
   );
   const wheelLockRef = useRef(0);
+  const originYRef = useRef(0);
+
+  function readY(track: HTMLElement) {
+    const transform = getComputedStyle(track).transform;
+    if (!transform || transform === "none") {
+      return 0;
+    }
+    return new DOMMatrix(transform).m42;
+  }
+
+  function writeY(track: HTMLElement, y: number, animate: boolean) {
+    track.style.transition = animate
+      ? `transform ${MOVE_MS}ms cubic-bezier(0.22, 1, 0.36, 1)`
+      : "none";
+    track.style.transform = `translate3d(0, ${y}px, 0)`;
+  }
 
   function paint(animate: boolean) {
     const root = rootRef.current;
@@ -40,8 +57,7 @@ export function SectionPager({
       return;
     }
     const y = -indexRef.current * root.clientHeight + dragRef.current;
-    track.style.transition = animate ? "transform 420ms ease-out" : "none";
-    track.style.transform = `translate3d(0, ${y}px, 0)`;
+    writeY(track, y, animate);
   }
 
   function settle(direction: -1 | 1 | 0) {
@@ -52,14 +68,17 @@ export function SectionPager({
     }
     if (direction !== 0) {
       const max = Math.max(0, track.children.length - 1);
-      indexRef.current = Math.min(max, Math.max(0, indexRef.current + direction));
+      indexRef.current = Math.min(
+        max,
+        Math.max(0, indexRef.current + direction),
+      );
     }
     dragRef.current = 0;
     const y = -indexRef.current * root.clientHeight;
-    requestAnimationFrame(() => {
-      track.style.transition = "transform 420ms ease-out";
-      track.style.transform = `translate3d(0, ${y}px, 0)`;
-    });
+    const from = readY(track);
+    writeY(track, from, false);
+    void track.offsetHeight;
+    writeY(track, y, true);
   }
 
   useEffect(() => {
@@ -95,16 +114,38 @@ export function SectionPager({
         return;
       }
       event.preventDefault();
-      wheelLockRef.current = now + 450;
+      wheelLockRef.current = now + MOVE_MS;
       settle(event.deltaY > 0 ? 1 : -1);
     }
+    function onTouchMove(event: TouchEvent) {
+      const target = event.target;
+      if (
+        target instanceof Element &&
+        target.closest("[data-pager-allow], textarea, input, select")
+      ) {
+        return;
+      }
+      if (event.cancelable) {
+        event.preventDefault();
+      }
+    }
     root.addEventListener("wheel", onWheel, { passive: false });
-    return () => root.removeEventListener("wheel", onWheel);
+    root.addEventListener("touchmove", onTouchMove, { passive: false });
+    return () => {
+      root.removeEventListener("wheel", onWheel);
+      root.removeEventListener("touchmove", onTouchMove);
+    };
   }, [enabled]);
 
   function onPointerDown(event: ReactPointerEvent<HTMLDivElement>) {
     if (!enabled || event.button !== 0) {
       return;
+    }
+    const track = trackRef.current;
+    if (track) {
+      const y = readY(track);
+      originYRef.current = y;
+      writeY(track, y, false);
     }
     startRef.current = {
       x: event.clientX,
@@ -113,7 +154,6 @@ export function SectionPager({
     };
     axisRef.current = null;
     draggingRef.current = true;
-    dragRef.current = 0;
   }
 
   function onPointerMove(event: ReactPointerEvent<HTMLDivElement>) {
@@ -132,8 +172,12 @@ export function SectionPager({
     if (axisRef.current !== "y") {
       return;
     }
+    const track = trackRef.current;
+    if (!track) {
+      return;
+    }
     dragRef.current = dy;
-    paint(false);
+    writeY(track, originYRef.current + dy, false);
   }
 
   function onPointerUp(event: ReactPointerEvent<HTMLDivElement>) {
@@ -160,14 +204,17 @@ export function SectionPager({
   return (
     <div
       ref={rootRef}
-      className={`overflow-hidden overscroll-none touch-pan-x ${className ?? ""}`}
+      className={`overflow-hidden overscroll-none touch-none ${className ?? ""}`}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
       onPointerCancel={onPointerUp}
     >
       {background}
-      <div ref={trackRef} className="relative z-10">
+      <div
+        ref={trackRef}
+        className="relative z-10 will-change-transform"
+      >
         {children}
       </div>
     </div>

@@ -88,7 +88,8 @@ export function GallerySection({ photos }: { photos: string[] }) {
             ref={scroller}
             onScroll={onScroll}
             onScrollEnd={onScrollEnd}
-            className="flex h-[58dvh] w-full snap-x snap-mandatory overflow-x-auto rounded-xl [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            data-pager-allow=""
+            className="flex h-[58dvh] w-full snap-x snap-mandatory touch-pan-x overflow-x-auto rounded-xl [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             {slides.map((src, slideIndex) => (
               <div
