@@ -46,7 +46,7 @@ export function InvitationSection({
           contentAlign === "bottom-left"
             ? "items-start justify-end pb-16 text-left"
             : contentAlign === "top-left"
-              ? "items-start justify-start overflow-y-auto pt-14 pb-10 text-left"
+              ? "items-start justify-start pt-12 pb-8 text-left"
               : "items-center justify-center text-center"
         }`}
       >
