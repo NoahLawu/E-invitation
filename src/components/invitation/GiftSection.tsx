@@ -52,7 +52,7 @@ function BankCard({ account }: { account: BankAccount }) {
             <img
               src={account.logo}
               alt=""
-              className="h-40 w-auto max-w-full shrink-0 object-contain"
+              className="h-24 w-auto max-w-full shrink-0 object-contain"
             />
           ) : null}
           <p className="font-mono text-sm tracking-wide">{account.number}</p>
