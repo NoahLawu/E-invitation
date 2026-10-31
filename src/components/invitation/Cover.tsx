@@ -36,23 +36,23 @@ export function Cover({
       priority
       cropBottom
     >
-      <p className="text-xs tracking-[0.35em] text-muted uppercase">
+      <p className="text-xs tracking-[0.35em] text-white/80 uppercase">
         The wedding of
       </p>
-      <h1 className="font-display mt-6 text-5xl leading-tight text-foreground">
+      <h1 className="font-display mt-6 text-5xl leading-tight text-white">
         {brideName}
-        <span className="mt-2 block text-2xl font-normal italic text-accent">
+        <span className="mt-2 block text-2xl font-normal text-white italic">
           &amp;
         </span>
         {groomName}
       </h1>
-      <p className="mt-10 max-w-xs text-sm leading-relaxed text-muted">
+      <p className="mt-10 max-w-xs text-sm leading-relaxed text-white">
         Dear {guestName},
         <br />
         {line}
       </p>
       {when ? (
-        <p className="mt-4 text-xs tracking-wide text-muted">{when}</p>
+        <p className="mt-4 text-xs tracking-wide text-white/90">{when}</p>
       ) : null}
       {opened ? (
         <p className="mt-12 animate-bounce text-xs tracking-[0.3em] text-muted uppercase">
