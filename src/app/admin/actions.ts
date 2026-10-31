@@ -563,6 +563,7 @@ export async function saveInvitationSettings(formData: FormData) {
           bank: String(item.bank ?? "").trim(),
           holder: String(item.holder ?? "").trim(),
           number: String(item.number ?? "").trim(),
+          logo: String(item.logo ?? "").trim(),
         })),
       };
     } else if (section === "faq") {
@@ -775,6 +776,12 @@ export async function prepareInviteVisualUpload(formData: FormData) {
     return { ok: false as const, error: "media-type" as const };
   }
   if (
+    slot === "bankLogo" &&
+    (index < 0 || index >= current.bankAccounts.length)
+  ) {
+    return { ok: false as const, error: "media-type" as const };
+  }
+  if (
     slot === "backdropImage" &&
     (!isInviteSectionId(sectionId) || sectionId === "qr")
   ) {
@@ -789,7 +796,7 @@ export async function prepareInviteVisualUpload(formData: FormData) {
   }
 
   const path = inviteVisualObjectPath(slot, ext, {
-    index: slot === "party" ? index : undefined,
+    index: slot === "party" || slot === "bankLogo" ? index : undefined,
     id: slot === "gallery" ? crypto.randomUUID() : undefined,
     section: slot === "backdropImage" ? sectionId : undefined,
   });
@@ -829,7 +836,7 @@ export async function commitInviteVisual(formData: FormData) {
   const slot = slotValue;
   const sectionId = String(formData.get("sectionId") ?? "");
   if (
-    !/^(cover|closing|people|party|gallery|sections|dress)\//.test(path)
+    !/^(cover|closing|people|party|gallery|sections|dress|banks)\//.test(path)
   ) {
     redirect("/admin/invitation?error=media-type");
   }
@@ -851,6 +858,14 @@ export async function commitInviteVisual(formData: FormData) {
   const current = await getSiteSettings();
 
   if (slot === "party" && (index < 0 || index >= current.copy.weddingParty.length)) {
+    redirect("/admin/invitation?error=media-type");
+  }
+  if (
+    slot === "bankLogo" &&
+    (index < 0 ||
+      index >= current.bankAccounts.length ||
+      !path.startsWith(`banks/${index}.`))
+  ) {
     redirect("/admin/invitation?error=media-type");
   }
 
@@ -945,6 +960,16 @@ function applyVisualUrl(
       ...settings,
       dressCode: { ...settings.dressCode, image: url },
     };
+  } else if (slot === "bankLogo") {
+    if (index < 0 || index >= settings.bankAccounts.length) {
+      return settings;
+    }
+    return {
+      ...settings,
+      bankAccounts: settings.bankAccounts.map((account, accountIndex) =>
+        accountIndex === index ? { ...account, logo: url } : account,
+      ),
+    };
   } else if (slot === "backdropImage") {
     if (!sectionId) {
       return settings;
@@ -995,6 +1020,20 @@ function clearVisualUrl(
       removed.push(media.backgroundVideo);
     }
     media.backgroundVideo = "";
+  } else if (slot === "bankLogo") {
+    const account = settings.bankAccounts[index];
+    if (account?.logo) {
+      removed.push(account.logo);
+    }
+    return {
+      next: {
+        ...settings,
+        bankAccounts: settings.bankAccounts.map((item, accountIndex) =>
+          accountIndex === index ? { ...item, logo: "" } : item,
+        ),
+      },
+      removed,
+    };
   } else if (slot === "dressCodeImage") {
     if (settings.dressCode.image) {
       removed.push(settings.dressCode.image);

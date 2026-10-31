@@ -624,8 +624,9 @@ function BanksForm({ settings }: { settings: SiteSettings }) {
         {accounts.map((account, index) => (
           <div
             key={`account-${index}`}
-            className="grid gap-2 rounded-xl border border-zinc-200 p-3 sm:grid-cols-3"
+            className="space-y-2 rounded-xl border border-zinc-200 p-3"
           >
+            <div className="grid gap-2 sm:grid-cols-2">
             <input
               value={account.bank}
               placeholder="Bank"
@@ -653,6 +654,16 @@ function BanksForm({ settings }: { settings: SiteSettings }) {
                 )
               }
               className={fieldClass + " mt-0"}
+            />
+            </div>
+            <VisualSlot
+              label="Bank logo"
+              slot="bankLogo"
+              index={index}
+              accept={INVITE_IMAGE_ACCEPT}
+              currentUrl={account.logo}
+              kind="image"
+              emptyHint="No logo yet. It shows between the account name and number."
             />
             <div className="flex gap-2">
               <input
@@ -688,7 +699,7 @@ function BanksForm({ settings }: { settings: SiteSettings }) {
           onClick={() =>
             setAccounts((current) => [
               ...current,
-              { bank: "", holder: "", number: "" },
+              { bank: "", holder: "", number: "", logo: "" },
             ])
           }
           className="text-sm text-zinc-600"

@@ -40,6 +40,7 @@ export type BankAccount = {
   bank: string;
   holder: string;
   number: string;
+  logo: string;
 };
 
 export type FaqItem = {
@@ -235,7 +236,7 @@ export const defaultSiteSettings: SiteSettings = {
     address:
       "Jalan Raya Cikole No.KM 22, Cikole, Kec. Lembang, Kabupaten Bandung Barat, Jawa Barat 40391",
   })),
-  bankAccounts: bankAccounts.map((account) => ({ ...account })),
+  bankAccounts: bankAccounts.map((account) => ({ ...account, logo: "" })),
   faq: faq.map((item) => ({ ...item })),
   dressCode: {
     label: dressCode.label,
@@ -353,7 +354,12 @@ export function mergeSiteSettings(raw: unknown): SiteSettings {
           }))
         : defaultSiteSettings.events,
     bankAccounts: Array.isArray(parsed.bankAccounts)
-      ? parsed.bankAccounts
+      ? parsed.bankAccounts.map((item) => ({
+          bank: String(item.bank ?? "").trim(),
+          holder: String(item.holder ?? "").trim(),
+          number: String(item.number ?? "").trim(),
+          logo: typeof item.logo === "string" ? item.logo : "",
+        }))
       : defaultSiteSettings.bankAccounts,
     faq: Array.isArray(parsed.faq) ? parsed.faq : defaultSiteSettings.faq,
     dressCode: {

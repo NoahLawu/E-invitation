@@ -46,7 +46,17 @@ function BankCard({ account }: { account: BankAccount }) {
       </p>
       <p className="mt-0.5 text-sm text-foreground">{account.holder}</p>
       <div className="mt-2 flex items-center justify-between gap-3">
-        <p className="font-mono text-sm tracking-wide">{account.number}</p>
+        <div className="flex min-w-0 items-center gap-2">
+          {account.logo ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={account.logo}
+              alt=""
+              className="h-8 w-8 shrink-0 object-contain"
+            />
+          ) : null}
+          <p className="font-mono text-sm tracking-wide">{account.number}</p>
+        </div>
         <button
           type="button"
           onClick={copyNumber}

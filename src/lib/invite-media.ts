@@ -22,6 +22,7 @@ export const INVITE_VISUAL_SLOTS = [
   "backdropImage",
   "backgroundVideo",
   "dressCodeImage",
+  "bankLogo",
 ] as const;
 
 export type InviteVisualSlot = (typeof INVITE_VISUAL_SLOTS)[number];
@@ -136,6 +137,9 @@ export function inviteVisualObjectPath(
   if (slot === "party") {
     return `party/${extra?.index ?? 0}.${ext}`;
   }
+  if (slot === "bankLogo") {
+    return `banks/${extra?.index ?? 0}.${ext}`;
+  }
   return `gallery/${extra?.id ?? crypto.randomUUID()}.${ext}`;
 }
 
@@ -162,6 +166,11 @@ export function inviteVisualSiblingPaths(
   if (slot === "dressCodeImage") {
     return IMAGE_EXTS.map(
       (ext) => `dress/image.${ext === "jpeg" ? "jpg" : ext}`,
+    );
+  }
+  if (slot === "bankLogo") {
+    return IMAGE_EXTS.map(
+      (ext) => `banks/${extra?.index ?? 0}.${ext === "jpeg" ? "jpg" : ext}`,
     );
   }
   const prefix =
