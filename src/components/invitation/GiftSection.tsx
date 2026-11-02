@@ -150,11 +150,13 @@ function BankCard({ account }: { account: BankAccount }) {
         {account.bank}
       </p>
       <p className="mt-0.5 text-sm text-foreground">{account.holder}</p>
-      <div className="mt-2 flex items-center justify-between gap-3">
-        <div className="flex min-w-0 items-center gap-2">
-          {account.logo ? <BankLogo src={account.logo} /> : null}
-          <p className="font-mono text-sm tracking-wide">{account.number}</p>
+      {account.logo ? (
+        <div className="mt-2">
+          <BankLogo src={account.logo} />
         </div>
+      ) : null}
+      <div className="mt-2 flex items-center justify-between gap-3">
+        <p className="min-w-0 font-mono text-sm tracking-wide">{account.number}</p>
         <button
           type="button"
           onClick={copyNumber}
