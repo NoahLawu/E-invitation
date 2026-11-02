@@ -14,8 +14,8 @@ export function DressCodeSection({
       <p className="text-xs tracking-[0.3em] text-white uppercase">
         Dress code
       </p>
-      <h2 className="font-display mt-3 text-3xl">{dressCode.label}</h2>
-      <p className="mt-2 text-sm text-muted">{dressCode.note}</p>
+      <h2 className="font-display mt-3 text-3xl text-white">{dressCode.label}</h2>
+      <p className="mt-2 text-sm text-white">{dressCode.note}</p>
       <div className="mt-8 flex justify-center gap-4">
         {dressCode.colors.map((color) => (
           <div
@@ -27,7 +27,7 @@ export function DressCodeSection({
               style={{ backgroundColor: color.hex }}
               aria-hidden
             />
-            <span className="text-[10px] tracking-wide text-muted uppercase">
+            <span className="text-[10px] tracking-wide text-white uppercase">
               {color.name}
             </span>
           </div>
