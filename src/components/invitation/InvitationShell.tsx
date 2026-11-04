@@ -171,7 +171,13 @@ export function InvitationShell({
       case "gallery":
         return <GallerySection photos={visuals.gallery} />;
       case "gifts":
-        return <GiftSection accounts={settings.bankAccounts} />;
+        return (
+          <GiftSection
+            accounts={settings.bankAccounts}
+            title={settings.giftCopy.title}
+            note={settings.giftCopy.note}
+          />
+        );
       case "faq":
         return <FaqSection faq={settings.faq} />;
       case "comments":

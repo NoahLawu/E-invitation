@@ -558,6 +558,14 @@ export async function saveInvitationSettings(formData: FormData) {
           body: String(item.body ?? "").trim(),
         })),
       };
+    } else if (section === "giftCopy") {
+      next = {
+        ...next,
+        giftCopy: {
+          title: String(formData.get("giftTitle") ?? "").trim(),
+          note: String(formData.get("giftNote") ?? "").trim(),
+        },
+      };
     } else if (section === "banks") {
       const payload = asRecordList(parseJsonPayload(formData.get("payload")));
       next = {

@@ -635,6 +635,28 @@ function BanksForm({ settings }: { settings: SiteSettings }) {
 
   return (
     <Group id="banks" title="Gifts">
+      <ItemHeading>Gift text</ItemHeading>
+      <form action={saveInvitationSettings} className="mb-8 space-y-3">
+        <input type="hidden" name="section" value="giftCopy" />
+        <label className="block text-sm">
+          Title
+          <input
+            name="giftTitle"
+            defaultValue={settings.giftCopy.title}
+            className={fieldClass}
+          />
+        </label>
+        <label className="block text-sm">
+          Description
+          <textarea
+            name="giftNote"
+            rows={3}
+            defaultValue={settings.giftCopy.note}
+            className={fieldClass}
+          />
+        </label>
+        <SaveButton />
+      </form>
       <ItemHeading>Bank accounts</ItemHeading>
       <form action={saveInvitationSettings} className="space-y-3">
         <input type="hidden" name="section" value="banks" />

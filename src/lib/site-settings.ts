@@ -142,6 +142,7 @@ export type SiteSettings = {
   };
   events: InviteEventDetails[];
   bankAccounts: BankAccount[];
+  giftCopy: { title: string; note: string };
   faq: FaqItem[];
   dressCode: {
     label: string;
@@ -242,6 +243,10 @@ export const defaultSiteSettings: SiteSettings = {
       "Jalan Raya Cikole No.KM 22, Cikole, Kec. Lembang, Kabupaten Bandung Barat, Jawa Barat 40391",
   })),
   bankAccounts: bankAccounts.map((account) => ({ ...account, logo: "" })),
+  giftCopy: {
+    title: "Angpao",
+    note: "Send a gift online to one of these accounts.",
+  },
   faq: faq.map((item) => ({ ...item })),
   dressCode: {
     label: dressCode.label,
@@ -376,6 +381,16 @@ export function mergeSiteSettings(raw: unknown): SiteSettings {
           logo: typeof item.logo === "string" ? item.logo : "",
         }))
       : defaultSiteSettings.bankAccounts,
+    giftCopy: {
+      title:
+        typeof parsed.giftCopy?.title === "string"
+          ? parsed.giftCopy.title
+          : defaultSiteSettings.giftCopy.title,
+      note:
+        typeof parsed.giftCopy?.note === "string"
+          ? parsed.giftCopy.note
+          : defaultSiteSettings.giftCopy.note,
+    },
     faq: Array.isArray(parsed.faq) ? parsed.faq : defaultSiteSettings.faq,
     dressCode: {
       ...defaultSiteSettings.dressCode,

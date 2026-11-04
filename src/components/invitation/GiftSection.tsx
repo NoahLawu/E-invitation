@@ -22,16 +22,28 @@ function orderedAccounts(accounts: BankAccount[]) {
     .map((item) => item.account);
 }
 
-export function GiftSection({ accounts }: { accounts: BankAccount[] }) {
+export function GiftSection({
+  accounts,
+  title,
+  note,
+}: {
+  accounts: BankAccount[];
+  title: string;
+  note: string;
+}) {
   return (
     <InvitationSection section="gifts" mediaAlt="">
       <p className="text-xs tracking-[0.3em] text-white uppercase">
         Wedding gift
       </p>
-      <h2 className="font-display mt-3 text-3xl text-white">Angpao</h2>
-      <p className="mt-2 max-w-xs text-sm text-white">
-        Send a gift online to one of these accounts.
-      </p>
+      {title.trim() ? (
+        <h2 className="font-display mt-3 text-3xl text-white">{title}</h2>
+      ) : null}
+      {note.trim() ? (
+        <p className="mt-2 max-w-xs text-sm whitespace-pre-line text-white">
+          {note}
+        </p>
+      ) : null}
       <div className="mt-4 w-full space-y-2">
         {orderedAccounts(accounts).map((account) => (
           <BankCard
