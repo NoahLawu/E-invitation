@@ -124,6 +124,7 @@ export type InviteMedia = {
   groom: string;
   gallery: string[];
   party: string[];
+  story: string[];
   backdrops: Partial<Record<InviteSectionId, InviteBackdropUpload>>;
 };
 
@@ -309,6 +310,7 @@ export const defaultSiteSettings: SiteSettings = {
     groom: "",
     gallery: [],
     party: [],
+    story: [],
     backdrops: {},
   },
   published: true,
@@ -460,6 +462,9 @@ function mergeInviteMedia(raw: InviteMedia | undefined): InviteMedia {
       : [],
     party: Array.isArray(parsed.party)
       ? parsed.party.map((value) => (typeof value === "string" ? value : ""))
+      : [],
+    story: Array.isArray(parsed.story)
+      ? parsed.story.map((value) => (typeof value === "string" ? value : ""))
       : [],
     backdrops: mergeBackdrops(parsed.backdrops),
   };

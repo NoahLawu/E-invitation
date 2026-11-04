@@ -21,6 +21,7 @@ export type InviteVisuals = {
   groom: string;
   gallery: string[];
   party: string[];
+  story: string[];
   backdrops: Record<InviteSectionId, InviteBackdrop>;
   backdropTint: number;
 };
@@ -140,6 +141,9 @@ export function inviteVisuals(settings: SiteSettings): InviteVisuals {
     party: settings.copy.weddingParty.map(
       (_, index) =>
         media.party[index] || invitationMedia.party.portraits[index] || "",
+    ),
+    story: settings.copy.loveStory.map(
+      (_, index) => media.story[index] || "",
     ),
     backdrops,
     backdropTint: settings.backdropTint,

@@ -19,6 +19,7 @@ export const INVITE_VISUAL_SLOTS = [
   "groom",
   "gallery",
   "party",
+  "story",
   "backdropImage",
   "backgroundVideo",
   "dressCodeImage",
@@ -137,6 +138,9 @@ export function inviteVisualObjectPath(
   if (slot === "party") {
     return `party/${extra?.index ?? 0}.${ext}`;
   }
+  if (slot === "story") {
+    return `story/${extra?.index ?? 0}.${ext}`;
+  }
   if (slot === "bankLogo") {
     return `banks/${extra?.index ?? 0}.${ext}`;
   }
@@ -171,6 +175,11 @@ export function inviteVisualSiblingPaths(
   if (slot === "bankLogo") {
     return IMAGE_EXTS.map(
       (ext) => `banks/${extra?.index ?? 0}.${ext === "jpeg" ? "jpg" : ext}`,
+    );
+  }
+  if (slot === "story") {
+    return IMAGE_EXTS.map(
+      (ext) => `story/${extra?.index ?? 0}.${ext === "jpeg" ? "jpg" : ext}`,
     );
   }
   const prefix =

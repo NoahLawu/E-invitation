@@ -791,6 +791,9 @@ export async function prepareInviteVisualUpload(formData: FormData) {
   if (slot === "party" && (index < 0 || index >= current.copy.weddingParty.length)) {
     return { ok: false as const, error: "media-type" as const };
   }
+  if (slot === "story" && (index < 0 || index >= current.copy.loveStory.length)) {
+    return { ok: false as const, error: "media-type" as const };
+  }
   if (
     slot === "bankLogo" &&
     (index < 0 || index >= current.bankAccounts.length)
@@ -812,7 +815,10 @@ export async function prepareInviteVisualUpload(formData: FormData) {
   }
 
   const path = inviteVisualObjectPath(slot, ext, {
-    index: slot === "party" || slot === "bankLogo" ? index : undefined,
+    index:
+      slot === "party" || slot === "bankLogo" || slot === "story"
+        ? index
+        : undefined,
     id: slot === "gallery" ? crypto.randomUUID() : undefined,
     section: slot === "backdropImage" ? sectionId : undefined,
   });
@@ -852,7 +858,7 @@ export async function commitInviteVisual(formData: FormData) {
   const slot = slotValue;
   const sectionId = String(formData.get("sectionId") ?? "");
   if (
-    !/^(cover|closing|people|party|gallery|sections|dress|banks)\//.test(path)
+    !/^(cover|closing|people|party|story|gallery|sections|dress|banks)\//.test(path)
   ) {
     redirect("/admin/invitation?error=media-type");
   }
@@ -874,6 +880,14 @@ export async function commitInviteVisual(formData: FormData) {
   const current = await getSiteSettings();
 
   if (slot === "party" && (index < 0 || index >= current.copy.weddingParty.length)) {
+    redirect("/admin/invitation?error=media-type");
+  }
+  if (
+    slot === "story" &&
+    (index < 0 ||
+      index >= current.copy.loveStory.length ||
+      !path.startsWith(`story/${index}.`))
+  ) {
     redirect("/admin/invitation?error=media-type");
   }
   if (
@@ -975,6 +989,13 @@ function applyVisualUrl(
     }
     party[index] = url;
     media.party = party;
+  } else if (slot === "story") {
+    const story = [...media.story];
+    while (story.length <= index) {
+      story.push("");
+    }
+    story[index] = url;
+    media.story = story;
   } else if (slot === "backgroundVideo") {
     media.backgroundVideo = url;
   } else if (slot === "dressCodeImage") {
@@ -1036,6 +1057,15 @@ function clearVisualUrl(
       }
       party[index] = "";
       media.party = party;
+    }
+  } else if (slot === "story") {
+    const story = [...media.story];
+    if (index >= 0) {
+      if (story[index]) {
+        removed.push(story[index]);
+      }
+      story[index] = "";
+      media.story = story;
     }
   } else if (slot === "backgroundVideo") {
     if (media.backgroundVideo) {

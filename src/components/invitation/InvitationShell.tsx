@@ -127,7 +127,12 @@ export function InvitationShell({
           />
         );
       case "loveStory":
-        return <LoveStorySection beats={copy.loveStory} />;
+        return (
+          <LoveStorySection
+            beats={copy.loveStory}
+            photos={visuals.story}
+          />
+        );
       case "weddingParty":
         return (
           <WeddingPartySection
