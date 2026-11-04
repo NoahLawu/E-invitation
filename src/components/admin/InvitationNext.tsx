@@ -19,6 +19,7 @@ import {
 } from "@/components/admin/InvitationChrome";
 import { SubmitButton } from "@/components/ui/SubmitButton";
 import { INVITE_MUSIC_ACCEPT } from "@/lib/invite-media";
+import { applyMusicVolume } from "@/lib/music-level";
 import {
   inviteSectionLabel,
   orderedInviteSections,
@@ -55,7 +56,7 @@ function OpeningForm({ settings }: { settings: SiteSettings }) {
     if (!audio) {
       return;
     }
-    audio.volume = volume / 100;
+    applyMusicVolume(audio, volume);
   }, [volume, settings.musicUrl]);
 
   return (
@@ -95,6 +96,7 @@ function OpeningForm({ settings }: { settings: SiteSettings }) {
               ref={previewRef}
               controls
               preload="metadata"
+              crossOrigin="anonymous"
               src={settings.musicUrl}
               className="w-full"
             />

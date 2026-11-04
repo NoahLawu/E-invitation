@@ -7,6 +7,7 @@ import {
   useState,
   type Ref,
 } from "react";
+import { applyMusicVolume } from "@/lib/music-level";
 
 export type MusicToggleHandle = {
   start: () => void;
@@ -25,18 +26,14 @@ export function MusicToggle({
 }) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [enabled, setEnabled] = useState(false);
-  const level = Math.min(100, Math.max(1, volume)) / 100;
-
-  function applyVolume(audio: HTMLAudioElement) {
-    audio.volume = level;
-  }
+  const percent = Math.min(100, Math.max(1, volume));
 
   function start() {
     const audio = audioRef.current;
     if (!audio) {
       return;
     }
-    applyVolume(audio);
+    applyMusicVolume(audio, percent);
     const playing = audio.play();
     setEnabled(true);
     void playing.catch(() => setEnabled(false));
@@ -49,13 +46,13 @@ export function MusicToggle({
     if (!audio) {
       return;
     }
-    applyVolume(audio);
+    applyMusicVolume(audio, percent);
     if (enabled) {
       void audio.play().catch(() => setEnabled(false));
       return;
     }
     audio.pause();
-  }, [enabled, level]);
+  }, [enabled, percent]);
 
   if (!src) {
     return null;
@@ -63,7 +60,13 @@ export function MusicToggle({
 
   return (
     <>
-      <audio ref={audioRef} src={src} loop preload="auto" />
+      <audio
+        ref={audioRef}
+        src={src}
+        loop
+        preload="auto"
+        crossOrigin="anonymous"
+      />
       {visible ? (
         <button
           type="button"

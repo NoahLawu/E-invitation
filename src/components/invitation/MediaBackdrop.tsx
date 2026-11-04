@@ -88,7 +88,7 @@ export function MediaBackdrop({
         />
       ) : null}
       {veil === "bottom" ? (
-        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background/70 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-background via-background/80 to-transparent backdrop-blur-sm" />
       ) : (
         <BackdropTint />
       )}

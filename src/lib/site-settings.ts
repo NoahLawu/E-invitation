@@ -330,7 +330,7 @@ export function eventsForInvite(
 
 export function clampBackdropTint(value: unknown) {
   const tint = typeof value === "number" ? value : Number(value);
-  if (!Number.isFinite(tint)) {
+  if (!Number.isFinite(tint) || tint <= 0) {
     return defaultSiteSettings.backdropTint;
   }
   return Math.min(1, Math.max(0, tint));
