@@ -13,6 +13,7 @@ import {
   INVITE_SECTIONS,
   mergeSectionOrder,
   clampBackdropTint,
+  clampMusicVolume,
   combineDateTime,
   dropMatchingPresetColors,
   isInviteSectionId,
@@ -652,6 +653,11 @@ export async function saveInvitationSettings(formData: FormData) {
       next = {
         ...next,
         media: { ...next.media, gallery: ordered },
+      };
+    } else if (section === "musicVolume") {
+      next = {
+        ...next,
+        musicVolume: clampMusicVolume(formData.get("musicVolume")),
       };
     } else if (section === "goLive") {
       next = {

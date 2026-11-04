@@ -14,21 +14,29 @@ export type MusicToggleHandle = {
 
 export function MusicToggle({
   src,
+  volume = 100,
   visible = true,
   ref,
 }: {
   src: string;
+  volume?: number;
   visible?: boolean;
   ref?: Ref<MusicToggleHandle>;
 }) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [enabled, setEnabled] = useState(false);
+  const level = Math.min(100, Math.max(1, volume)) / 100;
+
+  function applyVolume(audio: HTMLAudioElement) {
+    audio.volume = level;
+  }
 
   function start() {
     const audio = audioRef.current;
     if (!audio) {
       return;
     }
+    applyVolume(audio);
     const playing = audio.play();
     setEnabled(true);
     void playing.catch(() => setEnabled(false));
@@ -41,12 +49,13 @@ export function MusicToggle({
     if (!audio) {
       return;
     }
+    applyVolume(audio);
     if (enabled) {
       void audio.play().catch(() => setEnabled(false));
       return;
     }
     audio.pause();
-  }, [enabled]);
+  }, [enabled, level]);
 
   if (!src) {
     return null;

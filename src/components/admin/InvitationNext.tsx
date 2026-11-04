@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   clearInviteMusic,
   resetCheckIns,
@@ -47,6 +47,17 @@ export function InviteCopyGroup({ settings }: { settings: SiteSettings }) {
 }
 
 function OpeningForm({ settings }: { settings: SiteSettings }) {
+  const previewRef = useRef<HTMLAudioElement>(null);
+  const [volume, setVolume] = useState(settings.musicVolume);
+
+  useEffect(() => {
+    const audio = previewRef.current;
+    if (!audio) {
+      return;
+    }
+    audio.volume = volume / 100;
+  }, [volume, settings.musicUrl]);
+
   return (
     <div>
       <ItemHeading>Cover greeting</ItemHeading>
@@ -81,6 +92,7 @@ function OpeningForm({ settings }: { settings: SiteSettings }) {
               invite.
             </p>
             <audio
+              ref={previewRef}
               controls
               preload="metadata"
               src={settings.musicUrl}
@@ -100,6 +112,40 @@ function OpeningForm({ settings }: { settings: SiteSettings }) {
             No song yet. The ♪ button stays hidden until you upload one.
           </p>
         )}
+        <form action={saveInvitationSettings} className="mb-6 space-y-3">
+          <input type="hidden" name="section" value="musicVolume" />
+          <label className="block text-sm">
+            Default volume
+            <span className="mt-2 flex items-center gap-3">
+              <input
+                type="range"
+                min={1}
+                max={100}
+                value={volume}
+                onChange={(event) => setVolume(Number(event.target.value))}
+                className="w-full"
+                aria-label="Default volume"
+              />
+              <input
+                name="musicVolume"
+                type="number"
+                min={1}
+                max={100}
+                value={volume}
+                onChange={(event) =>
+                  setVolume(Number(event.target.value) || 1)
+                }
+                className="w-20 rounded-md border border-zinc-300 px-2 py-1.5 text-sm"
+              />
+              <span className="text-sm text-zinc-600">%</span>
+            </span>
+          </label>
+          <p className="text-xs text-zinc-500">
+            100% is the original loudness of the file. 50% plays at half that
+            volume each time a guest opens the invite.
+          </p>
+          <SaveButton />
+        </form>
         <form action={uploadInviteMusic} className="space-y-3">
           <label className="block text-sm">
             Upload MP3 or M4A

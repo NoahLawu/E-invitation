@@ -156,6 +156,7 @@ export type SiteSettings = {
   sections: Record<InviteSectionId, boolean>;
   sectionOrder: InviteSectionId[];
   musicUrl: string;
+  musicVolume: number;
   media: InviteMedia;
   published: boolean;
   rsvpOpensAt: string;
@@ -292,6 +293,7 @@ export const defaultSiteSettings: SiteSettings = {
   ) as Record<InviteSectionId, boolean>,
   sectionOrder: INVITE_SECTIONS.map((section) => section.id),
   musicUrl: "",
+  musicVolume: 100,
   media: {
     coverImage: "",
     coverVideo: "",
@@ -332,6 +334,15 @@ export function clampBackdropTint(value: unknown) {
     return defaultSiteSettings.backdropTint;
   }
   return Math.min(1, Math.max(0, tint));
+}
+
+/** 100 is the file’s original loudness. */
+export function clampMusicVolume(value: unknown) {
+  const volume = typeof value === "number" ? value : Number(value);
+  if (!Number.isFinite(volume)) {
+    return defaultSiteSettings.musicVolume;
+  }
+  return Math.min(100, Math.max(1, Math.round(volume)));
 }
 
 export function mergeSiteSettings(raw: unknown): SiteSettings {
@@ -388,6 +399,7 @@ export function mergeSiteSettings(raw: unknown): SiteSettings {
       typeof parsed.musicUrl === "string"
         ? parsed.musicUrl
         : defaultSiteSettings.musicUrl,
+    musicVolume: clampMusicVolume(parsed.musicVolume),
     media: mergeInviteMedia(parsed.media),
     published:
       typeof parsed.published === "boolean"

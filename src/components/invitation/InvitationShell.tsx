@@ -237,6 +237,7 @@ export function InvitationShell({
             <MusicToggle
               ref={musicRef}
               src={settings.musicUrl}
+              volume={settings.musicVolume}
               visible={opened}
             />
           ) : null}
