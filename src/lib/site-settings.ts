@@ -136,6 +136,8 @@ export type SiteSettings = {
     groomFullName: string;
     brideParents: string;
     groomParents: string;
+    brideInstagram: string;
+    groomInstagram: string;
     weddingAt: string;
   };
   events: InviteEventDetails[];
@@ -227,6 +229,8 @@ export const defaultSiteSettings: SiteSettings = {
     groomFullName: personDetails.groom.fullName,
     brideParents: personDetails.bride.parents,
     groomParents: personDetails.groom.parents,
+    brideInstagram: "https://www.instagram.com/intanshfra/",
+    groomInstagram: "https://www.instagram.com/nlawu/",
     weddingAt: "",
   },
   events: events.map((event) => ({

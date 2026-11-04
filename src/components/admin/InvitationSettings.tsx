@@ -251,6 +251,24 @@ function CoupleForm({ settings }: { settings: SiteSettings }) {
               className={fieldClass}
             />
           </label>
+          <label className="block text-sm">
+            Bride Instagram
+            <input
+              name="brideInstagram"
+              defaultValue={couple.brideInstagram}
+              placeholder="https://www.instagram.com/intanshfra/"
+              className={fieldClass}
+            />
+          </label>
+          <label className="block text-sm">
+            Groom Instagram
+            <input
+              name="groomInstagram"
+              defaultValue={couple.groomInstagram}
+              placeholder="https://www.instagram.com/nlawu/"
+              className={fieldClass}
+            />
+          </label>
         </div>
         <div className="grid gap-3 sm:grid-cols-2">
           <label className="block text-sm">

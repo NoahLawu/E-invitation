@@ -110,6 +110,7 @@ export function InvitationShell({
               name: couple.brideName,
               fullName: couple.brideFullName,
               parents: couple.brideParents,
+              instagram: couple.brideInstagram,
             }}
           />
         );
@@ -121,6 +122,7 @@ export function InvitationShell({
               name: couple.groomName,
               fullName: couple.groomFullName,
               parents: couple.groomParents,
+              instagram: couple.groomInstagram,
             }}
           />
         );

@@ -494,6 +494,8 @@ export async function saveInvitationSettings(formData: FormData) {
           groomFullName: String(formData.get("groomFullName") ?? "").trim(),
           brideParents: String(formData.get("brideParents") ?? "").trim(),
           groomParents: String(formData.get("groomParents") ?? "").trim(),
+          brideInstagram: String(formData.get("brideInstagram") ?? "").trim(),
+          groomInstagram: String(formData.get("groomInstagram") ?? "").trim(),
           weddingAt: combineDateTime(
             String(formData.get("weddingDate") ?? "").trim(),
             String(formData.get("weddingTime") ?? "").trim(),
