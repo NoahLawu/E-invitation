@@ -5,19 +5,37 @@ import { InvitationSection } from "@/components/invitation/InvitationSection";
 import type { BankAccount } from "@/lib/site-settings";
 
 const LOGO_HEIGHT = 36;
+const BANK_ORDER = ["BCA", "BNI"];
+
+function orderedAccounts(accounts: BankAccount[]) {
+  const rank = (bank: string) => {
+    const index = BANK_ORDER.indexOf(bank.trim().toUpperCase());
+    return index === -1 ? BANK_ORDER.length : index;
+  };
+
+  return accounts
+    .map((account, index) => ({ account, index }))
+    .sort((left, right) => {
+      const byBank = rank(left.account.bank) - rank(right.account.bank);
+      return byBank === 0 ? left.index - right.index : byBank;
+    })
+    .map((item) => item.account);
+}
 
 export function GiftSection({ accounts }: { accounts: BankAccount[] }) {
   return (
     <InvitationSection section="gifts" mediaAlt="">
-      <p className="text-xs tracking-[0.3em] text-white uppercase">
+      <p className="text-xs tracking-[0.3em] text-[#1c1612] uppercase [text-shadow:0_0_12px_rgba(247,241,232,0.95)]">
         Wedding gift
       </p>
-      <h2 className="font-display mt-3 text-3xl">Angpao</h2>
-      <p className="mt-2 max-w-xs text-sm text-muted">
+      <h2 className="font-display mt-3 text-3xl font-semibold text-[#1c1612] [text-shadow:0_0_14px_rgba(247,241,232,0.95),0_1px_1px_#f7f1e8]">
+        Angpao
+      </h2>
+      <p className="mt-2 max-w-xs text-sm font-medium text-[#1c1612] [text-shadow:0_0_12px_rgba(247,241,232,0.95)]">
         Send a gift online to one of these accounts.
       </p>
       <div className="mt-4 w-full space-y-2">
-        {accounts.map((account) => (
+        {orderedAccounts(accounts).map((account) => (
           <BankCard
             key={`${account.bank}-${account.number}`}
             account={account}
