@@ -25,13 +25,11 @@ function orderedAccounts(accounts: BankAccount[]) {
 export function GiftSection({ accounts }: { accounts: BankAccount[] }) {
   return (
     <InvitationSection section="gifts" mediaAlt="">
-      <p className="text-xs tracking-[0.3em] text-[#1c1612] uppercase [text-shadow:0_0_12px_rgba(247,241,232,0.95)]">
+      <p className="text-xs tracking-[0.3em] text-white uppercase">
         Wedding gift
       </p>
-      <h2 className="font-display mt-3 text-3xl font-semibold text-[#1c1612] [text-shadow:0_0_14px_rgba(247,241,232,0.95),0_1px_1px_#f7f1e8]">
-        Angpao
-      </h2>
-      <p className="mt-2 max-w-xs text-sm font-medium text-[#1c1612] [text-shadow:0_0_12px_rgba(247,241,232,0.95)]">
+      <h2 className="font-display mt-3 text-3xl text-white">Angpao</h2>
+      <p className="mt-2 max-w-xs text-sm text-white">
         Send a gift online to one of these accounts.
       </p>
       <div className="mt-4 w-full space-y-2">
