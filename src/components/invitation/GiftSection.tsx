@@ -7,6 +7,13 @@ import type { BankAccount } from "@/lib/site-settings";
 const LOGO_HEIGHT = 36;
 const BANK_ORDER = ["BCA", "BNI"];
 
+function giftTitle(title: string) {
+  if (title.includes("\n")) {
+    return title;
+  }
+  return title.replace(/\s+(Means\s+Everything)\s*$/i, "\n$1");
+}
+
 function orderedAccounts(accounts: BankAccount[]) {
   const rank = (bank: string) => {
     const index = BANK_ORDER.indexOf(bank.trim().toUpperCase());
@@ -37,7 +44,9 @@ export function GiftSection({
         Wedding gift
       </p>
       {title.trim() ? (
-        <h2 className="font-display mt-3 text-3xl text-white">{title}</h2>
+        <h2 className="font-display mt-3 max-w-xs text-3xl whitespace-pre-line text-white">
+          {giftTitle(title)}
+        </h2>
       ) : null}
       {note.trim() ? (
         <p className="mt-2 max-w-xs text-sm whitespace-pre-line text-white">

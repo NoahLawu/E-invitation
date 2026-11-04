@@ -640,11 +640,15 @@ function BanksForm({ settings }: { settings: SiteSettings }) {
         <input type="hidden" name="section" value="giftCopy" />
         <label className="block text-sm">
           Title
-          <input
+          <textarea
             name="giftTitle"
+            rows={2}
             defaultValue={settings.giftCopy.title}
             className={fieldClass}
           />
+          <span className="mt-1 block text-xs text-zinc-500">
+            Press Enter to start a new line.
+          </span>
         </label>
         <label className="block text-sm">
           Description
