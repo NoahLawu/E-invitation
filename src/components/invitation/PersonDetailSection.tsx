@@ -56,9 +56,7 @@ function InstagramLink({ url }: { url: string }) {
         <circle cx="12" cy="12" r="3.6" />
         <circle cx="17.2" cy="6.8" r="0.8" className="fill-current stroke-none" />
       </svg>
-      <span className="border-b-[3px] border-[#e23b3b] pb-0.5 text-sm leading-none">
-        {handle}
-      </span>
+      <span className="text-sm leading-none">{handle}</span>
     </a>
   );
 }
