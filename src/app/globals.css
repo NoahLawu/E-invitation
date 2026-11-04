@@ -59,6 +59,7 @@
   --color-line: var(--line);
   --font-sans: var(--font-outfit);
   --font-display: var(--font-cormorant);
+  --font-arabic: var(--font-naskh);
 }
 
 html,

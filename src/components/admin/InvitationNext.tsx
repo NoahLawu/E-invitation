@@ -236,18 +236,38 @@ function CopyForm({ settings }: { settings: SiteSettings }) {
             className={fieldClass + " mt-0"}
             placeholder="Label"
           />
-          <textarea
-            rows={3}
-            value={copy.verse.text}
-            onChange={(event) =>
-              setCopy((current) => ({
-                ...current,
-                verse: { ...current.verse, text: event.target.value },
-              }))
-            }
-            className={fieldClass}
-            placeholder="Verse"
-          />
+          <label className="block text-sm">
+            Arabic
+            <textarea
+              rows={4}
+              dir="rtl"
+              lang="ar"
+              value={copy.verse.arabic}
+              onChange={(event) =>
+                setCopy((current) => ({
+                  ...current,
+                  verse: { ...current.verse, arabic: event.target.value },
+                }))
+              }
+              className={fieldClass + " text-right"}
+              placeholder="Arabic verse"
+            />
+          </label>
+          <label className="block text-sm">
+            English
+            <textarea
+              rows={4}
+              value={copy.verse.text}
+              onChange={(event) =>
+                setCopy((current) => ({
+                  ...current,
+                  verse: { ...current.verse, text: event.target.value },
+                }))
+              }
+              className={fieldClass}
+              placeholder="English verse"
+            />
+          </label>
           <input
             value={copy.verse.source}
             onChange={(event) =>

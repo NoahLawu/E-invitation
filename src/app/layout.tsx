@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Outfit } from "next/font/google";
+import { Cormorant_Garamond, Noto_Naskh_Arabic, Outfit } from "next/font/google";
 import { AppFeedback } from "@/components/ui/AppFeedback";
 import "./globals.css";
 
@@ -12,6 +12,12 @@ const display = Cormorant_Garamond({
 const sans = Outfit({
   subsets: ["latin"],
   variable: "--font-outfit",
+});
+
+const arabic = Noto_Naskh_Arabic({
+  subsets: ["arabic"],
+  weight: ["400", "500", "600"],
+  variable: "--font-naskh",
 });
 
 export const metadata: Metadata = {
@@ -33,7 +39,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${display.variable} ${sans.variable} h-full antialiased`}
+      className={`${display.variable} ${sans.variable} ${arabic.variable} h-full antialiased`}
     >
       <body className="min-h-full">
         <AppFeedback>{children}</AppFeedback>

@@ -94,7 +94,7 @@ export type InviteSectionId = (typeof INVITE_SECTIONS)[number]["id"];
 
 export type InviteCopy = {
   coverGreeting: string;
-  verse: { label: string; text: string; source: string };
+  verse: { label: string; arabic: string; text: string; source: string };
   families: {
     label: string;
     heading: string;
@@ -454,12 +454,48 @@ function mergeBackdrops(
   return next;
 }
 
+const ARABIC_LETTER =
+  /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/;
+
+function splitVerseText(text: string) {
+  const arabic: string[] = [];
+  const english: string[] = [];
+  for (const token of text.split(/\s+/)) {
+    if (!token) {
+      continue;
+    }
+    if (ARABIC_LETTER.test(token)) {
+      arabic.push(token);
+    } else {
+      english.push(token);
+    }
+  }
+  return { arabic: arabic.join(" "), english: english.join(" ") };
+}
+
+function normalizeVerse(verse: InviteCopy["verse"]): InviteCopy["verse"] {
+  const arabic = (verse.arabic ?? "").trim();
+  const text = verse.text ?? "";
+  if (arabic || !ARABIC_LETTER.test(text)) {
+    return { ...verse, arabic, text };
+  }
+  const split = splitVerseText(text);
+  return {
+    ...verse,
+    arabic: split.arabic,
+    text: split.english || text,
+  };
+}
+
 function mergeCopy(raw: Partial<InviteCopy> | undefined): InviteCopy {
   const copy = raw ?? {};
   return {
     coverGreeting:
       copy.coverGreeting ?? defaultSiteSettings.copy.coverGreeting,
-    verse: { ...defaultSiteSettings.copy.verse, ...copy.verse },
+    verse: normalizeVerse({
+      ...defaultSiteSettings.copy.verse,
+      ...copy.verse,
+    }),
     families: {
       ...defaultSiteSettings.copy.families,
       ...copy.families,

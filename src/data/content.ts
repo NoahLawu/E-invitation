@@ -15,6 +15,7 @@ export const personDetails = {
 
 export const verse = {
   label: "A verse",
+  arabic: "",
   text: "Love is patient, love is kind.",
   source: "1 Corinthians 13:4",
 } as const;
