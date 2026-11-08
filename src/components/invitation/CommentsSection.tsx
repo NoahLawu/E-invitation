@@ -71,7 +71,7 @@ export function CommentsSection({
       <p className="text-xs tracking-[0.3em] text-white uppercase">
         Guest book
       </p>
-      <h2 className="font-display mt-3 text-3xl">Leave a wish</h2>
+      <h2 className="font-display mt-3 text-3xl text-white">Leave a wish</h2>
       <form className="mt-4 w-full space-y-2 text-left" onSubmit={handleSubmit}>
         {guestToken ? (
           <input type="hidden" name="token" value={guestToken} />
