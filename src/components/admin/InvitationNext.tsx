@@ -18,7 +18,8 @@ import {
   fieldClass,
 } from "@/components/admin/InvitationChrome";
 import { SubmitButton } from "@/components/ui/SubmitButton";
-import { INVITE_MUSIC_ACCEPT } from "@/lib/invite-media";
+import { INVITE_IMAGE_ACCEPT, INVITE_MUSIC_ACCEPT } from "@/lib/invite-media";
+import { VisualSlot } from "@/components/admin/InvitationMedia";
 import { applyMusicVolume } from "@/lib/music-level";
 import {
   inviteSectionLabel,
@@ -444,7 +445,7 @@ function CopyForm({ settings }: { settings: SiteSettings }) {
             setCopy((current) => ({ ...current, loveStory }))
           }
           blank={{ year: "", title: "", text: "" }}
-          render={(item, onItem) => (
+          render={(item, onItem, index) => (
             <>
               <input
                 value={item.year}
@@ -465,6 +466,21 @@ function CopyForm({ settings }: { settings: SiteSettings }) {
                 onChange={(event) => onItem({ ...item, text: event.target.value })}
                 className={fieldClass}
               />
+              {index < settings.copy.loveStory.length ? (
+                <VisualSlot
+                  label={`Slide ${index + 1} photo`}
+                  slot="story"
+                  index={index}
+                  accept={INVITE_IMAGE_ACCEPT}
+                  currentUrl={settings.media.story[index] ?? ""}
+                  kind="image"
+                  emptyHint="Shown on this slide, under the title."
+                />
+              ) : (
+                <p className="text-xs text-zinc-500">
+                  Save the story pages first, then upload a photo for this slide.
+                </p>
+              )}
             </>
           )}
         />
@@ -627,15 +643,24 @@ function ListEditor<T>({
   items: T[];
   blank: T;
   onChange: (items: T[]) => void;
-  render: (item: T, onItem: (item: T) => void) => ReactNode;
+  render: (
+    item: T,
+    onItem: (item: T) => void,
+    index: number,
+  ) => ReactNode;
 }) {
   return (
     <fieldset className="space-y-3">
       <legend className="text-sm font-medium">{label}</legend>
       {items.map((item, index) => (
         <div key={index} className="space-y-2 rounded-xl border border-zinc-200 p-3">
-          {render(item, (next) =>
-            onChange(items.map((row, rowIndex) => (rowIndex === index ? next : row))),
+          {render(
+            item,
+            (next) =>
+              onChange(
+                items.map((row, rowIndex) => (rowIndex === index ? next : row)),
+              ),
+            index,
           )}
           <button
             type="button"

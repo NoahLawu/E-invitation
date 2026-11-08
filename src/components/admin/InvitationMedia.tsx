@@ -34,7 +34,6 @@ import {
 export function InviteMediaGroup({ settings }: { settings: SiteSettings }) {
   const media = settings.media;
   const party = settings.copy.weddingParty;
-  const story = settings.copy.loveStory;
 
   return (
     <Group id="media" title="Photos and video">
@@ -93,34 +92,6 @@ export function InviteMediaGroup({ settings }: { settings: SiteSettings }) {
 
       <div className="mt-8 border-t border-zinc-100 pt-8">
         <GallerySlots urls={media.gallery} />
-      </div>
-
-      <div className="mt-8 border-t border-zinc-100 pt-8">
-        <ItemHeading>Love story photos</ItemHeading>
-        <p className="mb-4 text-xs text-zinc-500">
-          One photo for each story page. It sits under that page’s title.
-        </p>
-        {story.length === 0 ? (
-          <p className="text-sm text-zinc-500">
-            Add story pages under Invite copy first, then upload a photo for
-            each.
-          </p>
-        ) : (
-          <div className="grid gap-4 sm:grid-cols-2">
-            {story.map((beat, index) => (
-              <VisualSlot
-                key={`${beat.title}-${index}`}
-                label={beat.title || beat.year || `Page ${index + 1}`}
-                slot="story"
-                index={index}
-                accept={INVITE_IMAGE_ACCEPT}
-                currentUrl={media.story[index] ?? ""}
-                kind="image"
-                emptyHint="No photo yet."
-              />
-            ))}
-          </div>
-        )}
       </div>
 
       <div className="mt-8 border-t border-zinc-100 pt-8">
