@@ -43,30 +43,26 @@ export function LoveStorySection({
             return (
               <article
                 key={`${beat.year}-${beat.title}-${beatIndex}`}
-                className="flex h-full w-full shrink-0 snap-center flex-col items-center justify-center px-2"
+                className="flex h-full w-full shrink-0 snap-center flex-col items-center justify-center px-2 text-center"
               >
                 {heading ? (
-                  <h2 className="font-display max-w-xs text-center text-4xl leading-tight text-white">
+                  <h2 className="font-display max-w-xs text-4xl leading-tight text-white">
                     {heading}
                   </h2>
                 ) : null}
-                {beat.title.trim() && beat.year.trim() ? (
-                  <p className="font-display mt-2 text-2xl text-white">
-                    {beat.year}
-                  </p>
-                ) : null}
                 {photo ? (
-                  <div className="relative mt-5 aspect-square w-[68%] max-w-[16rem]">
+                  <div className="relative mt-5 aspect-square w-[68%] max-w-64">
                     <PhotoSlot
                       src={photo}
                       alt={heading || "Our story"}
                       sizes="256px"
+                      bare
                       className="h-full w-full"
                     />
                   </div>
                 ) : null}
                 {beat.text.trim() ? (
-                  <p className="mt-5 max-w-xs text-center text-sm leading-relaxed text-white">
+                  <p className="mt-5 max-w-xs text-sm leading-relaxed text-white">
                     {beat.text}
                   </p>
                 ) : null}
@@ -75,7 +71,7 @@ export function LoveStorySection({
           })}
         </div>
         {total > 0 ? (
-          <p className="mt-4 text-sm tracking-[0.35em] text-white">
+          <p className="mb-[3.5cm] font-display text-xl text-white">
             {index + 1} / {total}
           </p>
         ) : null}

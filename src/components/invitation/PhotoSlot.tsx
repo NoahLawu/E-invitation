@@ -8,6 +8,7 @@ type PhotoSlotProps = {
   alt: string;
   className?: string;
   sizes?: string;
+  bare?: boolean;
 };
 
 export function PhotoSlot({
@@ -15,21 +16,20 @@ export function PhotoSlot({
   alt,
   className = "",
   sizes = "200px",
+  bare = false,
 }: PhotoSlotProps) {
   const [ready, setReady] = useState(false);
 
+  const frame = bare ? "" : "border border-line bg-card";
+
   if (!src) {
     return (
-      <div
-        className={`relative overflow-hidden border border-line bg-card ${className}`}
-      />
+      <div className={`relative overflow-hidden ${frame} ${className}`} />
     );
   }
 
   return (
-    <div
-      className={`relative overflow-hidden border border-line bg-card ${className}`}
-    >
+    <div className={`relative overflow-hidden ${frame} ${className}`}>
       <Image
         src={src}
         alt={alt}
