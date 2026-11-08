@@ -27,7 +27,7 @@ export function LoveStorySection({
 
   return (
     <InvitationSection section="loveStory" mediaAlt="">
-      <div className="flex h-full w-full flex-col items-center">
+      <div className="flex h-full min-h-0 w-full flex-col items-center">
         <p className="mt-[3.5cm] text-xs tracking-[0.3em] text-white uppercase">
           Our story
         </p>
@@ -35,7 +35,7 @@ export function LoveStorySection({
           ref={scroller}
           onScroll={onScroll}
           data-pager-allow=""
-          className="mt-4 flex w-full flex-1 snap-x snap-mandatory overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="mt-4 flex min-h-0 w-full flex-1 snap-x snap-mandatory overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           {beats.map((beat, beatIndex) => {
             const photo = photos[beatIndex] ?? "";
@@ -43,15 +43,15 @@ export function LoveStorySection({
             return (
               <article
                 key={`${beat.year}-${beat.title}-${beatIndex}`}
-                className="flex h-full w-full shrink-0 snap-center flex-col items-center justify-center px-2 text-center"
+                className="flex h-full min-h-0 w-full shrink-0 snap-center flex-col items-center overflow-y-auto px-2 pb-3 text-center [container-type:size] [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
               >
                 {heading ? (
-                  <h2 className="font-display max-w-xs text-4xl leading-tight text-white">
+                  <h2 className="shrink-0 font-display max-w-xs text-4xl leading-tight text-white">
                     {heading}
                   </h2>
                 ) : null}
                 {photo ? (
-                  <div className="relative mt-5 aspect-square w-[68%] max-w-64">
+                  <div className="relative mt-4 aspect-square w-[min(68%,16rem,40cqh)] shrink-0">
                     <PhotoSlot
                       src={photo}
                       alt={heading || "Our story"}
@@ -62,7 +62,7 @@ export function LoveStorySection({
                   </div>
                 ) : null}
                 {beat.text.trim() ? (
-                  <p className="mt-5 max-w-xs text-sm leading-relaxed text-white">
+                  <p className="mt-4 max-w-xs shrink-0 font-display text-lg leading-snug text-white">
                     {beat.text}
                   </p>
                 ) : null}
