@@ -28,7 +28,7 @@ export function LoveStorySection({
   return (
     <InvitationSection section="loveStory" mediaAlt="">
       <div className="flex h-full w-full flex-col items-center">
-        <p className="text-xs tracking-[0.3em] text-white uppercase">
+        <p className="mt-[3.5cm] text-xs tracking-[0.3em] text-white uppercase">
           Our story
         </p>
         <div
