@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import { InvitationSection } from "@/components/invitation/InvitationSection";
 
 type Person = {
@@ -68,6 +71,34 @@ function PersonDetailSection({
   person: Person;
   section: "bride" | "groom";
 }) {
+  const copyRef = useRef<HTMLDivElement>(null);
+  const [shown, setShown] = useState(false);
+
+  useEffect(() => {
+    const node = copyRef.current;
+    const frame = node?.closest("section");
+    if (!frame) {
+      return;
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const ratio = entry?.intersectionRatio ?? 0;
+        setShown((current) => {
+          if (ratio >= 0.72) {
+            return true;
+          }
+          if (ratio <= 0.05) {
+            return false;
+          }
+          return current;
+        });
+      },
+      { threshold: [0, 0.05, 0.72, 1] },
+    );
+    observer.observe(frame);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <InvitationSection
       section={section}
@@ -75,7 +106,10 @@ function PersonDetailSection({
       contentAlign="bottom-left"
       veil="bottom"
     >
-      <div className="drop-shadow-[0_2px_12px_rgba(0,0,0,0.28)]">
+      <div
+        ref={copyRef}
+        className={`person-text-wipe drop-shadow-[0_2px_12px_rgba(0,0,0,0.28)] ${shown ? "is-shown" : ""}`}
+      >
         <p className="text-xs tracking-[0.3em] text-white/90 uppercase">
           {person.role}
         </p>

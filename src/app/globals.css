@@ -163,3 +163,28 @@ body {
   background: color-mix(in srgb, var(--accent) 25%, transparent);
 }
 
+.person-text-wipe {
+  clip-path: inset(0 0 100% 0);
+}
+
+.person-text-wipe.is-shown {
+  animation: person-text-wipe 1.2s cubic-bezier(0.33, 0.08, 0.24, 1) forwards;
+}
+
+@keyframes person-text-wipe {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .person-text-wipe,
+  .person-text-wipe.is-shown {
+    animation: none;
+    clip-path: none;
+  }
+}
+
