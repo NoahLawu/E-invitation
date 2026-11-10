@@ -108,7 +108,7 @@ function PersonDetailSection({
     >
       <div
         ref={copyRef}
-        className={`person-text-wipe drop-shadow-[0_2px_12px_rgba(0,0,0,0.28)] ${shown ? "is-shown" : ""}`}
+        className={`person-text-fade drop-shadow-[0_2px_12px_rgba(0,0,0,0.28)] ${shown ? "is-shown" : ""}`}
       >
         <p className="text-xs tracking-[0.3em] text-white/90 uppercase">
           {person.role}
