@@ -217,6 +217,7 @@ export function InvitationShell({
                 <SharedSectionVideo
                   src={visuals.backgroundVideo}
                   mediaRef={soundtrackRef}
+                  active={opened}
                 />
               ) : null
             }

@@ -32,6 +32,7 @@ export function MusicToggle({
     if (!media) {
       return;
     }
+    media.currentTime = 0;
     media.muted = false;
     applyMusicVolume(media, percent);
     const playing = media.play();
