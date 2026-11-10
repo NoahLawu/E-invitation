@@ -16,79 +16,51 @@ export function EventsSection({
   const visible = eventsForInvite(events, invitedTo);
   const copyRef = useRef<HTMLDivElement>(null);
   const shown = useSectionShown(copyRef);
-  let step = 0;
-  function fade() {
-    return lineFade(shown, step++);
-  }
-  const intro = fade();
+  const fade = lineFade(shown, 0);
 
   return (
     <InvitationSection section="events" mediaAlt="" contentAlign="top-left">
-      <div ref={copyRef} className="w-full">
-      <p
-        className={`font-display text-[1.40625rem] leading-tight text-white ${intro.className}`}
-        style={intro.style}
+      <div
+        ref={copyRef}
+        className={`w-full ${fade.className}`}
+        style={fade.style}
       >
+      <p className="font-display text-[1.40625rem] leading-tight text-white">
         Join us in celebrating
       </p>
       <div className="mt-6 w-full text-white">
-        {visible.map((event, index) => {
-          const title = fade();
-          const date = eventDateLabel(event.date) ? fade() : null;
-          const time = eventTimeLabel(event.time) ? fade() : null;
-          const place = event.place ? fade() : null;
-          const address = event.address ? fade() : null;
-          const links = event.mapsUrl || event.wazeUrl ? fade() : null;
-          return (
+        {visible.map((event, index) => (
           <article
             key={event.id}
             className={
               index > 0 ? "mt-6 border-t-2 border-white/70 pt-6" : undefined
             }
           >
-            <h2
-              className={`font-display text-[1.6875rem] leading-tight ${title.className}`}
-              style={title.style}
-            >
+            <h2 className="font-display text-[1.6875rem] leading-tight">
               {event.title}
             </h2>
-            {date ? (
-              <p
-                className={`font-display mt-3 text-[0.9375rem] leading-snug ${date.className}`}
-                style={date.style}
-              >
+            {eventDateLabel(event.date) ? (
+              <p className="font-display mt-3 text-[0.9375rem] leading-snug">
                 {eventDateLabel(event.date)}
               </p>
             ) : null}
-            {time ? (
-              <p
-                className={`font-display text-[0.9375rem] leading-snug ${time.className}`}
-                style={time.style}
-              >
+            {eventTimeLabel(event.time) ? (
+              <p className="font-display text-[0.9375rem] leading-snug">
                 {eventTimeLabel(event.time)}
               </p>
             ) : null}
-            {place ? (
-              <p
-                className={`font-display mt-4 text-[0.9375rem] leading-snug whitespace-pre-line ${place.className}`}
-                style={place.style}
-              >
+            {event.place ? (
+              <p className="font-display mt-4 text-[0.9375rem] leading-snug whitespace-pre-line">
                 {event.place}
               </p>
             ) : null}
-            {address ? (
-              <p
-                className={`mt-2 text-[0.65625rem] leading-relaxed whitespace-pre-line text-white/90 ${address.className}`}
-                style={address.style}
-              >
+            {event.address ? (
+              <p className="mt-2 text-[0.65625rem] leading-relaxed whitespace-pre-line text-white/90">
                 {event.address}
               </p>
             ) : null}
-            {links ? (
-              <div
-                className={`mt-5 flex flex-wrap gap-2 ${links.className}`}
-                style={links.style}
-              >
+            {event.mapsUrl || event.wazeUrl ? (
+              <div className="mt-5 flex flex-wrap gap-2">
                 {event.mapsUrl ? (
                   <a
                     href={event.mapsUrl}
@@ -112,8 +84,7 @@ export function EventsSection({
               </div>
             ) : null}
           </article>
-          );
-        })}
+        ))}
       </div>
       </div>
     </InvitationSection>
