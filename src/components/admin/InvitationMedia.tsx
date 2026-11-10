@@ -331,7 +331,7 @@ export function SoundtrackVolume({
   );
 }
 
-function VisualSlot({
+export function VisualSlot({
   label,
   slot,
   index,
