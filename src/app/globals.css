@@ -196,6 +196,23 @@ body {
   }
 }
 
+.page-wipe {
+  clip-path: inset(0 0 100% 0);
+}
+
+.page-wipe.is-shown {
+  animation: page-wipe 1.2s cubic-bezier(0.33, 0.08, 0.24, 1) forwards;
+}
+
+@keyframes page-wipe {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
 .line-fade {
   opacity: 0;
 }
@@ -212,9 +229,12 @@ body {
   .person-text-fade > *,
   .person-text-fade.is-shown > *,
   .line-fade,
-  .line-fade.is-shown {
+  .line-fade.is-shown,
+  .page-wipe,
+  .page-wipe.is-shown {
     animation: none;
     opacity: 1;
+    clip-path: none;
   }
 }
 

@@ -41,52 +41,34 @@ export function GiftSection({
 }) {
   const copyRef = useRef<HTMLDivElement>(null);
   const shown = useSectionShown(copyRef);
-  let step = 0;
-  function fade() {
-    return lineFade(shown, step++);
-  }
-  const label = fade();
-  const heading = title.trim() ? fade() : null;
-  const description = note.trim() ? fade() : null;
-  const cards = orderedAccounts(accounts).map((account) => ({
-    account,
-    fade: fade(),
-  }));
+  const fade = lineFade(shown, 0);
 
   return (
     <InvitationSection section="gifts" mediaAlt="">
-      <div ref={copyRef} className="flex w-full flex-col items-center">
-      <p
-        className={`text-xs tracking-[0.3em] text-white uppercase ${label.className}`}
-        style={label.style}
+      <div
+        ref={copyRef}
+        className={`flex w-full flex-col items-center ${fade.className}`}
+        style={fade.style}
       >
+      <p className="text-xs tracking-[0.3em] text-white uppercase">
         Wedding gift
       </p>
-      {heading ? (
-        <h2
-          className={`font-display mt-3 max-w-xs text-3xl whitespace-pre-line text-white ${heading.className}`}
-          style={heading.style}
-        >
+      {title.trim() ? (
+        <h2 className="font-display mt-3 max-w-xs text-3xl whitespace-pre-line text-white">
           {giftTitle(title)}
         </h2>
       ) : null}
-      {description ? (
-        <p
-          className={`mt-2 max-w-xs text-sm whitespace-pre-line text-white ${description.className}`}
-          style={description.style}
-        >
+      {note.trim() ? (
+        <p className="mt-2 max-w-xs text-sm whitespace-pre-line text-white">
           {note}
         </p>
       ) : null}
       <div className="mt-4 w-full space-y-2">
-        {cards.map(({ account, fade: cardFade }) => (
-          <div
+        {orderedAccounts(accounts).map((account) => (
+          <BankCard
             key={`${account.bank}-${account.number}`}
-            className={cardFade.className}
-            style={cardFade.style}
-          >
-            <BankCard account={account} />
-          </div>
+            account={account}
+          />
         ))}
       </div>
       </div>

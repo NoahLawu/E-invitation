@@ -1,8 +1,9 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import { submitRsvp } from "@/app/invite/actions";
 import { InvitationSection } from "@/components/invitation/InvitationSection";
+import { useSectionShown } from "@/components/invitation/line-fade";
 import { useInviteBusy } from "@/components/invitation/InviteBusy";
 import { useToast } from "@/components/ui/Toast";
 import { formatWeddingWhen, rsvpWindowState } from "@/lib/site-settings";
@@ -41,6 +42,8 @@ export function RsvpSection({
   const [pending, setPending] = useState(false);
   const toast = useToast();
   const setBusy = useInviteBusy();
+  const copyRef = useRef<HTMLDivElement>(null);
+  const shown = useSectionShown(copyRef);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -65,6 +68,10 @@ export function RsvpSection({
 
   return (
     <InvitationSection section="rsvp" mediaAlt="">
+      <div
+        ref={copyRef}
+        className={`flex w-full flex-col items-center ${shown ? "page-wipe is-shown" : "page-wipe"}`}
+      >
       <p className="text-xs tracking-[0.3em] text-white uppercase">RSVP</p>
       <h2 className="font-display mt-3 text-3xl text-white">Will you join us?</h2>
       {windowState === "soon" ? (
@@ -158,6 +165,7 @@ export function RsvpSection({
           Saved: {attending === "yes" ? "attending" : "cannot attend"}
         </p>
       ) : null}
+      </div>
     </InvitationSection>
   );
 }
