@@ -81,7 +81,6 @@ const MODULES = [
       "Cover greeting",
       "Show, hide, and order sections",
       "Verse, parents, story, rundown, party",
-      "Background music (MP3 or M4A)",
     ],
     later: ["English / Indonesian"],
   },
@@ -90,6 +89,7 @@ const MODULES = [
     title: "Photos and video",
     live: [
       "Cover photo / video",
+      "Background video and its sound",
       "Backdrop for each section",
       "Bride and groom portraits",
       "Gallery and wedding party",

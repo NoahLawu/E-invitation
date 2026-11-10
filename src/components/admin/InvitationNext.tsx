@@ -1,13 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import {
-  clearInviteMusic,
   resetCheckIns,
   resetGifts,
   resetGuestbook,
   saveInvitationSettings,
-  uploadInviteMusic,
   wipeGuests,
 } from "@/app/admin/actions";
 import { ConfirmSubmit } from "@/components/admin/AdminControls";
@@ -18,9 +16,8 @@ import {
   fieldClass,
 } from "@/components/admin/InvitationChrome";
 import { SubmitButton } from "@/components/ui/SubmitButton";
-import { INVITE_IMAGE_ACCEPT, INVITE_MUSIC_ACCEPT } from "@/lib/invite-media";
+import { INVITE_IMAGE_ACCEPT } from "@/lib/invite-media";
 import { VisualSlot } from "@/components/admin/InvitationMedia";
-import { applyMusicVolume } from "@/lib/music-level";
 import {
   inviteSectionLabel,
   orderedInviteSections,
@@ -49,17 +46,6 @@ export function InviteCopyGroup({ settings }: { settings: SiteSettings }) {
 }
 
 function OpeningForm({ settings }: { settings: SiteSettings }) {
-  const previewRef = useRef<HTMLAudioElement>(null);
-  const [volume, setVolume] = useState(settings.musicVolume);
-
-  useEffect(() => {
-    const audio = previewRef.current;
-    if (!audio) {
-      return;
-    }
-    applyMusicVolume(audio, volume);
-  }, [volume, settings.musicUrl]);
-
   return (
     <div>
       <ItemHeading>Cover greeting</ItemHeading>
@@ -80,106 +66,8 @@ function OpeningForm({ settings }: { settings: SiteSettings }) {
         </label>
         <SaveButton />
       </form>
-      <div className="mt-8 border-t border-zinc-100 pt-8">
-        <ItemHeading>Background music</ItemHeading>
-        <p className="mb-3 text-sm text-zinc-600">
-          MP3 or M4A, up to 10 MB. MP3 plays everywhere; M4A is what iPhones
-          usually export. The song starts when a guest opens the invite, then
-          loops. They can mute it with ♪.
-        </p>
-        {settings.musicUrl ? (
-          <div className="mb-4 space-y-3 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-3">
-            <p className="text-sm text-zinc-700">
-              Current song ({musicKindLabel(settings.musicUrl)}) is on the
-              invite.
-            </p>
-            <audio
-              ref={previewRef}
-              controls
-              preload="metadata"
-              crossOrigin="anonymous"
-              src={settings.musicUrl}
-              className="w-full"
-            />
-            <form action={clearInviteMusic}>
-              <ConfirmSubmit
-                label="Remove song"
-                confirmLabel="Remove background music from the invite?"
-                pendingLabel="Removing…"
-                className="rounded-md border border-zinc-300 px-3 py-2 text-sm hover:bg-white"
-              />
-            </form>
-          </div>
-        ) : (
-          <p className="mb-3 text-xs text-zinc-500">
-            No song yet. The ♪ button stays hidden until you upload one.
-          </p>
-        )}
-        <form action={saveInvitationSettings} className="mb-6 space-y-3">
-          <input type="hidden" name="section" value="musicVolume" />
-          <label className="block text-sm">
-            Default volume
-            <span className="mt-2 flex items-center gap-3">
-              <input
-                type="range"
-                min={1}
-                max={100}
-                value={volume}
-                onChange={(event) => setVolume(Number(event.target.value))}
-                className="w-full"
-                aria-label="Default volume"
-              />
-              <input
-                name="musicVolume"
-                type="number"
-                min={1}
-                max={100}
-                value={volume}
-                onChange={(event) =>
-                  setVolume(Number(event.target.value) || 1)
-                }
-                className="w-20 rounded-md border border-zinc-300 px-2 py-1.5 text-sm"
-              />
-              <span className="text-sm text-zinc-600">%</span>
-            </span>
-          </label>
-          <p className="text-xs text-zinc-500">
-            100% is the original loudness of the file. 50% plays at half that
-            volume each time a guest opens the invite.
-          </p>
-          <SaveButton />
-        </form>
-        <form action={uploadInviteMusic} className="space-y-3">
-          <label className="block text-sm">
-            Upload MP3 or M4A
-            <input
-              name="file"
-              type="file"
-              accept={INVITE_MUSIC_ACCEPT}
-              required
-              className={`${fieldClass} file:mr-3 file:rounded-md file:border-0 file:bg-zinc-900 file:px-3 file:py-1.5 file:text-sm file:text-white`}
-            />
-          </label>
-          <SubmitButton
-            pendingLabel="Uploading…"
-            className="rounded-md bg-zinc-900 px-3 py-2 text-sm text-white"
-          >
-            Upload song
-          </SubmitButton>
-        </form>
-      </div>
     </div>
   );
-}
-
-function musicKindLabel(url: string) {
-  if (/\.m4a(\?|$)/i.test(url)) {
-    return "M4A";
-  }
-  if (/\.mp3(\?|$)/i.test(url)) {
-    return "MP3";
-  }
-  return "audio";
 }
 
 function SectionsForm({ settings }: { settings: SiteSettings }) {

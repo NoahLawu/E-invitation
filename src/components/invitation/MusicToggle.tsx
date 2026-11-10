@@ -3,9 +3,9 @@
 import {
   useEffect,
   useImperativeHandle,
-  useRef,
   useState,
   type Ref,
+  type RefObject,
 } from "react";
 import { applyMusicVolume } from "@/lib/music-level";
 
@@ -14,27 +14,27 @@ export type MusicToggleHandle = {
 };
 
 export function MusicToggle({
-  src,
+  mediaRef,
   volume = 100,
   visible = true,
   ref,
 }: {
-  src: string;
+  mediaRef: RefObject<HTMLVideoElement | null>;
   volume?: number;
   visible?: boolean;
   ref?: Ref<MusicToggleHandle>;
 }) {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
   const [enabled, setEnabled] = useState(false);
   const percent = Math.min(100, Math.max(1, volume));
 
   function start() {
-    const audio = audioRef.current;
-    if (!audio) {
+    const media = mediaRef.current;
+    if (!media) {
       return;
     }
-    applyMusicVolume(audio, percent);
-    const playing = audio.play();
+    media.muted = false;
+    applyMusicVolume(media, percent);
+    const playing = media.play();
     setEnabled(true);
     void playing.catch(() => setEnabled(false));
   }
@@ -42,31 +42,25 @@ export function MusicToggle({
   useImperativeHandle(ref, () => ({ start }));
 
   useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) {
+    const media = mediaRef.current;
+    if (!media || !enabled) {
       return;
     }
-    applyMusicVolume(audio, percent);
-    if (enabled) {
-      void audio.play().catch(() => setEnabled(false));
-      return;
-    }
-    audio.pause();
-  }, [enabled, percent]);
+    media.muted = false;
+    applyMusicVolume(media, percent);
+    void media.play().catch(() => setEnabled(false));
+  }, [enabled, mediaRef, percent]);
 
-  if (!src) {
-    return null;
+  function stop() {
+    const media = mediaRef.current;
+    if (media) {
+      applyMusicVolume(media, 0);
+    }
+    setEnabled(false);
   }
 
   return (
     <>
-      <audio
-        ref={audioRef}
-        src={src}
-        loop
-        preload="auto"
-        crossOrigin="anonymous"
-      />
       {visible ? (
         <button
           type="button"
@@ -74,8 +68,7 @@ export function MusicToggle({
           aria-label={enabled ? "Pause music" : "Play music"}
           onClick={() => {
             if (enabled) {
-              audioRef.current?.pause();
-              setEnabled(false);
+              stop();
               return;
             }
             start();

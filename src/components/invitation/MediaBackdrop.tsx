@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, type RefObject } from "react";
 import { useInviteVisuals } from "@/components/invitation/InviteVisualsContext";
 
 type MediaBackdropProps = {
@@ -13,16 +13,25 @@ type MediaBackdropProps = {
   cropBottom?: boolean;
 };
 
-export function SharedSectionVideo({ src }: { src: string }) {
+export function SharedSectionVideo({
+  src,
+  mediaRef,
+}: {
+  src: string;
+  mediaRef: RefObject<HTMLVideoElement | null>;
+}) {
   return (
     <div className="pointer-events-none absolute inset-0 z-0">
       <video
+        ref={mediaRef}
         className="h-full w-full object-cover"
         src={src}
         autoPlay
         muted
         loop
         playsInline
+        preload="auto"
+        crossOrigin="anonymous"
       />
       <BackdropTint />
     </div>

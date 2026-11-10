@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   clearInviteVisual,
   commitInviteVisual,
@@ -14,6 +14,7 @@ import {
   fieldClass,
 } from "@/components/admin/InvitationChrome";
 import { SubmitButton } from "@/components/ui/SubmitButton";
+import { applyMusicVolume } from "@/lib/music-level";
 import {
   INVITE_GALLERY_MAX,
   INVITE_IMAGE_ACCEPT,
@@ -43,7 +44,8 @@ export function InviteMediaGroup({ settings }: { settings: SiteSettings }) {
         the background video. With no video, each section uses its file in{" "}
         <code>public/media</code>. QR uses the cover photo until a background
         video is set. Photos: JPEG, PNG, or WebP, up to 10 MB. Videos: MP4,
-        muted loop, up to 40 MB. Run{" "}
+        up to 40 MB. The background video’s sound is the invitation music.
+        Run{" "}
         <code>supabase/migrate-invite-media.sql</code> if upload fails.
       </p>
 
@@ -120,12 +122,13 @@ export function InviteMediaGroup({ settings }: { settings: SiteSettings }) {
       <div className="mt-8 border-t border-zinc-100 pt-8">
         <ItemHeading>Section backdrops</ItemHeading>
         <p className="mb-4 text-xs text-zinc-500">
-          One muted looping video plays behind every snap section and keeps
-          its place as you scroll. A photo uploaded for a section covers that
-          video. With no video, each section keeps its file in{" "}
-          <code>public/media</code>. Groom and bride full-page photos are on
-          the Wedding form. QR is not listed — it uses the cover photo until
-          this video is set.
+          Upload one MP4. It loops behind every snap section, and the sound
+          in that same file is the invitation music. It starts when a guest
+          opens the invite, and they can mute it with ♪. A photo uploaded for
+          a section covers the picture, not the sound. With no video, each
+          section keeps its file in <code>public/media</code>. Groom and bride
+          full-page photos are on the Wedding form. QR uses the cover photo
+          until this video is set.
         </p>
         <VisualSlot
           label="Background video"
@@ -133,7 +136,11 @@ export function InviteMediaGroup({ settings }: { settings: SiteSettings }) {
           accept={INVITE_VIDEO_ACCEPT}
           currentUrl={media.backgroundVideo}
           kind="video"
-          emptyHint="No video yet. Each section uses its photo in public/media."
+          emptyHint="No video yet. Each section uses its photo in public/media, and there is no music."
+        />
+        <SoundtrackVolume
+          volume={settings.musicVolume}
+          src={media.backgroundVideo}
         />
         <div className="mt-8 space-y-8">
           {SECTION_BACKDROP_IDS.map((id) => {
@@ -255,7 +262,76 @@ function GallerySlots({ urls }: { urls: string[] }) {
   );
 }
 
-export function VisualSlot({
+export function SoundtrackVolume({
+  volume: savedVolume,
+  src,
+}: {
+  volume: number;
+  src: string;
+}) {
+  const previewRef = useRef<HTMLAudioElement>(null);
+  const [volume, setVolume] = useState(savedVolume);
+
+  useEffect(() => {
+    const audio = previewRef.current;
+    if (!audio) {
+      return;
+    }
+    applyMusicVolume(audio, volume);
+  }, [volume, src]);
+
+  return (
+    <form action={saveInvitationSettings} className="mt-4 space-y-3">
+      <input type="hidden" name="section" value="musicVolume" />
+      <label className="block text-sm">
+        Sound volume
+        <span className="mt-2 flex items-center gap-3">
+          <input
+            type="range"
+            min={1}
+            max={100}
+            value={volume}
+            onChange={(event) => setVolume(Number(event.target.value))}
+            className="w-full"
+            aria-label="Sound volume"
+          />
+          <input
+            name="musicVolume"
+            type="number"
+            min={1}
+            max={100}
+            value={volume}
+            onChange={(event) => setVolume(Number(event.target.value) || 1)}
+            className="w-20 rounded-md border border-zinc-300 px-2 py-1.5 text-sm"
+          />
+          <span className="text-sm text-zinc-600">%</span>
+        </span>
+      </label>
+      <p className="text-xs text-zinc-500">
+        100% is the original loudness of the video. 50% plays at half that
+        volume each time a guest opens the invite.
+      </p>
+      {src ? (
+        <audio
+          ref={previewRef}
+          controls
+          preload="metadata"
+          crossOrigin="anonymous"
+          src={src}
+          className="w-full"
+        />
+      ) : null}
+      <SubmitButton
+        pendingLabel="Saving…"
+        className="rounded-md bg-zinc-900 px-3 py-2 text-sm text-white"
+      >
+        Save volume
+      </SubmitButton>
+    </form>
+  );
+}
+
+function VisualSlot({
   label,
   slot,
   index,

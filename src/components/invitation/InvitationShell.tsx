@@ -69,6 +69,7 @@ export function InvitationShell({
 }: InvitationShellProps) {
   const [opened, setOpened] = useState(false);
   const musicRef = useRef<MusicToggleHandle>(null);
+  const soundtrackRef = useRef<HTMLVideoElement>(null);
   const couple = settings.couple;
   const copy = settings.copy;
   const visuals = inviteVisuals(settings);
@@ -194,12 +195,7 @@ export function InvitationShell({
           />
         );
       case "closing":
-        return (
-          <ClosingSection
-            brideName={couple.brideName}
-            groomName={couple.groomName}
-          />
-        );
+        return <ClosingSection />;
       default:
         return null;
     }
@@ -217,8 +213,11 @@ export function InvitationShell({
             enabled={opened}
             className="relative isolate mx-auto h-dvh w-full max-w-[430px] bg-background shadow-[0_0_40px_color-mix(in_srgb,var(--foreground)_12%,transparent)]"
             background={
-              opened && visuals.backgroundVideo ? (
-                <SharedSectionVideo src={visuals.backgroundVideo} />
+              visuals.backgroundVideo ? (
+                <SharedSectionVideo
+                  src={visuals.backgroundVideo}
+                  mediaRef={soundtrackRef}
+                />
               ) : null
             }
           >
@@ -244,10 +243,10 @@ export function InvitationShell({
               : null}
           </SectionPager>
 
-          {settings.musicUrl ? (
+          {visuals.backgroundVideo ? (
             <MusicToggle
               ref={musicRef}
-              src={settings.musicUrl}
+              mediaRef={soundtrackRef}
               volume={settings.musicVolume}
               visible={opened}
             />
