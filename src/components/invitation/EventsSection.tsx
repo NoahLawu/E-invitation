@@ -92,9 +92,13 @@ function eventDateLabel(date: string) {
 }
 
 function eventTimeLabel(time: string) {
-  const match = time.trim().match(/^(\d{1,2}):(\d{2})/);
+  const trimmed = time.trim();
+  if (!/^\d{1,2}:\d{2}(?::\d{2})?$/.test(trimmed)) {
+    return trimmed || null;
+  }
+  const match = trimmed.match(/^(\d{1,2}):(\d{2})/);
   if (!match) {
-    return time.trim() || null;
+    return trimmed || null;
   }
   const clock = new Date();
   clock.setHours(Number(match[1]), Number(match[2]), 0, 0);

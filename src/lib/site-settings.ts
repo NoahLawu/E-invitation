@@ -325,6 +325,36 @@ export function isThemeId(value: string): value is ThemeId {
   return (THEME_IDS as readonly string[]).includes(value);
 }
 
+function withBrideMother(parents: string) {
+  return parents.replace(
+    /Mrs\. Endang(?!\s+Murtikarini)/g,
+    "Mrs. Endang Murtikarini",
+  );
+}
+
+function clockOnly(time: string) {
+  const match = time.trim().match(/^(\d{1,2}):(\d{2})(?::\d{2})?$/);
+  if (!match) {
+    return "";
+  }
+  return `${match[1].padStart(2, "0")}:${match[2]}`;
+}
+
+function presentEvent(event: InviteEventDetails): InviteEventDetails {
+  if (event.id === "ceremony") {
+    const title = /\(\s*family only\s*\)/i.test(event.title)
+      ? event.title
+      : `${event.title.trim() || "Ceremony"} (Family only)`;
+    const time =
+      clockOnly(event.time) === "07:30" ? "07:30 AM - 09:30" : event.time;
+    return { ...event, title, time };
+  }
+  if (event.id === "reception" && clockOnly(event.time) === "10:00") {
+    return { ...event, time: "11:00 AM - 02:00 PM" };
+  }
+  return event;
+}
+
 export function eventsForInvite(
   allEvents: InviteEventDetails[],
   invitedTo: InviteEvent = "both",
@@ -366,15 +396,22 @@ export function mergeSiteSettings(raw: unknown): SiteSettings {
   const theme = parsed.theme ?? "";
   return {
     theme: isThemeId(theme) ? theme : defaultSiteSettings.theme,
-    couple: { ...defaultSiteSettings.couple, ...parsed.couple },
-    events:
+    couple: {
+      ...defaultSiteSettings.couple,
+      ...parsed.couple,
+      brideParents: withBrideMother(
+        parsed.couple?.brideParents ?? defaultSiteSettings.couple.brideParents,
+      ),
+    },
+    events: (
       Array.isArray(parsed.events) && parsed.events.length > 0
         ? parsed.events.map((event, index) => ({
             ...(defaultSiteSettings.events[index] ??
               defaultSiteSettings.events[0]),
             ...event,
           }))
-        : defaultSiteSettings.events,
+        : defaultSiteSettings.events
+    ).map(presentEvent),
     bankAccounts: Array.isArray(parsed.bankAccounts)
       ? parsed.bankAccounts.map((item) => ({
           bank: String(item.bank ?? "").trim(),

@@ -490,8 +490,13 @@ function EventFields({
           Time
           <input
             name={`${prefix}_time`}
-            type="time"
-            defaultValue={timeInputValue(event.time ?? "")}
+            type="text"
+            defaultValue={
+              /^\d{2}:\d{2}(?::\d{2})?$/.test(event.time ?? "")
+                ? timeInputValue(event.time ?? "")
+                : (event.time ?? "")
+            }
+            placeholder="07:30 AM - 09:30"
             className={fieldClass}
           />
         </label>
