@@ -196,9 +196,23 @@ body {
   }
 }
 
+.line-fade {
+  opacity: 0;
+}
+
+.line-fade.is-shown {
+  animation-name: person-line-fade;
+  animation-duration: 0.7s;
+  animation-timing-function: ease;
+  animation-fill-mode: forwards;
+  animation-delay: calc(var(--fade-index, 0) * 0.32s);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .person-text-fade > *,
-  .person-text-fade.is-shown > * {
+  .person-text-fade.is-shown > *,
+  .line-fade,
+  .line-fade.is-shown {
     animation: none;
     opacity: 1;
   }

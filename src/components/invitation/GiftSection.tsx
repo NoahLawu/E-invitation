@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { InvitationSection } from "@/components/invitation/InvitationSection";
+import { lineFade, useSectionShown } from "@/components/invitation/line-fade";
 import type { BankAccount } from "@/lib/site-settings";
 
 const LOGO_HEIGHT = 36;
@@ -38,28 +39,56 @@ export function GiftSection({
   title: string;
   note: string;
 }) {
+  const copyRef = useRef<HTMLDivElement>(null);
+  const shown = useSectionShown(copyRef);
+  let step = 0;
+  function fade() {
+    return lineFade(shown, step++);
+  }
+  const label = fade();
+  const heading = title.trim() ? fade() : null;
+  const description = note.trim() ? fade() : null;
+  const cards = orderedAccounts(accounts).map((account) => ({
+    account,
+    fade: fade(),
+  }));
+
   return (
     <InvitationSection section="gifts" mediaAlt="">
-      <p className="text-xs tracking-[0.3em] text-white uppercase">
+      <div ref={copyRef} className="flex w-full flex-col items-center">
+      <p
+        className={`text-xs tracking-[0.3em] text-white uppercase ${label.className}`}
+        style={label.style}
+      >
         Wedding gift
       </p>
-      {title.trim() ? (
-        <h2 className="font-display mt-3 max-w-xs text-3xl whitespace-pre-line text-white">
+      {heading ? (
+        <h2
+          className={`font-display mt-3 max-w-xs text-3xl whitespace-pre-line text-white ${heading.className}`}
+          style={heading.style}
+        >
           {giftTitle(title)}
         </h2>
       ) : null}
-      {note.trim() ? (
-        <p className="mt-2 max-w-xs text-sm whitespace-pre-line text-white">
+      {description ? (
+        <p
+          className={`mt-2 max-w-xs text-sm whitespace-pre-line text-white ${description.className}`}
+          style={description.style}
+        >
           {note}
         </p>
       ) : null}
       <div className="mt-4 w-full space-y-2">
-        {orderedAccounts(accounts).map((account) => (
-          <BankCard
+        {cards.map(({ account, fade: cardFade }) => (
+          <div
             key={`${account.bank}-${account.number}`}
-            account={account}
-          />
+            className={cardFade.className}
+            style={cardFade.style}
+          >
+            <BankCard account={account} />
+          </div>
         ))}
+      </div>
       </div>
     </InvitationSection>
   );
