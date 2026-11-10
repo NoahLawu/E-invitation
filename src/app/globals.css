@@ -165,6 +165,7 @@ body {
 
 .person-text-wipe {
   clip-path: inset(0 0 100% 0);
+  opacity: 0;
 }
 
 .person-text-wipe.is-shown {
@@ -172,11 +173,16 @@ body {
 }
 
 @keyframes person-text-wipe {
-  from {
+  0% {
     clip-path: inset(0 0 100% 0);
+    opacity: 0;
   }
-  to {
+  55% {
+    opacity: 1;
+  }
+  100% {
     clip-path: inset(0 0 0 0);
+    opacity: 1;
   }
 }
 
@@ -185,6 +191,7 @@ body {
   .person-text-wipe.is-shown {
     animation: none;
     clip-path: none;
+    opacity: 1;
   }
 }
 
