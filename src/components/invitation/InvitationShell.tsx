@@ -68,8 +68,10 @@ export function InvitationShell({
   settings,
 }: InvitationShellProps) {
   const [opened, setOpened] = useState(false);
+  const [soundtrackOn, setSoundtrackOn] = useState(false);
   const musicRef = useRef<MusicToggleHandle>(null);
   const soundtrackRef = useRef<HTMLVideoElement>(null);
+  const soundtrackStarted = useRef(false);
   const couple = settings.couple;
   const copy = settings.copy;
   const visuals = inviteVisuals(settings);
@@ -212,12 +214,20 @@ export function InvitationShell({
           <SectionPager
             enabled={opened}
             className="relative isolate mx-auto h-dvh w-full max-w-[430px] bg-background shadow-[0_0_40px_color-mix(in_srgb,var(--foreground)_12%,transparent)]"
+            onIndexChange={(index) => {
+              if (index < 1 || soundtrackStarted.current) {
+                return;
+              }
+              soundtrackStarted.current = true;
+              setSoundtrackOn(true);
+              musicRef.current?.start();
+            }}
             background={
               visuals.backgroundVideo ? (
                 <SharedSectionVideo
                   src={visuals.backgroundVideo}
                   mediaRef={soundtrackRef}
-                  active={opened}
+                  active={soundtrackOn}
                 />
               ) : null
             }
@@ -230,10 +240,8 @@ export function InvitationShell({
               greeting={copy.coverGreeting}
               opened={opened}
               image={visuals.coverImage}
-              video={visuals.coverVideo}
               onOpen={() => {
                 setOpened(true);
-                musicRef.current?.start();
               }}
             />
 

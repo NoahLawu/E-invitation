@@ -14,6 +14,7 @@ type SectionPagerProps = {
   enabled: boolean;
   background?: ReactNode;
   className?: string;
+  onIndexChange?: (index: number) => void;
   children: ReactNode;
 };
 
@@ -21,6 +22,7 @@ export function SectionPager({
   enabled,
   background,
   className,
+  onIndexChange,
   children,
 }: SectionPagerProps) {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -33,6 +35,8 @@ export function SectionPager({
     null,
   );
   const wheelLockRef = useRef(0);
+  const onIndexChangeRef = useRef(onIndexChange);
+  onIndexChangeRef.current = onIndexChange;
 
   function writeY(track: HTMLElement, y: number, animate: boolean) {
     track.style.transition = animate ? `transform ${MOVE_MS}ms ease-out` : "none";
@@ -55,6 +59,7 @@ export function SectionPager({
     if (!root || !track) {
       return;
     }
+    const previous = indexRef.current;
     let step = direction;
     if (step !== 0) {
       const now = performance.now();
@@ -70,6 +75,9 @@ export function SectionPager({
       }
     }
     dragRef.current = 0;
+    if (indexRef.current !== previous) {
+      onIndexChangeRef.current?.(indexRef.current);
+    }
     const y = -indexRef.current * root.clientHeight;
     requestAnimationFrame(() => {
       writeY(track, y, true);
