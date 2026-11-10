@@ -257,7 +257,7 @@ export function InvitationShell({
               ref={musicRef}
               mediaRef={soundtrackRef}
               volume={settings.musicVolume}
-              visible={opened}
+              visible={soundtrackOn}
             />
           ) : null}
         </InviteVisualsProvider>
