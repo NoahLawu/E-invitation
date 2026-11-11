@@ -43,7 +43,8 @@ export function InviteMediaGroup({ settings }: { settings: SiteSettings }) {
         portraits, gallery, and wedding-party faces. A section photo covers
         the background video. With no video, each section uses its file in{" "}
         <code>public/media</code>. QR uses the cover photo until a background
-        video is set. Photos: JPEG, PNG, or WebP, up to 10 MB. Videos: MP4,
+        video is set. Photos: JPEG, PNG, or WebP, up to 10 MB. Gallery photos
+        up to 15 MB. Videos: MP4,
         up to 40 MB. The background video’s sound is the invitation music.
         Run{" "}
         <code>supabase/migrate-invite-media.sql</code> if upload fails.

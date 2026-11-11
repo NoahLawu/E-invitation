@@ -3,6 +3,7 @@ export const INVITE_MUSIC_MAX_BYTES = 10 * 1024 * 1024;
 export const INVITE_MUSIC_ACCEPT = ".mp3,.m4a,audio/mpeg,audio/mp4,audio/x-m4a";
 export const INVITE_MUSIC_OBJECT_BASE = "music/background";
 export const INVITE_IMAGE_MAX_BYTES = 10 * 1024 * 1024;
+export const INVITE_GALLERY_MAX_BYTES = 15 * 1024 * 1024;
 export const INVITE_VIDEO_MAX_BYTES = 40 * 1024 * 1024;
 export const INVITE_COVER_VIDEO_MAX_BYTES = INVITE_VIDEO_MAX_BYTES;
 export const INVITE_GALLERY_MAX = 12;
@@ -94,6 +95,9 @@ export function isVisualImageSlot(slot: InviteVisualSlot) {
 }
 
 export function inviteVisualMaxBytes(slot: InviteVisualSlot) {
+  if (slot === "gallery") {
+    return INVITE_GALLERY_MAX_BYTES;
+  }
   if (isVisualImageSlot(slot)) {
     return INVITE_IMAGE_MAX_BYTES;
   }
