@@ -119,7 +119,7 @@ export function GallerySection({ photos }: { photos: string[] }) {
                 type="button"
                 aria-label="Previous photo"
                 onClick={() => show(-1)}
-                className="absolute top-1/2 left-1 flex h-16 w-12 -translate-y-1/2 items-center justify-center text-foreground"
+                className="absolute top-1/2 left-1 flex h-11 w-11 -translate-y-1/2 items-center justify-center bg-transparent text-foreground hover:bg-none focus:bg-none active:bg-none"
               >
                 <GalleryArrow direction="left" />
               </button>
@@ -127,7 +127,7 @@ export function GallerySection({ photos }: { photos: string[] }) {
                 type="button"
                 aria-label="Next photo"
                 onClick={() => show(1)}
-                className="absolute top-1/2 right-1 flex h-16 w-12 -translate-y-1/2 items-center justify-center text-foreground"
+                className="absolute top-1/2 right-1 flex h-11 w-11 -translate-y-1/2 items-center justify-center bg-transparent text-foreground hover:bg-none focus:bg-none active:bg-none"
               >
                 <GalleryArrow direction="right" />
               </button>
@@ -146,15 +146,15 @@ export function GallerySection({ photos }: { photos: string[] }) {
 function GalleryArrow({ direction }: { direction: "left" | "right" }) {
   return (
     <svg
-      viewBox="0 0 20 48"
+      viewBox="0 0 16 24"
       aria-hidden
-      className={`h-12 w-5 drop-shadow-[0_0_1px_rgba(255,255,255,0.9)] ${direction === "right" ? "rotate-180" : ""}`}
+      className={`h-7 w-4 ${direction === "right" ? "rotate-180" : ""}`}
     >
       <path
-        d="M15 4 L5 24 L15 44"
+        d="M12 3 L4 12 L12 21"
         fill="none"
         stroke="currentColor"
-        strokeWidth="2.4"
+        strokeWidth="1.8"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
