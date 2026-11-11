@@ -219,7 +219,7 @@ body {
 
 .line-fade.is-shown {
   animation-name: person-line-fade;
-  animation-duration: 0.7s;
+  animation-duration: 1.1s;
   animation-timing-function: ease;
   animation-fill-mode: forwards;
   animation-delay: calc(var(--fade-index, 0) * 0.32s);
