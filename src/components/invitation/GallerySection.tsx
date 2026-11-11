@@ -119,7 +119,7 @@ export function GallerySection({ photos }: { photos: string[] }) {
                 type="button"
                 aria-label="Previous photo"
                 onClick={() => show(-1)}
-                className="absolute top-1/2 left-1 flex h-11 w-11 -translate-y-1/2 items-center justify-center bg-transparent text-foreground hover:bg-none focus:bg-none active:bg-none"
+                className="gallery-arrow absolute top-1/2 left-1 flex h-11 w-11 -translate-y-1/2 items-center justify-center text-foreground"
               >
                 <GalleryArrow direction="left" />
               </button>
@@ -127,7 +127,7 @@ export function GallerySection({ photos }: { photos: string[] }) {
                 type="button"
                 aria-label="Next photo"
                 onClick={() => show(1)}
-                className="absolute top-1/2 right-1 flex h-11 w-11 -translate-y-1/2 items-center justify-center bg-transparent text-foreground hover:bg-none focus:bg-none active:bg-none"
+                className="gallery-arrow absolute top-1/2 right-1 flex h-11 w-11 -translate-y-1/2 items-center justify-center text-foreground"
               >
                 <GalleryArrow direction="right" />
               </button>

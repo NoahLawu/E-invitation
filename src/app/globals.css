@@ -144,7 +144,7 @@ body {
     [type="submit"],
     [type="reset"],
     [role="button"]
-  ):not(:disabled):hover {
+  ):not(:disabled, .gallery-arrow):hover {
     background-image: linear-gradient(
       color-mix(in srgb, currentColor 12%, transparent),
       color-mix(in srgb, currentColor 12%, transparent)
@@ -157,6 +157,19 @@ body {
       color-mix(in srgb, currentColor 8%, transparent)
     );
   }
+}
+
+button.gallery-arrow,
+button.gallery-arrow:hover,
+button.gallery-arrow:focus,
+button.gallery-arrow:active {
+  border: 0;
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
 }
 
 ::selection {
