@@ -346,7 +346,9 @@ function presentEvent(event: InviteEventDetails): InviteEventDetails {
       ? event.title
       : `${event.title.trim() || "Ceremony"} (Family only)`;
     const time =
-      clockOnly(event.time) === "07:30" ? "07:30 AM - 09:30" : event.time;
+      clockOnly(event.time) === "07:30" || event.time.trim() === "07:30 AM - 09:30"
+        ? "07:30 AM - 09:30 AM"
+        : event.time;
     return { ...event, title, time };
   }
   if (event.id === "reception" && clockOnly(event.time) === "10:00") {

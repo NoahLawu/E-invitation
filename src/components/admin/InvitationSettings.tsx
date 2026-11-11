@@ -496,7 +496,7 @@ function EventFields({
                 ? timeInputValue(event.time ?? "")
                 : (event.time ?? "")
             }
-            placeholder="07:30 AM - 09:30"
+            placeholder="07:30 AM - 09:30 AM"
             className={fieldClass}
           />
         </label>
