@@ -1,20 +1,29 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { InvitationSection } from "@/components/invitation/InvitationSection";
+import { lineFade, useSectionShown } from "@/components/invitation/line-fade";
 import { countdownTarget } from "@/lib/site-settings";
 
 export function CountdownSection({ weddingAt }: { weddingAt: string }) {
   const remaining = useCountdown(weddingAt);
+  const copyRef = useRef<HTMLDivElement>(null);
+  const fade = lineFade(useSectionShown(copyRef), 0);
 
   return (
     <InvitationSection section="countdown" mediaAlt="">
-      <p className="text-xs tracking-[0.3em] text-white uppercase">Countdown</p>
-      <div className="mt-6 grid w-full grid-cols-4 gap-2">
-        <TimeBox value={remaining?.days ?? "--"} label="Days" />
-        <TimeBox value={remaining?.hours ?? "--"} label="Hours" />
-        <TimeBox value={remaining?.mins ?? "--"} label="Mins" />
-        <TimeBox value={remaining?.secs ?? "--"} label="Secs" />
+      <div
+        ref={copyRef}
+        className={`flex w-full flex-col items-center ${fade.className}`}
+        style={fade.style}
+      >
+        <p className="text-xs tracking-[0.3em] text-white uppercase">Countdown</p>
+        <div className="mt-6 grid w-full grid-cols-4 gap-2">
+          <TimeBox value={remaining?.days ?? "--"} label="Days" />
+          <TimeBox value={remaining?.hours ?? "--"} label="Hours" />
+          <TimeBox value={remaining?.mins ?? "--"} label="Mins" />
+          <TimeBox value={remaining?.secs ?? "--"} label="Secs" />
+        </div>
       </div>
     </InvitationSection>
   );

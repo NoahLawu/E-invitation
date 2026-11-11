@@ -1,5 +1,9 @@
+"use client";
+
+import { useRef } from "react";
 import Image from "next/image";
 import { InvitationSection } from "@/components/invitation/InvitationSection";
+import { lineFade, useSectionShown } from "@/components/invitation/line-fade";
 import type { SiteSettings } from "@/lib/site-settings";
 
 export function DressCodeSection({
@@ -9,6 +13,8 @@ export function DressCodeSection({
   dressCode: SiteSettings["dressCode"];
   tint: number;
 }) {
+  const copyRef = useRef<HTMLDivElement>(null);
+  const fade = lineFade(useSectionShown(copyRef), 0);
   const content = (
     <>
       <p className="text-xs tracking-[0.3em] text-white uppercase">
@@ -38,6 +44,11 @@ export function DressCodeSection({
 
   return (
     <InvitationSection section="dressCode" mediaAlt="">
+      <div
+        ref={copyRef}
+        className={`flex w-full flex-col items-center ${fade.className}`}
+        style={fade.style}
+      >
       {dressCode.image ? (
         <div className="relative w-full overflow-hidden rounded-2xl">
           <Image
@@ -58,6 +69,7 @@ export function DressCodeSection({
       ) : (
         content
       )}
+      </div>
     </InvitationSection>
   );
 }

@@ -2,10 +2,13 @@
 
 import { useLayoutEffect, useRef, useState } from "react";
 import { InvitationSection } from "@/components/invitation/InvitationSection";
+import { lineFade, useSectionShown } from "@/components/invitation/line-fade";
 import { PhotoSlot } from "@/components/invitation/PhotoSlot";
 
 export function GallerySection({ photos }: { photos: string[] }) {
   const scroller = useRef<HTMLDivElement>(null);
+  const copyRef = useRef<HTMLDivElement>(null);
+  const fade = lineFade(useSectionShown(copyRef), 0);
   const placed = useRef(false);
   const [index, setIndex] = useState(0);
   const looping = photos.length > 1;
@@ -81,6 +84,11 @@ export function GallerySection({ photos }: { photos: string[] }) {
 
   return (
     <InvitationSection section="gallery">
+      <div
+        ref={copyRef}
+        className={`flex w-full flex-col items-center ${fade.className}`}
+        style={fade.style}
+      >
       <p className="text-xs tracking-[0.3em] text-white uppercase">Gallery</p>
       {photos.length === 0 ? null : (
         <div className="relative mt-6 w-full">
@@ -130,6 +138,7 @@ export function GallerySection({ photos }: { photos: string[] }) {
           ) : null}
         </div>
       )}
+      </div>
     </InvitationSection>
   );
 }

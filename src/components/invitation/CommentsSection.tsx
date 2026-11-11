@@ -1,8 +1,9 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import { submitComment } from "@/app/invite/actions";
 import { InvitationSection } from "@/components/invitation/InvitationSection";
+import { lineFade, useSectionShown } from "@/components/invitation/line-fade";
 import { useInviteBusy } from "@/components/invitation/InviteBusy";
 import { useToast } from "@/components/ui/Toast";
 
@@ -31,6 +32,8 @@ export function CommentsSection({
   const [pending, setPending] = useState(false);
   const toast = useToast();
   const setBusy = useInviteBusy();
+  const copyRef = useRef<HTMLDivElement>(null);
+  const fade = lineFade(useSectionShown(copyRef), 0);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -68,6 +71,11 @@ export function CommentsSection({
 
   return (
     <InvitationSection section="comments" mediaAlt="">
+      <div
+        ref={copyRef}
+        className={`flex w-full flex-col items-center ${fade.className}`}
+        style={fade.style}
+      >
       <p className="text-xs tracking-[0.3em] text-white uppercase">
         Guest book
       </p>
@@ -126,6 +134,7 @@ export function CommentsSection({
           ))
         )}
       </ul>
+      </div>
     </InvitationSection>
   );
 }
