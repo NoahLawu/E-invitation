@@ -108,6 +108,7 @@ export function GallerySection({ photos }: { photos: string[] }) {
                   src={src}
                   alt={`Gallery photo ${realIndex(slideIndex) + 1}`}
                   sizes="430px"
+                  bare
                   className="h-full"
                 />
               </div>
