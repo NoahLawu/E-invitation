@@ -745,13 +745,17 @@ export function combineDateTime(date: string, time: string) {
   return time ? `${date}T${time}` : date;
 }
 
-export function formatWeddingWhen(weddingAt: string, includeTime = true) {
+export function formatWeddingWhen(
+  weddingAt: string,
+  includeTime = true,
+  locale = "id-ID",
+) {
   const date = toLocalDate(weddingAt);
   if (!date) {
     return weddingAt || null;
   }
   const hasTime = includeTime && Boolean(timeInputValue(weddingAt));
-  return date.toLocaleString("id-ID", {
+  return date.toLocaleString(locale, {
     weekday: "long",
     day: "numeric",
     month: "long",

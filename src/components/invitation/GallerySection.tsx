@@ -149,9 +149,6 @@ export function GallerySection({ photos }: { photos: string[] }) {
                 >
                   <GalleryArrow direction="right" />
                 </button>
-                <p className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-card/90 px-3 py-1 text-[10px] tracking-wider text-muted">
-                  {index + 1} / {photos.length}
-                </p>
               </>
             ) : null}
           </div>

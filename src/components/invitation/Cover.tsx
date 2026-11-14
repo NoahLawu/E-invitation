@@ -26,7 +26,7 @@ export function Cover({
   image,
   video,
 }: CoverProps) {
-  const when = weddingAt ? formatWeddingWhen(weddingAt, false) : null;
+  const when = weddingAt ? formatWeddingWhen(weddingAt, false, "en-GB") : null;
   const line = fillCoverGreeting(greeting, guestName);
   return (
     <InvitationSection
