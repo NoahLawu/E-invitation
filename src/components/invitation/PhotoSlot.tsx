@@ -9,6 +9,7 @@ type PhotoSlotProps = {
   className?: string;
   sizes?: string;
   bare?: boolean;
+  instant?: boolean;
 };
 
 export function PhotoSlot({
@@ -17,8 +18,9 @@ export function PhotoSlot({
   className = "",
   sizes = "200px",
   bare = false,
+  instant = false,
 }: PhotoSlotProps) {
-  const [ready, setReady] = useState(false);
+  const [ready, setReady] = useState(instant);
 
   const frame = bare ? "" : "border border-line bg-card";
 
