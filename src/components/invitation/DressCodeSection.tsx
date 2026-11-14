@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef } from "react";
-import Image from "next/image";
 import { InvitationSection } from "@/components/invitation/InvitationSection";
 import { lineFade, useSectionShown } from "@/components/invitation/line-fade";
 import type { SiteSettings } from "@/lib/site-settings";
@@ -51,18 +50,17 @@ export function DressCodeSection({
       >
       {dressCode.image ? (
         <div className="relative w-full overflow-hidden rounded-2xl">
-          <Image
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src={dressCode.image}
             alt=""
-            fill
-            sizes="430px"
-            className="object-cover"
+            className="block h-auto max-h-[84dvh] w-full object-contain"
           />
           <div
             className="absolute inset-0 bg-background"
             style={{ opacity: tint }}
           />
-          <div className="relative z-10 flex min-h-[52dvh] flex-col items-center justify-center px-4 py-10">
+          <div className="absolute inset-0 flex flex-col items-center justify-center px-4 py-10">
             {content}
           </div>
         </div>
