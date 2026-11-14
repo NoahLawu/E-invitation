@@ -97,7 +97,7 @@ export function GallerySection({ photos }: { photos: string[] }) {
             onScroll={onScroll}
             onScrollEnd={onScrollEnd}
             data-pager-allow=""
-            className="flex h-[58dvh] w-full snap-x snap-mandatory touch-pan-x overflow-x-auto rounded-xl [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="flex h-[58dvh] w-full snap-x snap-mandatory touch-pan-x overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             {slides.map((src, slideIndex) => (
               <div
@@ -108,7 +108,7 @@ export function GallerySection({ photos }: { photos: string[] }) {
                   src={src}
                   alt={`Gallery photo ${realIndex(slideIndex) + 1}`}
                   sizes="430px"
-                  className="h-full rounded-xl"
+                  className="h-full"
                 />
               </div>
             ))}
@@ -119,7 +119,7 @@ export function GallerySection({ photos }: { photos: string[] }) {
                 type="button"
                 aria-label="Previous photo"
                 onClick={() => show(-1)}
-                className="gallery-arrow absolute top-1/2 left-1 flex h-11 w-11 -translate-y-1/2 items-center justify-center text-foreground"
+                className="gallery-arrow absolute top-1/2 left-1 flex h-11 w-11 -translate-y-1/2 items-center justify-center text-[#e4e4e4]"
               >
                 <GalleryArrow direction="left" />
               </button>
@@ -127,7 +127,7 @@ export function GallerySection({ photos }: { photos: string[] }) {
                 type="button"
                 aria-label="Next photo"
                 onClick={() => show(1)}
-                className="gallery-arrow absolute top-1/2 right-1 flex h-11 w-11 -translate-y-1/2 items-center justify-center text-foreground"
+                className="gallery-arrow absolute top-1/2 right-1 flex h-11 w-11 -translate-y-1/2 items-center justify-center text-[#e4e4e4]"
               >
                 <GalleryArrow direction="right" />
               </button>
