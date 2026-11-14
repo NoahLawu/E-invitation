@@ -49,12 +49,12 @@ export function DressCodeSection({
         style={fade.style}
       >
       {dressCode.image ? (
-        <div className="relative w-full overflow-hidden rounded-2xl">
+        <div className="relative max-w-full">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={dressCode.image}
             alt=""
-            className="block h-auto max-h-[84dvh] w-full object-contain"
+            className="block h-auto max-h-[84dvh] w-auto max-w-full border-0"
           />
           <div
             className="absolute inset-0 bg-background"
