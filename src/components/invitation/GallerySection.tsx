@@ -5,6 +5,20 @@ import { InvitationSection } from "@/components/invitation/InvitationSection";
 import { lineFade, useSectionShown } from "@/components/invitation/line-fade";
 import { PhotoSlot } from "@/components/invitation/PhotoSlot";
 
+function nearestSlide(frame: HTMLElement) {
+  let best = 0;
+  let bestDist = Infinity;
+  for (let i = 0; i < frame.children.length; i++) {
+    const child = frame.children[i] as HTMLElement;
+    const dist = Math.abs(frame.scrollLeft - child.offsetLeft);
+    if (dist < bestDist) {
+      bestDist = dist;
+      best = i;
+    }
+  }
+  return best;
+}
+
 export function GallerySection({ photos }: { photos: string[] }) {
   const scroller = useRef<HTMLDivElement>(null);
   const copyRef = useRef<HTMLDivElement>(null);
@@ -31,15 +45,30 @@ export function GallerySection({ photos }: { photos: string[] }) {
 
   useLayoutEffect(() => {
     const frame = scroller.current;
-    if (!frame || !looping) {
+    if (!frame) {
       return;
     }
     placed.current = false;
     const place = () => {
-      if (placed.current || frame.clientWidth === 0) {
+      const width = frame.clientWidth;
+      if (width === 0) {
         return;
       }
-      frame.scrollLeft = frame.clientWidth;
+      for (const child of frame.children) {
+        const slide = child as HTMLElement;
+        slide.style.flexBasis = `${width}px`;
+        slide.style.width = `${width}px`;
+      }
+      if (!looping || placed.current) {
+        const current = nearestSlide(frame);
+        const target = frame.children[current] as HTMLElement | undefined;
+        if (target) {
+          frame.scrollLeft = target.offsetLeft;
+        }
+        return;
+      }
+      const first = frame.children[1] as HTMLElement | undefined;
+      frame.scrollLeft = first?.offsetLeft ?? width;
       placed.current = true;
     };
     place();
@@ -53,11 +82,13 @@ export function GallerySection({ photos }: { photos: string[] }) {
     if (!frame || frame.clientWidth === 0) {
       return;
     }
-    const current = Math.round(frame.scrollLeft / frame.clientWidth);
-    frame.scrollTo({
-      left: frame.clientWidth * (current + direction),
-      behavior: "smooth",
-    });
+    const next = frame.children[nearestSlide(frame) + direction] as
+      | HTMLElement
+      | undefined;
+    if (!next) {
+      return;
+    }
+    frame.scrollTo({ left: next.offsetLeft, behavior: "smooth" });
   }
 
   function onScroll() {
@@ -65,8 +96,7 @@ export function GallerySection({ photos }: { photos: string[] }) {
     if (!frame || frame.clientWidth === 0) {
       return;
     }
-    const scrollIndex = Math.round(frame.scrollLeft / frame.clientWidth);
-    setIndex(realIndex(scrollIndex));
+    setIndex(realIndex(nearestSlide(frame)));
   }
 
   function onScrollEnd() {
@@ -74,11 +104,15 @@ export function GallerySection({ photos }: { photos: string[] }) {
     if (!frame || !looping || frame.clientWidth === 0) {
       return;
     }
-    const scrollIndex = Math.round(frame.scrollLeft / frame.clientWidth);
-    if (scrollIndex === 0) {
-      frame.scrollTo({ left: frame.clientWidth * photos.length, behavior: "instant" });
-    } else if (scrollIndex === photos.length + 1) {
-      frame.scrollTo({ left: frame.clientWidth, behavior: "instant" });
+    const scrollIndex = nearestSlide(frame);
+    const jump =
+      scrollIndex === 0
+        ? (frame.children[photos.length] as HTMLElement | undefined)
+        : scrollIndex === photos.length + 1
+          ? (frame.children[1] as HTMLElement | undefined)
+          : (frame.children[scrollIndex] as HTMLElement | undefined);
+    if (jump && Math.abs(frame.scrollLeft - jump.offsetLeft) > 1) {
+      frame.scrollTo({ left: jump.offsetLeft, behavior: "instant" });
     }
   }
 
@@ -102,7 +136,7 @@ export function GallerySection({ photos }: { photos: string[] }) {
             {slides.map((src, slideIndex) => (
               <div
                 key={`${src}-${slideIndex}`}
-                className="relative h-full w-full shrink-0 snap-center"
+                className="relative h-full w-full shrink-0 grow-0 snap-start"
               >
                 <PhotoSlot
                   src={src}
