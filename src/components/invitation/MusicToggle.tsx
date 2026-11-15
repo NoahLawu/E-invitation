@@ -32,7 +32,6 @@ export function MusicToggle({
     if (!media) {
       return;
     }
-    media.currentTime = 0;
     media.muted = false;
     applyMusicVolume(media, percent);
     const playing = media.play();
@@ -55,7 +54,11 @@ export function MusicToggle({
   function stop() {
     const media = mediaRef.current;
     if (media) {
+      media.muted = true;
       applyMusicVolume(media, 0);
+      if (media.paused) {
+        void media.play();
+      }
     }
     setEnabled(false);
   }
