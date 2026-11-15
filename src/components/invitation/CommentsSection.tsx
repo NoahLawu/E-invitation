@@ -103,7 +103,7 @@ export function CommentsSection({
             onChange={(event) => setMessage(event.target.value)}
             placeholder="Your message"
             rows={2}
-            className="w-full resize-none rounded-xl border border-line bg-card/90 px-3 py-2 text-sm outline-none"
+            className="w-full resize-none touch-none rounded-xl border border-line bg-card/90 px-3 py-2 text-sm outline-none"
           />
         </label>
         <button

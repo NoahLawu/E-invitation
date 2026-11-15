@@ -35,6 +35,7 @@ export function SectionPager({
     null,
   );
   const wheelLockRef = useRef(0);
+  const fieldSwipeRef = useRef(false);
   const onIndexChangeRef = useRef(onIndexChange);
   onIndexChangeRef.current = onIndexChange;
 
@@ -127,7 +128,7 @@ export function SectionPager({
       const target = event.target;
       if (
         target instanceof Element &&
-        target.closest("[data-pager-allow], textarea, input, select")
+        target.closest("[data-pager-allow], input, select")
       ) {
         return;
       }
@@ -152,6 +153,9 @@ export function SectionPager({
       track.style.transition = "none";
     }
     dragRef.current = 0;
+    fieldSwipeRef.current =
+      event.target instanceof Element &&
+      Boolean(event.target.closest("textarea"));
     startRef.current = {
       x: event.clientX,
       y: event.clientY,
@@ -170,7 +174,7 @@ export function SectionPager({
     const dy = event.clientY - start.y;
     if (!axisRef.current && Math.hypot(dx, dy) > 8) {
       axisRef.current = Math.abs(dy) > Math.abs(dx) ? "y" : "x";
-      if (axisRef.current === "y") {
+      if (axisRef.current === "y" && !fieldSwipeRef.current) {
         event.currentTarget.setPointerCapture(event.pointerId);
       }
     }
