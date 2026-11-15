@@ -71,13 +71,13 @@ export function LoveStorySection({
                 {photo ? (
                   <div className="mt-3 flex w-full shrink-0 items-center justify-center">
                     <div
-                      className={`relative aspect-square size-[8rem] max-w-[50%] ${photoFade?.className ?? ""}`}
+                      className={`relative aspect-square size-[8.4rem] max-w-[50%] ${photoFade?.className ?? ""}`}
                       style={photoFade?.style}
                     >
                       <PhotoSlot
                         src={photo}
                         alt={heading || "Our story"}
-                        sizes="128px"
+                        sizes="135px"
                         bare
                         className="h-full w-full"
                       />
