@@ -35,30 +35,31 @@ export function LoveStorySection({
         ref={copyRef}
         className="flex h-full min-h-0 w-full flex-col items-center"
       >
-        <p
-          className={`mt-[clamp(1rem,7dvh,3.5cm)] shrink-0 text-xs tracking-[0.3em] text-white uppercase ${lineFade(shown, 0).className}`}
-          style={lineFade(shown, 0).style}
-        >
-          Our story
-        </p>
-        <div
-          ref={scroller}
-          onScroll={onScroll}
-          data-pager-allow=""
-          className="mt-3 flex min-h-0 w-full flex-1 snap-x snap-mandatory overflow-x-auto overflow-y-hidden [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        >
-          {beats.map((beat, beatIndex) => {
-            const photo = photos[beatIndex] ?? "";
-            const heading = beat.title.trim() || beat.year;
-            let step = 1;
-            const titleFade = heading ? lineFade(shown, step++) : null;
-            const photoFade = photo ? lineFade(shown, step++) : null;
-            const textFade = beat.text.trim() ? lineFade(shown, step++) : null;
-            return (
-              <article
-                key={`${beat.year}-${beat.title}-${beatIndex}`}
-                className="flex h-full min-h-0 w-full shrink-0 snap-center flex-col items-center overflow-x-hidden overflow-y-auto px-1 text-center [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-              >
+        <div className="flex min-h-0 w-full flex-1 flex-col items-center justify-center">
+          <p
+            className={`shrink-0 text-xs tracking-[0.3em] text-white uppercase ${lineFade(shown, 0).className}`}
+            style={lineFade(shown, 0).style}
+          >
+            Our story
+          </p>
+          <div
+            ref={scroller}
+            onScroll={onScroll}
+            data-pager-allow=""
+            className="mt-3 flex w-full snap-x snap-mandatory overflow-x-auto overflow-y-hidden [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            {beats.map((beat, beatIndex) => {
+              const photo = photos[beatIndex] ?? "";
+              const heading = beat.title.trim() || beat.year;
+              let step = 1;
+              const titleFade = heading ? lineFade(shown, step++) : null;
+              const photoFade = photo ? lineFade(shown, step++) : null;
+              const textFade = beat.text.trim() ? lineFade(shown, step++) : null;
+              return (
+                <article
+                  key={`${beat.year}-${beat.title}-${beatIndex}`}
+                  className="flex w-full shrink-0 snap-center flex-col items-center px-1 text-center"
+                >
                 {heading ? (
                   <h2
                     className={`shrink-0 font-display max-w-xs text-4xl leading-tight text-white ${titleFade?.className ?? ""}`}
@@ -92,8 +93,9 @@ export function LoveStorySection({
                   </p>
                 ) : null}
               </article>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
         {total > 0 ? (
           <p
