@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { InvitationSection } from "@/components/invitation/InvitationSection";
 import { lineFade, useSectionShown } from "@/components/invitation/line-fade";
 import { PhotoSlot } from "@/components/invitation/PhotoSlot";
@@ -19,6 +19,17 @@ export function LoveStorySection({
   const [index, setIndex] = useState(0);
   const total = beats.length;
   const pageFade = lineFade(shown, photos.some(Boolean) ? 4 : 3);
+
+  useEffect(() => {
+    if (shown) {
+      return;
+    }
+    const frame = scroller.current;
+    if (frame) {
+      frame.scrollLeft = 0;
+    }
+    setIndex(0);
+  }, [shown]);
 
   function onScroll() {
     const frame = scroller.current;
