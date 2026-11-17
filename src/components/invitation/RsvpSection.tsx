@@ -160,11 +160,6 @@ export function RsvpSection({
         </form>
       )}
       {error ? <p className="mt-3 text-sm text-accent">{error}</p> : null}
-      {saved && guestToken && rsvpEditable ? (
-        <p className="mt-3 text-sm text-muted">
-          Saved: {attending === "yes" ? "attending" : "cannot attend"}
-        </p>
-      ) : null}
       </div>
     </InvitationSection>
   );
