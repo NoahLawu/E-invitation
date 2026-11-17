@@ -35,7 +35,7 @@ export function RsvpSection({
     rsvpStatus === "no" ? "no" : "yes",
   );
   const [guests, setGuests] = useState(
-    rsvpCount && rsvpCount > 0 ? rsvpCount : 1,
+    String(rsvpCount && rsvpCount > 0 ? rsvpCount : 1),
   );
   const [saved, setSaved] = useState(rsvpStatus !== "pending");
   const [error, setError] = useState<string | null>(null);
@@ -45,9 +45,29 @@ export function RsvpSection({
   const copyRef = useRef<HTMLDivElement>(null);
   const shown = useSectionShown(copyRef);
 
+  function onGuestsChange(value: string) {
+    if (value === "") {
+      setGuests("");
+      return;
+    }
+    const digits = value.replace(/\D/g, "");
+    if (!digits) {
+      setGuests("");
+      return;
+    }
+    const count = Number(digits);
+    setGuests(count > 10 ? "10" : String(count));
+  }
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError(null);
+    if (attending === "yes" && Number(guests) < 1) {
+      const message = "Minimum attend is 1 person.";
+      setError(message);
+      toast({ tone: "error", message });
+      return;
+    }
     setPending(true);
     setBusy(true);
     try {
@@ -138,12 +158,11 @@ export function RsvpSection({
             <label className="flex items-center justify-between rounded-xl border border-line bg-card/90 px-3 py-2 text-sm">
               Guests
               <input
-                type="number"
                 name="guests"
-                min={1}
-                max={10}
+                inputMode="numeric"
+                pattern="[0-9]*"
                 value={guests}
-                onChange={(event) => setGuests(Number(event.target.value) || 1)}
+                onChange={(event) => onGuestsChange(event.target.value)}
                 className="w-16 bg-transparent text-right outline-none"
               />
             </label>

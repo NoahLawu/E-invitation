@@ -21,6 +21,9 @@ export async function submitRsvp(formData: FormData) {
   if (!name) {
     return { ok: false, error: "Name is required." };
   }
+  if (attending === "yes" && (!Number.isFinite(guests) || guests < 1)) {
+    return { ok: false, error: "Minimum attend is 1 person." };
+  }
 
   const guest = await getGuestByToken(token);
   if (!guest) {
@@ -47,7 +50,7 @@ export async function submitRsvp(formData: FormData) {
     .update({
       invite_name: name,
       rsvp_status: attending,
-      rsvp_count: attending === "yes" ? Math.max(1, guests) : 0,
+      rsvp_count: attending === "yes" ? guests : 0,
       rsvp_at: new Date().toISOString(),
     })
     .eq("id", guest.id);
