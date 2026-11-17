@@ -219,8 +219,12 @@ export default async function GuestsPage({ searchParams }: GuestsPageProps) {
                     {guest.phone || "—"}
                   </td>
                   <td className="px-3 py-2">
-                    {guest.rsvp_status}
-                    {guest.rsvp_count != null ? ` · ${guest.rsvp_count}` : ""}
+                    {guest.rsvp_status === "no"
+                      ? "Not attend"
+                      : guest.rsvp_status}
+                    {guest.rsvp_status !== "no" && guest.rsvp_count != null
+                      ? ` · ${guest.rsvp_count}`
+                      : ""}
                   </td>
                   <td className="px-3 py-2">
                     {guest.checked_in_at ? "Arrived" : "Waiting"}
