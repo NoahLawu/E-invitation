@@ -55,7 +55,7 @@ export function Cover({
         <p className="mt-4 text-xs tracking-wide text-white/90">{when}</p>
       ) : null}
       {opened ? (
-        <p className="mt-12 animate-bounce text-xs tracking-[0.3em] text-muted uppercase">
+        <p className="mt-12 animate-bounce text-xs tracking-[0.3em] text-white uppercase">
           Swipe up
         </p>
       ) : (
