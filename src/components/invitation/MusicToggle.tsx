@@ -96,15 +96,12 @@ export function MusicToggle({
           }}
           className="fixed right-[max(1rem,calc(50%-215px+1rem))] bottom-5 z-30 flex h-12 w-12 items-center justify-center rounded-full border border-line bg-card text-accent shadow-sm"
         >
-          {enabled ? (
-            <span aria-hidden className="text-lg leading-none">
-              ♪
-            </span>
-          ) : (
-            <span aria-hidden className="text-xs tracking-wide">
-              off
-            </span>
-          )}
+          <span aria-hidden className="relative text-lg leading-none">
+            ♪
+            {enabled ? null : (
+              <span className="absolute top-1/2 left-1/2 h-0.5 w-5 -translate-x-1/2 -translate-y-1/2 rotate-45 rounded-full bg-current" />
+            )}
+          </span>
         </button>
       ) : null}
     </>
