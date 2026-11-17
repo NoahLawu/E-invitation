@@ -178,7 +178,7 @@ export function RsvpSection({
           </button>
         </form>
       )}
-      {error ? <p className="mt-3 text-sm text-accent">{error}</p> : null}
+      {error ? <p className="mt-3 text-sm text-white">{error}</p> : null}
       </div>
     </InvitationSection>
   );
