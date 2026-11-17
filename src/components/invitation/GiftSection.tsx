@@ -5,7 +5,7 @@ import { InvitationSection } from "@/components/invitation/InvitationSection";
 import { lineFade, useSectionShown } from "@/components/invitation/line-fade";
 import type { BankAccount } from "@/lib/site-settings";
 
-const LOGO_HEIGHT = 36;
+const LOGO_HEIGHT = 26;
 const BANK_ORDER = ["BCA", "BNI"];
 
 function giftTitle(title: string) {
@@ -63,7 +63,7 @@ export function GiftSection({
           {note}
         </p>
       ) : null}
-      <div className="mt-4 w-full space-y-2">
+      <div className="mt-3 w-full space-y-1.5">
         {orderedAccounts(accounts).map((account) => (
           <BankCard
             key={`${account.bank}-${account.number}`}
@@ -193,22 +193,22 @@ function BankCard({ account }: { account: BankAccount }) {
   }
 
   return (
-    <article className="rounded-2xl border border-line bg-card/90 px-3 py-2.5 text-left">
-      <p className="text-xs tracking-[0.2em] text-muted uppercase">
+    <article className="rounded-xl border border-line bg-card/90 px-2.5 py-1.5 text-left">
+      <p className="text-[0.65rem] tracking-[0.2em] text-muted uppercase">
         {account.bank}
       </p>
-      <p className="mt-0.5 text-sm text-foreground">{account.holder}</p>
+      <p className="text-xs text-foreground">{account.holder}</p>
       {account.logo ? (
-        <div className="mt-2">
+        <div className="mt-1">
           <BankLogo src={account.logo} />
         </div>
       ) : null}
-      <div className="mt-2 flex items-center justify-between gap-3">
-        <p className="min-w-0 font-mono text-sm tracking-wide">{account.number}</p>
+      <div className="mt-1 flex items-center justify-between gap-3">
+        <p className="min-w-0 font-mono text-xs tracking-wide">{account.number}</p>
         <button
           type="button"
           onClick={copyNumber}
-          className="min-h-9 shrink-0 rounded-full bg-accent px-3 text-xs tracking-wide text-white"
+          className="min-h-8 shrink-0 rounded-full bg-accent px-3 text-xs tracking-wide text-white"
         >
           {copied ? "Copied" : "Copy"}
         </button>
