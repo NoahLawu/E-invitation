@@ -32,11 +32,11 @@ export function QrSection({ guestName, inviteUrl, doorCode }: QrSectionProps) {
 
   return (
     <InvitationSection section="qr" mediaAlt="">
-      <p className="text-xs tracking-[0.3em] text-muted uppercase">
+      <p className="text-xs tracking-[0.3em] text-white uppercase">
         Attendance
       </p>
-      <h2 className="font-display mt-3 text-3xl">Your QR</h2>
-      <p className="mt-2 max-w-xs text-sm text-muted">
+      <h2 className="font-display mt-3 text-3xl text-white">Your QR</h2>
+      <p className="mt-2 max-w-xs text-sm text-white">
         Show this at the door, {guestName}. If the camera cannot read it, tell
         them the door code.
       </p>
@@ -54,10 +54,10 @@ export function QrSection({ guestName, inviteUrl, doorCode }: QrSectionProps) {
       </div>
       {doorCode ? (
         <p className="mt-5 text-center">
-          <span className="block text-xs tracking-[0.3em] text-muted uppercase">
+          <span className="block text-xs tracking-[0.3em] text-white uppercase">
             Door code
           </span>
-          <span className="font-display mt-1 block text-4xl tracking-[0.2em]">
+          <span className="font-display mt-1 block text-4xl tracking-[0.2em] text-white">
             {formatDoorCode(doorCode)}
           </span>
         </p>
