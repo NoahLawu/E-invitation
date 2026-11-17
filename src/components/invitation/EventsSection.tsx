@@ -19,7 +19,11 @@ export function EventsSection({
   const fade = lineFade(shown, 0);
 
   return (
-    <InvitationSection section="events" mediaAlt="" contentAlign="top-left">
+    <InvitationSection
+      section="events"
+      mediaAlt=""
+      contentAlign={visible.length === 1 ? "middle-left" : "top-left"}
+    >
       <div
         ref={copyRef}
         className={`w-full ${fade.className}`}

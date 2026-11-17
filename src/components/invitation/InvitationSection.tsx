@@ -12,7 +12,7 @@ type InvitationSectionProps = {
   video?: string;
   mediaAlt?: string;
   priority?: boolean;
-  contentAlign?: "center" | "bottom-left" | "top-left";
+  contentAlign?: "center" | "bottom-left" | "middle-left" | "top-left";
   veil?: "tint" | "bottom";
   cropBottom?: boolean;
 };
@@ -47,7 +47,9 @@ export function InvitationSection({
             ? "items-start justify-end pb-16 text-left"
             : contentAlign === "top-left"
               ? "items-start justify-start pt-12 pb-8 text-left"
-              : "items-center justify-center text-center"
+              : contentAlign === "middle-left"
+                ? "items-start justify-center text-left"
+                : "items-center justify-center text-center"
         }`}
       >
         {children}
