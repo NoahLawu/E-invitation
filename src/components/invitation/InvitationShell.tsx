@@ -262,7 +262,6 @@ export function InvitationShell({
                 <SharedSectionVideo
                   src={visuals.backgroundVideo}
                   mediaRef={soundtrackRef}
-                  active={soundtrackOn}
                 />
               ) : null
             }
@@ -277,6 +276,7 @@ export function InvitationShell({
               image={visuals.coverImage}
               onOpen={() => {
                 setOpened(true);
+                musicRef.current?.prime();
               }}
             />
 

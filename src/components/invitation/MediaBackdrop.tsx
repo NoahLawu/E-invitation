@@ -16,16 +16,12 @@ type MediaBackdropProps = {
 export function SharedSectionVideo({
   src,
   mediaRef,
-  active,
 }: {
   src: string;
   mediaRef: RefObject<HTMLVideoElement | null>;
-  active: boolean;
 }) {
   return (
-    <div
-      className={`pointer-events-none absolute inset-0 z-0 ${active ? "" : "invisible"}`}
-    >
+    <div className="pointer-events-none absolute inset-0 z-0">
       <video
         ref={mediaRef}
         className="h-full w-full object-cover"
@@ -33,6 +29,7 @@ export function SharedSectionVideo({
         muted
         loop
         playsInline
+        autoPlay
         preload="auto"
         crossOrigin="anonymous"
       />

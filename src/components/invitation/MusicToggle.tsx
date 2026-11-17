@@ -10,6 +10,7 @@ import {
 import { applyMusicVolume } from "@/lib/music-level";
 
 export type MusicToggleHandle = {
+  prime: () => void;
   start: () => void;
 };
 
@@ -27,19 +28,36 @@ export function MusicToggle({
   const [enabled, setEnabled] = useState(false);
   const percent = Math.min(100, Math.max(1, volume));
 
+  function playMuted(media: HTMLVideoElement) {
+    media.muted = true;
+    media.playsInline = true;
+    return media.play();
+  }
+
+  function prime() {
+    const media = mediaRef.current;
+    if (!media) {
+      return;
+    }
+    void playMuted(media);
+  }
+
   function start() {
     const media = mediaRef.current;
     if (!media) {
       return;
     }
+    const playing = media.paused ? playMuted(media) : Promise.resolve();
     media.muted = false;
     applyMusicVolume(media, percent);
-    const playing = media.play();
     setEnabled(true);
-    void playing.catch(() => setEnabled(false));
+    void playing.catch(() => {
+      setEnabled(false);
+      void playMuted(media);
+    });
   }
 
-  useImperativeHandle(ref, () => ({ start }));
+  useImperativeHandle(ref, () => ({ prime, start }));
 
   useEffect(() => {
     const media = mediaRef.current;
@@ -48,7 +66,6 @@ export function MusicToggle({
     }
     media.muted = false;
     applyMusicVolume(media, percent);
-    void media.play().catch(() => setEnabled(false));
   }, [enabled, mediaRef, percent]);
 
   function stop() {
