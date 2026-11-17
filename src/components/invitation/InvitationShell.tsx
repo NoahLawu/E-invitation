@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, type ReactNode, Fragment } from "react";
+import { useEffect, useRef, useState, type ReactNode, Fragment } from "react";
 import { ClosingSection } from "@/components/invitation/ClosingSection";
 import { CommentsSection } from "@/components/invitation/CommentsSection";
 import { CountdownSection } from "@/components/invitation/CountdownSection";
@@ -74,6 +74,38 @@ export function InvitationShell({
   const musicRef = useRef<MusicToggleHandle>(null);
   const soundtrackRef = useRef<HTMLVideoElement>(null);
   const soundtrackStarted = useRef(false);
+
+  useEffect(() => {
+    document.body.classList.add("invite-locked");
+    function pin() {
+      if (window.scrollX !== 0 || window.scrollY !== 0) {
+        window.scrollTo(0, 0);
+      }
+      document.documentElement.scrollLeft = 0;
+      document.body.scrollLeft = 0;
+    }
+    function onFocusIn(event: FocusEvent) {
+      const target = event.target;
+      if (
+        !(target instanceof HTMLInputElement) &&
+        !(target instanceof HTMLTextAreaElement)
+      ) {
+        return;
+      }
+      pin();
+      window.setTimeout(pin, 50);
+      window.setTimeout(pin, 300);
+    }
+    document.addEventListener("focusin", onFocusIn);
+    window.visualViewport?.addEventListener("scroll", pin);
+    window.visualViewport?.addEventListener("resize", pin);
+    return () => {
+      document.body.classList.remove("invite-locked");
+      document.removeEventListener("focusin", onFocusIn);
+      window.visualViewport?.removeEventListener("scroll", pin);
+      window.visualViewport?.removeEventListener("resize", pin);
+    };
+  }, []);
   const couple = settings.couple;
   const copy = settings.copy;
   const visuals = inviteVisuals(settings);

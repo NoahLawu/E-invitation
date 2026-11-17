@@ -135,7 +135,7 @@ export function RsvpSection({
               placeholder="Your name"
               autoComplete="name"
               required
-              className="min-h-11 w-full rounded-xl border border-line bg-card/90 px-3 text-sm outline-none"
+              className="min-h-11 w-full rounded-xl border border-line bg-card/90 px-3 text-base outline-none"
             />
           </label>
           <div className="grid grid-cols-2 gap-2">
@@ -171,7 +171,7 @@ export function RsvpSection({
                 pattern="[0-9]*"
                 value={guests}
                 onChange={(event) => onGuestsChange(event.target.value)}
-                className="w-16 bg-transparent text-right outline-none"
+                className="w-16 bg-transparent text-right text-base outline-none"
               />
             </label>
           ) : (
