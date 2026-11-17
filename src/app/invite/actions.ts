@@ -13,9 +13,13 @@ export async function submitRsvp(formData: FormData) {
   const token = String(formData.get("token") ?? "");
   const attending = String(formData.get("attending") ?? "");
   const guests = Number(formData.get("guests") ?? 1);
+  const name = String(formData.get("name") ?? "").trim();
 
   if (!token || (attending !== "yes" && attending !== "no")) {
     return { ok: false, error: "Open your personal invite link to RSVP." };
+  }
+  if (!name) {
+    return { ok: false, error: "Name is required." };
   }
 
   const guest = await getGuestByToken(token);
@@ -41,6 +45,7 @@ export async function submitRsvp(formData: FormData) {
   const { error } = await createServiceClient()
     .from("guests")
     .update({
+      invite_name: name,
       rsvp_status: attending,
       rsvp_count: attending === "yes" ? Math.max(1, guests) : 0,
       rsvp_at: new Date().toISOString(),

@@ -106,7 +106,7 @@ export function RsvpSection({
               onChange={(event) => setName(event.target.value)}
               placeholder="Your name"
               autoComplete="name"
-              readOnly
+              required
               className="min-h-11 w-full rounded-xl border border-line bg-card/90 px-3 text-sm outline-none"
             />
           </label>
