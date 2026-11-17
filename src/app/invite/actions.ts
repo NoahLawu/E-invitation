@@ -29,6 +29,12 @@ export async function submitRsvp(formData: FormData) {
   if (!guest) {
     return { ok: false, error: "Guest not found." };
   }
+  if (attending === "yes" && guests > guest.invited_count) {
+    return {
+      ok: false,
+      error: `Maximum guest is ${guest.invited_count} person.`,
+    };
+  }
 
   const settings = await getSiteSettings();
   const windowState = rsvpWindowState(

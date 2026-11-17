@@ -50,6 +50,7 @@ type InvitationShellProps = {
   inviteUrl?: string;
   rsvpStatus?: RsvpStatus;
   rsvpCount?: number | null;
+  invitedCount?: number;
   invitedTo?: InviteEvent;
   doorCode?: string;
   comments?: Pick<GuestbookComment, "id" | "name" | "message">[];
@@ -62,6 +63,7 @@ export function InvitationShell({
   inviteUrl,
   rsvpStatus = "pending",
   rsvpCount,
+  invitedCount = 1,
   invitedTo = "both",
   doorCode,
   comments = [],
@@ -171,6 +173,7 @@ export function InvitationShell({
             guestToken={guestToken}
             rsvpStatus={rsvpStatus}
             rsvpCount={rsvpCount}
+            invitedCount={invitedCount}
             rsvpOpensAt={settings.rsvpOpensAt}
             rsvpClosesAt={settings.rsvpClosesAt}
             rsvpEditable={settings.rsvpEditable}

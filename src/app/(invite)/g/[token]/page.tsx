@@ -40,6 +40,7 @@ export default async function GuestInvitePage({
       inviteUrl={inviteUrl}
       rsvpStatus={guest.rsvp_status}
       rsvpCount={guest.rsvp_count}
+      invitedCount={guest.invited_count}
       invitedTo={guest.invited_to}
       doorCode={guest.door_code}
       comments={comments}

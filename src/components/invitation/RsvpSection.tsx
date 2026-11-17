@@ -14,6 +14,7 @@ type RsvpSectionProps = {
   guestToken?: string;
   rsvpStatus?: RsvpStatus;
   rsvpCount?: number | null;
+  invitedCount?: number;
   rsvpOpensAt?: string;
   rsvpClosesAt?: string;
   rsvpEditable?: boolean;
@@ -24,6 +25,7 @@ export function RsvpSection({
   guestToken,
   rsvpStatus = "pending",
   rsvpCount,
+  invitedCount = 1,
   rsvpOpensAt = "",
   rsvpClosesAt = "",
   rsvpEditable = true,
@@ -56,7 +58,7 @@ export function RsvpSection({
       return;
     }
     const count = Number(digits);
-    setGuests(count > 10 ? "10" : String(count));
+    setGuests(count > 99 ? "99" : String(count));
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -64,6 +66,12 @@ export function RsvpSection({
     setError(null);
     if (attending === "yes" && Number(guests) < 1) {
       const message = "Minimum attend is 1 person.";
+      setError(message);
+      toast({ tone: "error", message });
+      return;
+    }
+    if (attending === "yes" && Number(guests) > invitedCount) {
+      const message = `Maximum guest is ${invitedCount} person.`;
       setError(message);
       toast({ tone: "error", message });
       return;
