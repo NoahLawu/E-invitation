@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { submitComment } from "@/app/invite/actions";
 import { InvitationSection } from "@/components/invitation/InvitationSection";
 import { lineFade, useSectionShown } from "@/components/invitation/line-fade";
@@ -33,7 +33,23 @@ export function CommentsSection({
   const toast = useToast();
   const setBusy = useInviteBusy();
   const copyRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
+  const [canScroll, setCanScroll] = useState(false);
   const fade = lineFade(useSectionShown(copyRef), 0);
+
+  useEffect(() => {
+    const list = listRef.current;
+    if (!list) {
+      return;
+    }
+    const measure = () => {
+      setCanScroll(list.scrollHeight > list.clientHeight + 1);
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(list);
+    return () => observer.disconnect();
+  }, [items]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -116,8 +132,9 @@ export function CommentsSection({
       </form>
       {error ? <p className="mt-2 text-sm text-accent">{error}</p> : null}
       <ul
+        ref={listRef}
         data-pager-scroll
-        className="wish-scroll mt-3 mb-14 min-h-0 w-full flex-1 space-y-2 overflow-y-auto overscroll-contain pr-1.5 pb-2 text-left touch-pan-y"
+        className={`wish-scroll mt-3 mb-14 min-h-0 w-full flex-1 space-y-2 overflow-y-auto overscroll-contain pr-1.5 pb-2 text-left${canScroll ? " touch-pan-y" : ""}`}
       >
         {items.length === 0 ? (
           <li className="rounded-xl border border-line bg-card/80 px-3 py-3 text-center text-sm text-muted">
