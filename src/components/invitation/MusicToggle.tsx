@@ -11,7 +11,7 @@ import { applyMusicVolume } from "@/lib/music-level";
 
 export type MusicToggleHandle = {
   prime: () => void;
-  start: () => void;
+  start: (fromBeginning?: boolean) => void;
 };
 
 export function MusicToggle({
@@ -42,10 +42,17 @@ export function MusicToggle({
     void playMuted(media);
   }
 
-  function start() {
+  function start(fromBeginning = false) {
     const media = mediaRef.current;
     if (!media) {
       return;
+    }
+    if (fromBeginning) {
+      try {
+        media.currentTime = 0;
+      } catch {
+        // The file can still be loading. Playback begins at the start once it can.
+      }
     }
     const playing = media.paused ? playMuted(media) : Promise.resolve();
     media.muted = false;

@@ -255,7 +255,7 @@ export function InvitationShell({
               }
               soundtrackStarted.current = true;
               setSoundtrackOn(true);
-              musicRef.current?.start();
+              musicRef.current?.start(true);
             }}
             background={
               visuals.backgroundVideo ? (
