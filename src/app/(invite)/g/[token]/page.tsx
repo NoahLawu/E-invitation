@@ -25,7 +25,7 @@ export default async function GuestInvitePage({
 
   const [inviteUrl, comments, settings] = await Promise.all([
     getInviteUrl(guest.token),
-    listComments(12),
+    listComments(40),
     getSiteSettings(),
   ]);
 

@@ -12,7 +12,7 @@ type HomeProps = {
 export default async function Home({ searchParams }: HomeProps) {
   const params = await searchParams;
   const configured = isSupabaseConfigured();
-  const comments = configured ? await listComments(12) : [];
+  const comments = configured ? await listComments(40) : [];
   const settings = configured ? await getSiteSettings() : defaultSiteSettings;
   if (!settings.published) {
     return <ComingSoon settings={settings} />;

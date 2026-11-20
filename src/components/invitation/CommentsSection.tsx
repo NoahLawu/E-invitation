@@ -19,6 +19,86 @@ type CommentsSectionProps = {
   comments?: GuestComment[];
 };
 
+const sampleWishes: GuestComment[] = [
+  {
+    id: "sample-1",
+    name: "Rina & Andi",
+    message: "Congratulations Intan and Noah. Wishing you a lifetime of love.",
+  },
+  {
+    id: "sample-2",
+    name: "Budi Santoso",
+    message: "So happy for both of you. See you at the reception.",
+  },
+  {
+    id: "sample-3",
+    name: "Sari Dewi",
+    message: "May your home be full of laughter, patience, and warm meals.",
+  },
+  {
+    id: "sample-4",
+    name: "Kevin Tan",
+    message: "What a beautiful day to celebrate the two of you.",
+  },
+  {
+    id: "sample-5",
+    name: "Maya Putri",
+    message:
+      "Intan, Noah — thank you for letting us be part of this. Love you both.",
+  },
+  {
+    id: "sample-6",
+    name: "Dimas Pratama",
+    message: "Selamat menempuh hidup baru. Semoga selalu saling jaga.",
+  },
+  {
+    id: "sample-7",
+    name: "Auntie Lina",
+    message: "You two look so happy. Blessings on your marriage.",
+  },
+  {
+    id: "sample-8",
+    name: "Hendra Wijaya",
+    message: "Congratulations. Wishing you health, joy, and many adventures.",
+  },
+  {
+    id: "sample-9",
+    name: "Nadia Kusuma",
+    message: "So glad I could celebrate with you today.",
+  },
+  {
+    id: "sample-10",
+    name: "The Hartono Family",
+    message:
+      "May Allah bless your union and keep your hearts close through every season.",
+  },
+  {
+    id: "sample-11",
+    name: "Clara Ong",
+    message: "Cheers to Intan and Noah. This is going to be a lovely chapter.",
+  },
+  {
+    id: "sample-12",
+    name: "Fajar Rahman",
+    message: "Happy wedding day. Cannot wait to dance later.",
+  },
+  {
+    id: "sample-13",
+    name: "Mrs. Susanti",
+    message: "Anak-anak yang baik. Semoga rumah tangganya sakinah.",
+  },
+  {
+    id: "sample-14",
+    name: "Jason & Melissa",
+    message: "We are so excited for you. Congratulations.",
+  },
+  {
+    id: "sample-15",
+    name: "Oki Pratama",
+    message: "Barakallahu lakuma wa baraka alaikuma wa jama'a bainakuma fi khair.",
+  },
+];
+
 export function CommentsSection({
   guestName,
   guestToken,
@@ -27,7 +107,7 @@ export function CommentsSection({
   const defaultName = guestName === "Guest" ? "" : guestName;
   const [name, setName] = useState(defaultName);
   const [message, setMessage] = useState("");
-  const [items, setItems] = useState(comments);
+  const [items, setItems] = useState([...comments, ...sampleWishes]);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
   const toast = useToast();
@@ -70,10 +150,10 @@ export function CommentsSection({
   }
 
   return (
-    <InvitationSection section="comments" mediaAlt="">
+    <InvitationSection section="comments" mediaAlt="" contentAlign="top-left">
       <div
         ref={copyRef}
-        className={`flex w-full flex-col items-center ${fade.className}`}
+        className={`flex min-h-0 w-full flex-1 flex-col items-center text-center ${fade.className}`}
         style={fade.style}
       >
       <p className="text-xs tracking-[0.3em] text-white uppercase">
@@ -115,13 +195,16 @@ export function CommentsSection({
         </button>
       </form>
       {error ? <p className="mt-2 text-sm text-accent">{error}</p> : null}
-      <ul className="mt-3 w-full space-y-2 overflow-hidden text-left">
+      <ul
+        data-pager-allow
+        className="mt-3 min-h-0 w-full flex-1 space-y-2 overflow-y-auto overscroll-contain pb-16 text-left touch-pan-y"
+      >
         {items.length === 0 ? (
           <li className="rounded-xl border border-line bg-card/80 px-3 py-3 text-center text-sm text-muted">
             Be the first to leave a wish.
           </li>
         ) : (
-          items.slice(0, 3).map((comment) => (
+          items.map((comment) => (
             <li
               key={comment.id}
               className="rounded-xl border border-line bg-card/90 px-3 py-3"

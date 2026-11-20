@@ -121,6 +121,20 @@ export function SectionPager({
         event.preventDefault();
         return;
       }
+      const target = event.target;
+      if (target instanceof Element) {
+        const scroller = target.closest("[data-pager-allow]");
+        if (
+          scroller instanceof HTMLElement &&
+          scroller.scrollHeight > scroller.clientHeight + 1 &&
+          ((event.deltaY > 0 &&
+            scroller.scrollTop + scroller.clientHeight <
+              scroller.scrollHeight - 1) ||
+            (event.deltaY < 0 && scroller.scrollTop > 0))
+        ) {
+          return;
+        }
+      }
       event.preventDefault();
       settle(event.deltaY > 0 ? 1 : -1);
     }
@@ -155,7 +169,7 @@ export function SectionPager({
     dragRef.current = 0;
     fieldSwipeRef.current =
       event.target instanceof Element &&
-      Boolean(event.target.closest("textarea"));
+      Boolean(event.target.closest("textarea, [data-pager-allow]"));
     startRef.current = {
       x: event.clientX,
       y: event.clientY,
@@ -178,7 +192,7 @@ export function SectionPager({
         event.currentTarget.setPointerCapture(event.pointerId);
       }
     }
-    if (axisRef.current !== "y") {
+    if (fieldSwipeRef.current || axisRef.current !== "y") {
       return;
     }
     const root = rootRef.current;
@@ -195,13 +209,20 @@ export function SectionPager({
     const dx = event.clientX - start.x;
     const dy = event.clientY - start.y;
     const vertical = axisRef.current === "y";
+    const scrollingList = fieldSwipeRef.current;
+    fieldSwipeRef.current = false;
     startRef.current = null;
     axisRef.current = null;
     draggingRef.current = false;
     if (event.currentTarget.hasPointerCapture(event.pointerId)) {
       event.currentTarget.releasePointerCapture(event.pointerId);
     }
-    if (!vertical || Math.abs(dy) < SWIPE_PX || Math.abs(dy) < Math.abs(dx)) {
+    if (
+      scrollingList ||
+      !vertical ||
+      Math.abs(dy) < SWIPE_PX ||
+      Math.abs(dy) < Math.abs(dx)
+    ) {
       settle(0);
       return;
     }
