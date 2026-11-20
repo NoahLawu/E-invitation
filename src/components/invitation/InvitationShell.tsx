@@ -73,17 +73,39 @@ export function InvitationShell({
   const [soundtrackOn, setSoundtrackOn] = useState(false);
   const musicRef = useRef<MusicToggleHandle>(null);
   const soundtrackRef = useRef<HTMLVideoElement>(null);
+  const shellRef = useRef<HTMLDivElement>(null);
   const soundtrackStarted = useRef(false);
 
   useEffect(() => {
+    const root = document.documentElement;
+    root.classList.add("invite-locked");
     document.body.classList.add("invite-locked");
+
     function pin() {
-      if (window.scrollX !== 0 || window.scrollY !== 0) {
+      const viewport = window.visualViewport;
+      const top = viewport?.offsetTop ?? 0;
+      const left = viewport?.offsetLeft ?? 0;
+      if (
+        window.scrollX !== 0 ||
+        window.scrollY !== 0 ||
+        root.scrollTop !== 0 ||
+        document.body.scrollTop !== 0
+      ) {
         window.scrollTo(0, 0);
+        root.scrollTop = 0;
+        document.body.scrollTop = 0;
       }
-      document.documentElement.scrollLeft = 0;
-      document.body.scrollLeft = 0;
+      if (viewport) {
+        root.style.setProperty("--invite-h", `${viewport.height}px`);
+      }
+      const shell = shellRef.current;
+      if (!shell) {
+        return;
+      }
+      shell.style.transform =
+        top || left ? `translate3d(${left}px, ${top}px, 0)` : "";
     }
+
     function onFocusIn(event: FocusEvent) {
       const target = event.target;
       if (
@@ -94,16 +116,26 @@ export function InvitationShell({
       }
       pin();
       window.setTimeout(pin, 50);
-      window.setTimeout(pin, 300);
+      window.setTimeout(pin, 150);
+      window.setTimeout(pin, 400);
     }
+
+    pin();
     document.addEventListener("focusin", onFocusIn);
+    window.addEventListener("scroll", pin);
     window.visualViewport?.addEventListener("scroll", pin);
     window.visualViewport?.addEventListener("resize", pin);
     return () => {
+      root.classList.remove("invite-locked");
       document.body.classList.remove("invite-locked");
+      root.style.removeProperty("--invite-h");
       document.removeEventListener("focusin", onFocusIn);
+      window.removeEventListener("scroll", pin);
       window.visualViewport?.removeEventListener("scroll", pin);
       window.visualViewport?.removeEventListener("resize", pin);
+      if (shellRef.current) {
+        shellRef.current.style.transform = "";
+      }
     };
   }, []);
   const couple = settings.couple;
@@ -240,15 +272,16 @@ export function InvitationShell({
 
   return (
     <div
+      ref={shellRef}
       data-theme={settings.theme}
-      className="h-dvh bg-[var(--chrome)]"
+      className="h-[var(--invite-h)] overflow-hidden bg-[var(--chrome)]"
       style={inviteThemeStyle(settings.colors)}
     >
       <InviteBusyProvider>
         <InviteVisualsProvider visuals={visuals}>
           <SectionPager
             enabled={opened}
-            className="relative isolate mx-auto h-dvh w-full max-w-[430px] bg-background shadow-[0_0_40px_color-mix(in_srgb,var(--foreground)_12%,transparent)]"
+            className="relative isolate mx-auto h-[var(--invite-h)] w-full max-w-[430px] bg-background shadow-[0_0_40px_color-mix(in_srgb,var(--foreground)_12%,transparent)]"
             onIndexChange={(index) => {
               if (index < 1 || soundtrackStarted.current) {
                 return;

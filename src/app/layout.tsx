@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Noto_Naskh_Arabic, Outfit } from "next/font/google";
 import { AppFeedback } from "@/components/ui/AppFeedback";
 import "./globals.css";
@@ -19,6 +19,12 @@ const arabic = Noto_Naskh_Arabic({
   weight: ["400", "500", "600"],
   variable: "--font-naskh",
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  interactiveWidget: "overlays-content",
+};
 
 export const metadata: Metadata = {
   title: "Wedding Invitation",

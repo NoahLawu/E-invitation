@@ -11,10 +11,10 @@ export function ComingSoon({ settings }: { settings: SiteSettings }) {
   return (
     <div
       data-theme={settings.theme}
-      className="h-dvh bg-[var(--chrome)]"
+      className="h-[var(--invite-h)] bg-[var(--chrome)]"
       style={inviteThemeStyle(settings.colors)}
     >
-      <div className="mx-auto flex h-dvh w-full max-w-[430px] flex-col items-center justify-center bg-background px-8 text-center shadow-[0_0_40px_color-mix(in_srgb,var(--foreground)_12%,transparent)]">
+      <div className="mx-auto flex h-[var(--invite-h)] w-full max-w-[430px] flex-col items-center justify-center bg-background px-8 text-center shadow-[0_0_40px_color-mix(in_srgb,var(--foreground)_12%,transparent)]">
         <p className="text-xs tracking-[0.35em] text-muted uppercase">
           The wedding of
         </p>

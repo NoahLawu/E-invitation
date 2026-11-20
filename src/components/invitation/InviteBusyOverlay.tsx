@@ -5,7 +5,7 @@ export function InviteBusyOverlay({
 }) {
   return (
     <div
-      className="fixed inset-x-0 top-0 z-50 mx-auto flex h-dvh w-full max-w-[430px] items-center justify-center bg-background/45 backdrop-blur-md"
+      className="fixed inset-x-0 top-0 z-50 mx-auto flex h-[var(--invite-h)] w-full max-w-[430px] items-center justify-center bg-background/45 backdrop-blur-md"
       role="status"
       aria-live="polite"
       aria-busy="true"
