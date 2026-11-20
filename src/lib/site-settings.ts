@@ -246,7 +246,7 @@ export const defaultSiteSettings: SiteSettings = {
   bankAccounts: bankAccounts.map((account) => ({ ...account, logo: "" })),
   giftCopy: {
     title: "Angpao",
-    note: "Send a gift online to one of these accounts.",
+    note: "For those of you who wish to give a token of love to the bride and groom, you may use the bank account details below:",
   },
   faq: faq.map((item) => ({ ...item })),
   dressCode: {
@@ -384,6 +384,16 @@ export function clampMusicVolume(value: unknown) {
   return Math.min(100, Math.max(1, Math.round(volume)));
 }
 
+const previousGiftNote =
+  "For those of you who want to give a token of love to the bride and groom, you can use the E-wallet below:";
+
+function currentGiftNote(note: string) {
+  if (note.trim() === previousGiftNote) {
+    return defaultSiteSettings.giftCopy.note;
+  }
+  return note;
+}
+
 export function mergeSiteSettings(raw: unknown): SiteSettings {
   const parsed =
     raw && typeof raw === "object" ? (raw as Partial<SiteSettings>) : {};
@@ -427,10 +437,11 @@ export function mergeSiteSettings(raw: unknown): SiteSettings {
         typeof parsed.giftCopy?.title === "string"
           ? parsed.giftCopy.title
           : defaultSiteSettings.giftCopy.title,
-      note:
+      note: currentGiftNote(
         typeof parsed.giftCopy?.note === "string"
           ? parsed.giftCopy.note
           : defaultSiteSettings.giftCopy.note,
+      ),
     },
     faq: Array.isArray(parsed.faq) ? parsed.faq : defaultSiteSettings.faq,
     dressCode: {
