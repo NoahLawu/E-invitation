@@ -47,7 +47,11 @@ export function MusicToggle({
     if (!media) {
       return;
     }
+    // Opening the invitation starts the video muted, so a swipe joins it mid-way.
+    // Pause first: phones ignore a seek while the video is already playing.
+    // The music button calls this without fromBeginning, so it never rewinds.
     if (fromBeginning) {
+      media.pause();
       try {
         media.currentTime = 0;
       } catch {
