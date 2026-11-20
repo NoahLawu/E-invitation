@@ -19,86 +19,6 @@ type CommentsSectionProps = {
   comments?: GuestComment[];
 };
 
-const sampleWishes: GuestComment[] = [
-  {
-    id: "sample-1",
-    name: "Rina & Andi",
-    message: "Congratulations Intan and Noah. Wishing you a lifetime of love.",
-  },
-  {
-    id: "sample-2",
-    name: "Budi Santoso",
-    message: "So happy for both of you. See you at the reception.",
-  },
-  {
-    id: "sample-3",
-    name: "Sari Dewi",
-    message: "May your home be full of laughter, patience, and warm meals.",
-  },
-  {
-    id: "sample-4",
-    name: "Kevin Tan",
-    message: "What a beautiful day to celebrate the two of you.",
-  },
-  {
-    id: "sample-5",
-    name: "Maya Putri",
-    message:
-      "Intan, Noah — thank you for letting us be part of this. Love you both.",
-  },
-  {
-    id: "sample-6",
-    name: "Dimas Pratama",
-    message: "Selamat menempuh hidup baru. Semoga selalu saling jaga.",
-  },
-  {
-    id: "sample-7",
-    name: "Auntie Lina",
-    message: "You two look so happy. Blessings on your marriage.",
-  },
-  {
-    id: "sample-8",
-    name: "Hendra Wijaya",
-    message: "Congratulations. Wishing you health, joy, and many adventures.",
-  },
-  {
-    id: "sample-9",
-    name: "Nadia Kusuma",
-    message: "So glad I could celebrate with you today.",
-  },
-  {
-    id: "sample-10",
-    name: "The Hartono Family",
-    message:
-      "May Allah bless your union and keep your hearts close through every season.",
-  },
-  {
-    id: "sample-11",
-    name: "Clara Ong",
-    message: "Cheers to Intan and Noah. This is going to be a lovely chapter.",
-  },
-  {
-    id: "sample-12",
-    name: "Fajar Rahman",
-    message: "Happy wedding day. Cannot wait to dance later.",
-  },
-  {
-    id: "sample-13",
-    name: "Mrs. Susanti",
-    message: "Anak-anak yang baik. Semoga rumah tangganya sakinah.",
-  },
-  {
-    id: "sample-14",
-    name: "Jason & Melissa",
-    message: "We are so excited for you. Congratulations.",
-  },
-  {
-    id: "sample-15",
-    name: "Oki Pratama",
-    message: "Barakallahu lakuma wa baraka alaikuma wa jama'a bainakuma fi khair.",
-  },
-];
-
 export function CommentsSection({
   guestName,
   guestToken,
@@ -107,7 +27,7 @@ export function CommentsSection({
   const defaultName = guestName === "Guest" ? "" : guestName;
   const [name, setName] = useState(defaultName);
   const [message, setMessage] = useState("");
-  const [items, setItems] = useState([...comments, ...sampleWishes]);
+  const [items, setItems] = useState(comments);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
   const toast = useToast();
