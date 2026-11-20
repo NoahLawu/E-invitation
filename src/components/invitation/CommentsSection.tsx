@@ -197,7 +197,7 @@ export function CommentsSection({
       {error ? <p className="mt-2 text-sm text-accent">{error}</p> : null}
       <ul
         data-pager-scroll
-        className="wish-scroll mt-3 mb-14 min-h-0 w-full flex-1 space-y-2 overflow-y-auto overscroll-contain pr-4 pb-2 text-left touch-pan-y"
+        className="wish-scroll mt-3 mb-14 min-h-0 w-full flex-1 space-y-2 overflow-y-auto overscroll-contain pr-1.5 pb-2 text-left touch-pan-y"
       >
         {items.length === 0 ? (
           <li className="rounded-xl border border-line bg-card/80 px-3 py-3 text-center text-sm text-muted">
