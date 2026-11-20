@@ -181,6 +181,39 @@ button.gallery-arrow:active {
   cursor: pointer;
 }
 
+.wish-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(255 255 255 / 0.72) transparent;
+}
+
+.wish-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.wish-scroll::-webkit-scrollbar-button,
+.wish-scroll::-webkit-scrollbar-button:single-button,
+.wish-scroll::-webkit-scrollbar-button:vertical:start:decrement,
+.wish-scroll::-webkit-scrollbar-button:vertical:end:increment,
+.wish-scroll::-webkit-scrollbar-button:vertical:start:increment,
+.wish-scroll::-webkit-scrollbar-button:vertical:end:decrement {
+  display: none;
+  width: 0;
+  height: 0;
+  background: transparent;
+}
+
+.wish-scroll::-webkit-scrollbar-track,
+.wish-scroll::-webkit-scrollbar-track-piece,
+.wish-scroll::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+.wish-scroll::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.72);
+}
+
 ::selection {
   background: color-mix(in srgb, var(--accent) 25%, transparent);
 }
