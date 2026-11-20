@@ -105,7 +105,7 @@ export function MusicToggle({
             }
             start();
           }}
-          className="fixed right-[max(1rem,calc(50%-215px+1rem))] bottom-5 z-30 flex h-12 w-12 items-center justify-center rounded-full border border-white/45 bg-white/25 text-white shadow-sm backdrop-blur-md"
+          className="fixed right-[max(1rem,calc(50%-215px+1rem))] bottom-5 z-30 flex h-12 w-12 items-center justify-center rounded-full bg-white/25 text-white shadow-sm backdrop-blur-md"
         >
           <span aria-hidden className="relative text-lg leading-none">
             ♪
