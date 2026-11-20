@@ -123,7 +123,7 @@ export function SectionPager({
       }
       const target = event.target;
       if (target instanceof Element) {
-        const scroller = target.closest("[data-pager-allow]");
+        const scroller = target.closest("[data-pager-scroll]");
         if (
           scroller instanceof HTMLElement &&
           scroller.scrollHeight > scroller.clientHeight + 1 &&
@@ -142,7 +142,7 @@ export function SectionPager({
       const target = event.target;
       if (
         target instanceof Element &&
-        target.closest("[data-pager-allow], input, select")
+        target.closest("[data-pager-allow], [data-pager-scroll], input, select")
       ) {
         return;
       }
@@ -169,7 +169,7 @@ export function SectionPager({
     dragRef.current = 0;
     fieldSwipeRef.current =
       event.target instanceof Element &&
-      Boolean(event.target.closest("textarea, [data-pager-allow]"));
+      Boolean(event.target.closest("textarea, [data-pager-scroll]"));
     startRef.current = {
       x: event.clientX,
       y: event.clientY,
