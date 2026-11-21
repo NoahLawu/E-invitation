@@ -341,9 +341,9 @@ export default async function GuestsPage({ searchParams }: GuestsPageProps) {
           <FormPageBusy label="Importing guests…" />
           <h2 className="font-medium">CSV import</h2>
           <p className="mt-2 text-sm text-zinc-500">
-            Columns: name, invite_name, type, invited_to, invited_count, phone.
-            Type can be regular, vip, family, or vendor. Event can be both,
-            ceremony, or reception.
+            Columns: name, invite_name, type_guest, invited_to, invited_count,
+            phone. type_guest is friend or family. Event can be both, ceremony,
+            or reception.
           </p>
           <input
             name="file"

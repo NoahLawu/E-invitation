@@ -257,25 +257,21 @@ export const defaultSiteSettings: SiteSettings = {
   },
   whatsappTemplates: [
     {
-      id: "en",
-      name: "English",
+      id: "friend",
+      name: "Friend",
       body: "Hi {name},\n\nYou are invited to our wedding:\n{url}\nDoor code: {door_code}",
     },
     {
-      id: "id",
-      name: "Indonesian",
-      body: "Halo {name},\n\nIni undangan pernikahan kami:\n{url}\nKode pintu: {door_code}",
-    },
-    {
-      id: "ceremony",
-      name: "Ceremony only",
-      body: "Hi {name},\n\nYou are invited to the ceremony:\n{url}\nDoor code: {door_code}",
+      id: "family",
+      name: "Family",
+      body: "Hi {name},\n\nYou are invited to celebrate with the family:\n{url}\nDoor code: {door_code}",
     },
   ],
   guestTypes: {
+    friend: { label: "Friend", bg: "#ecfccb", fg: "#3f6212" },
+    family: { label: "Family", bg: "#e7e5e4", fg: "#44403c" },
     regular: { label: "Regular", bg: "#f4f4f5", fg: "#3f3f46" },
     vip: { label: "VIP", bg: "#fef3c7", fg: "#78350f" },
-    family: { label: "Family", bg: "#e7e5e4", fg: "#44403c" },
     vendor: { label: "Vendor", bg: "#e0f2fe", fg: "#0c4a6e" },
   },
   copy: {
@@ -453,11 +449,7 @@ export function mergeSiteSettings(raw: unknown): SiteSettings {
           ? parsed.dressCode.image
           : "",
     },
-    whatsappTemplates:
-      Array.isArray(parsed.whatsappTemplates) &&
-      parsed.whatsappTemplates.length > 0
-        ? parsed.whatsappTemplates
-        : defaultSiteSettings.whatsappTemplates,
+    whatsappTemplates: shareMessageTemplates(parsed.whatsappTemplates),
     guestTypes,
     copy: mergeCopy(parsed.copy),
     sections: mergeSections(parsed.sections),
@@ -701,6 +693,31 @@ export function rsvpWindowState(
     return "closed";
   }
   return "open";
+}
+
+export function shareMessageTemplates(raw: unknown): WhatsAppTemplate[] {
+  const saved = Array.isArray(raw) ? (raw as WhatsAppTemplate[]) : [];
+  return defaultSiteSettings.whatsappTemplates.map((fallback, index) => {
+    const match =
+      saved.find((item) => item?.id === fallback.id) ??
+      saved.find(
+        (item) => item?.name?.trim().toLowerCase() === fallback.id,
+      ) ??
+      saved[index];
+    const body = typeof match?.body === "string" ? match.body : fallback.body;
+    return { id: fallback.id, name: fallback.name, body };
+  });
+}
+
+export function whatsAppTemplateForGuest(
+  templates: WhatsAppTemplate[],
+  guestType: string,
+) {
+  const id = guestType === "family" ? "family" : "friend";
+  return (
+    shareMessageTemplates(templates).find((item) => item.id === id) ??
+    shareMessageTemplates(templates)[0]
+  );
 }
 
 export function fillWhatsAppTemplate(

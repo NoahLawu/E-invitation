@@ -33,7 +33,6 @@ import {
   type SiteSettings,
   type ThemeColorOverrides,
   type ThemeId,
-  type WhatsAppTemplate,
 } from "@/lib/site-settings";
 import { INVITE_IMAGE_ACCEPT } from "@/lib/invite-media";
 import { GUEST_TYPES, type GuestType } from "@/lib/types";
@@ -538,97 +537,43 @@ function EventFields({
 }
 
 function WhatsAppForm({ settings }: { settings: SiteSettings }) {
-  const [templates, setTemplates] = useState<WhatsAppTemplate[]>(
-    settings.whatsappTemplates,
-  );
+  const [templates, setTemplates] = useState(settings.whatsappTemplates);
+
+  function setBody(id: string, body: string) {
+    setTemplates((current) =>
+      current.map((item) => (item.id === id ? { ...item, body } : item)),
+    );
+  }
 
   return (
     <Group id="messages" title="WhatsApp">
-      <ItemHeading>Templates</ItemHeading>
+      <ItemHeading>Share messages</ItemHeading>
       <p className="mb-3 text-sm text-zinc-600">
-        Staff pick one of these when they tap WhatsApp. Placeholders:{" "}
-        <code>{"{name}"}</code> <code>{"{url}"}</code>{" "}
-        <code>{"{door_code}"}</code> <code>{"{event}"}</code>.
+        Friends and family each get their own message when you send the invite
+        by WhatsApp. Placeholders: <code>{"{name}"}</code>{" "}
+        <code>{"{url}"}</code> <code>{"{door_code}"}</code>{" "}
+        <code>{"{event}"}</code>.
       </p>
       <form action={saveInvitationSettings} className="space-y-3">
         <input type="hidden" name="section" value="whatsapp" />
         <input type="hidden" name="payload" value={JSON.stringify(templates)} />
-        {templates.map((template, index) => (
-          <div
-            key={template.id}
-            className="space-y-2 rounded-xl border border-zinc-200 p-3"
-          >
-            <div className="flex gap-2">
-              <input
-                value={template.name}
-                onChange={(event) =>
-                  setTemplates((current) =>
-                    current.map((item, itemIndex) =>
-                      itemIndex === index
-                        ? { ...item, name: event.target.value }
-                        : item,
-                    ),
-                  )
-                }
-                className={fieldClass + " mt-0"}
-                placeholder="Template name"
-              />
-              {templates.length > 1 ? (
-                <button
-                  type="button"
-                  onClick={() =>
-                    setTemplates((current) =>
-                      current.filter((_, itemIndex) => itemIndex !== index),
-                    )
-                  }
-                  className="text-sm text-red-600"
-                >
-                  Remove
-                </button>
-              ) : null}
-            </div>
+        {templates.map((template) => (
+          <label key={template.id} className="block text-sm">
+            {template.name}
             <textarea
               value={template.body}
               rows={5}
-              onChange={(event) =>
-                setTemplates((current) =>
-                  current.map((item, itemIndex) =>
-                    itemIndex === index
-                      ? { ...item, body: event.target.value }
-                      : item,
-                  ),
-                )
-              }
+              onChange={(event) => setBody(template.id, event.target.value)}
               className={fieldClass}
             />
-          </div>
+          </label>
         ))}
-        <button
-          type="button"
-          onClick={() =>
-            setTemplates((current) => [
-              ...current,
-              {
-                id: `tpl-${Date.now()}`,
-                name: "New template",
-                body: "Hi {name},\n\n{url}\nDoor code: {door_code}",
-              },
-            ])
-          }
-          className="text-sm text-zinc-600"
-        >
-          Add template
-        </button>
-        <div>
-          <SaveButton />
-        </div>
+        <SaveButton />
       </form>
-      <div className="mt-4">
-        <p className="mt-4 text-sm text-zinc-600">
-          After you pick a template, that guest is marked invite-sent. You can
-          also toggle it on the guest list.
-        </p>
-      </div>
+      <p className="mt-4 text-sm text-zinc-600">
+        The guest list uses the friend message or the family message from the
+        type_guest column. Sending marks that guest as invite-sent.
+      </p>
     </Group>
   );
 }
@@ -951,8 +896,8 @@ function GuestTypesForm({ settings }: { settings: SiteSettings }) {
     <Group id="guest-types" title="Guest types" status="mixed">
       <ItemHeading>Labels and badge colors</ItemHeading>
       <p className="mb-3 text-sm text-zinc-600">
-        The four types stay the same in the database. You can change the label
-        and badge color.
+        The types stay the same in the database. Friend and family choose which
+        WhatsApp message is sent. You can change each label and badge color.
       </p>
       <form action={saveInvitationSettings} className="space-y-3">
         <input type="hidden" name="section" value="guestTypes" />

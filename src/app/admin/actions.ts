@@ -20,6 +20,7 @@ import {
   isThemeId,
   mergeSiteSettings,
   sanitizeThemeColors,
+  shareMessageTemplates,
   type InviteSectionId,
   type SiteSettings,
 } from "@/lib/site-settings";
@@ -234,6 +235,13 @@ export async function importGuestsCsv(formData: FormData) {
     .map((line) => {
       const cells = splitCsvLine(line);
       const name = csvCell(cells, headerCells, hasHeader, ["name"], 0);
+      const typeGuest = csvCell(
+        cells,
+        headerCells,
+        hasHeader,
+        ["type_guest"],
+        -1,
+      );
       const type = csvCell(cells, headerCells, hasHeader, ["type"], 1);
       const invited = csvCell(
         cells,
@@ -248,9 +256,7 @@ export async function importGuestsCsv(formData: FormData) {
         invite_name:
           csvCell(cells, headerCells, hasHeader, ["invite_name"], -1) || null,
         token: createGuestToken(),
-        guest_type: isGuestType(type.toLowerCase())
-          ? type.toLowerCase()
-          : "regular",
+        guest_type: guestTypeFromImport(typeGuest || type),
         invited_to: parseInviteEvent(
           csvCell(cells, headerCells, hasHeader, ["invited_to", "event"], -1),
         ),
@@ -273,6 +279,20 @@ export async function importGuestsCsv(formData: FormData) {
   revalidatePath("/admin");
   revalidatePath("/admin/guests");
   redirect(`/admin/guests?imported=${rows.length}`);
+}
+
+function guestTypeFromImport(raw: string) {
+  const value = raw.trim().toLowerCase();
+  if (value === "friend" || value === "teman") {
+    return "friend";
+  }
+  if (value === "family" || value === "keluarga") {
+    return "family";
+  }
+  if (isGuestType(value)) {
+    return value;
+  }
+  return "regular";
 }
 
 function splitCsvLine(line: string) {
@@ -552,11 +572,7 @@ export async function saveInvitationSettings(formData: FormData) {
       }
       next = {
         ...next,
-        whatsappTemplates: payload.map((item, index) => ({
-          id: String(item.id ?? `tpl-${index + 1}`),
-          name: String(item.name ?? "").trim() || `Template ${index + 1}`,
-          body: String(item.body ?? "").trim(),
-        })),
+        whatsappTemplates: shareMessageTemplates(payload),
       };
     } else if (section === "giftCopy") {
       next = {
