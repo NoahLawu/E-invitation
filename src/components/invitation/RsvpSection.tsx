@@ -138,7 +138,7 @@ export function RsvpSection({
               className="min-h-11 w-full rounded-xl border border-line bg-card/90 px-3 text-base outline-none"
             />
           </label>
-          <div className="flex items-center justify-between rounded-xl border border-line bg-card/90 px-3 py-2 text-sm">
+          <div className="flex items-center justify-between rounded-xl border border-white/50 px-3 py-2 text-sm text-white">
             <span>Attend</span>
             <div className="flex gap-2">
               <button
@@ -147,7 +147,7 @@ export function RsvpSection({
                 className={`min-h-9 min-w-14 rounded-full border px-3 text-sm ${
                   attending === "yes"
                     ? "border-accent bg-accent text-white"
-                    : "border-line bg-card"
+                    : "border-white/60 bg-transparent text-white"
                 }`}
               >
                 Yes
@@ -158,7 +158,7 @@ export function RsvpSection({
                 className={`min-h-9 min-w-14 rounded-full border px-3 text-sm ${
                   attending === "no"
                     ? "border-accent bg-accent text-white"
-                    : "border-line bg-card"
+                    : "border-white/60 bg-transparent text-white"
                 }`}
               >
                 No
