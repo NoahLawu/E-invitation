@@ -50,6 +50,7 @@ export function SectionPager({
   const wheelLockRef = useRef(0);
   const fieldSwipeRef = useRef(false);
   const listSwipeRef = useRef<HTMLElement | null>(null);
+  const allowAreaRef = useRef(false);
   const onIndexChangeRef = useRef(onIndexChange);
   onIndexChangeRef.current = onIndexChange;
 
@@ -154,10 +155,19 @@ export function SectionPager({
     }
     function onTouchMove(event: TouchEvent) {
       const target = event.target;
-      if (
-        target instanceof Element &&
-        target.closest("[data-pager-allow], input, select")
-      ) {
+      if (target instanceof Element && target.closest("input, select")) {
+        return;
+      }
+      if (target instanceof Element && target.closest("[data-pager-allow]")) {
+        const start = startRef.current;
+        const touch = event.touches[0];
+        if (start && touch && event.cancelable) {
+          const dx = touch.clientX - start.x;
+          const dy = touch.clientY - start.y;
+          if (Math.abs(dy) > Math.abs(dx)) {
+            event.preventDefault();
+          }
+        }
         return;
       }
       const list =
@@ -199,6 +209,8 @@ export function SectionPager({
     const list =
       target instanceof Element ? target.closest("[data-pager-scroll]") : null;
     listSwipeRef.current = list instanceof HTMLElement ? list : null;
+    allowAreaRef.current =
+      target instanceof Element && Boolean(target.closest("[data-pager-allow]"));
     startRef.current = {
       x: event.clientX,
       y: event.clientY,
@@ -225,7 +237,11 @@ export function SectionPager({
       ) {
         fieldSwipeRef.current = true;
       }
-      if (axisRef.current === "y" && !fieldSwipeRef.current) {
+      if (
+        axisRef.current === "y" &&
+        !fieldSwipeRef.current &&
+        !allowAreaRef.current
+      ) {
         event.currentTarget.setPointerCapture(event.pointerId);
       }
     }
@@ -249,6 +265,7 @@ export function SectionPager({
     const scrollingList = fieldSwipeRef.current;
     fieldSwipeRef.current = false;
     listSwipeRef.current = null;
+    allowAreaRef.current = false;
     startRef.current = null;
     axisRef.current = null;
     draggingRef.current = false;

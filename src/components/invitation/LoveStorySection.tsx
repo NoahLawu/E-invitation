@@ -57,7 +57,7 @@ export function LoveStorySection({
             ref={scroller}
             onScroll={onScroll}
             data-pager-allow=""
-            className="mt-3 flex w-full snap-x snap-mandatory overflow-x-auto overflow-y-hidden [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="mt-3 flex w-full touch-pan-x snap-x snap-mandatory overflow-x-auto overflow-y-hidden [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             {beats.map((beat, beatIndex) => {
               const photo = photos[beatIndex] ?? "";
