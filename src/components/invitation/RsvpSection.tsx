@@ -138,13 +138,13 @@ export function RsvpSection({
               className="min-h-11 w-full rounded-xl border border-line bg-card/90 px-3 text-base outline-none"
             />
           </label>
-          <div className="flex items-center justify-between rounded-xl border border-white/50 px-3 py-2 text-sm text-white">
-            <span>Attend</span>
-            <div className="flex gap-2">
+          <div className="space-y-2 text-sm text-white">
+            <p>Attend</p>
+            <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
                 onClick={() => setAttending("yes")}
-                className={`min-h-9 min-w-14 rounded-full border px-3 text-sm ${
+                className={`min-h-11 w-full rounded-xl border text-sm ${
                   attending === "yes"
                     ? "border-accent bg-accent text-white"
                     : "border-white/60 bg-transparent text-white"
@@ -155,7 +155,7 @@ export function RsvpSection({
               <button
                 type="button"
                 onClick={() => setAttending("no")}
-                className={`min-h-9 min-w-14 rounded-full border px-3 text-sm ${
+                className={`min-h-11 w-full rounded-xl border text-sm ${
                   attending === "no"
                     ? "border-accent bg-accent text-white"
                     : "border-white/60 bg-transparent text-white"
