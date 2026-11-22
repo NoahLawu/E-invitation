@@ -1,57 +1,71 @@
 "use client";
 
-import { useRef, useState, type AnimationEvent, type PointerEvent } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type PointerEvent,
+  type TransitionEvent,
+} from "react";
 import { InvitationSection } from "@/components/invitation/InvitationSection";
 import { lineFade, useSectionShown } from "@/components/invitation/line-fade";
 import { PhotoSlot } from "@/components/invitation/PhotoSlot";
 
 const SWIPE_PX = 48;
 
-type GallerySlide = {
-  direction: -1 | 1;
-  from: string;
-  to: string;
-};
-
 export function GallerySection({ photos }: { photos: string[] }) {
   const copyRef = useRef<HTMLDivElement>(null);
   const fade = lineFade(useSectionShown(copyRef), 0);
   const start = useRef<{ x: number; y: number } | null>(null);
   const moving = useRef(false);
-  const [index, setIndex] = useState(0);
-  const [slide, setSlide] = useState<GallerySlide | null>(null);
   const looping = photos.length > 1;
-  const photo = photos[index] ?? photos[0] ?? "";
+  const frames = looping
+    ? [photos[photos.length - 1], ...photos, photos[0]]
+    : photos;
+  const [pos, setPos] = useState(looping ? 1 : 0);
+  const [animate, setAnimate] = useState(true);
+
+  useEffect(() => {
+    if (animate) {
+      return;
+    }
+    const frame = requestAnimationFrame(() => {
+      requestAnimationFrame(() => setAnimate(true));
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [animate]);
 
   function show(direction: -1 | 1) {
     if (moving.current || photos.length < 2) {
       return;
     }
-    const from = index;
-    const to =
-      direction === 1
-        ? (from + 1) % photos.length
-        : (from - 1 + photos.length) % photos.length;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) {
-      setIndex(to);
+      setAnimate(false);
+      setPos((current) => wrap(current + direction, photos.length));
       return;
     }
     moving.current = true;
-    setIndex(to);
-    setSlide({
-      direction,
-      from: photos[from] ?? "",
-      to: photos[to] ?? "",
-    });
+    setAnimate(true);
+    setPos((current) => current + direction);
   }
 
-  function finishSlide(event: AnimationEvent<HTMLDivElement>) {
-    if (event.target !== event.currentTarget) {
+  function onTransitionEnd(event: TransitionEvent<HTMLDivElement>) {
+    if (event.target !== event.currentTarget || event.propertyName !== "transform") {
       return;
     }
     moving.current = false;
-    setSlide(null);
+    setPos((current) => {
+      if (current <= 0) {
+        setAnimate(false);
+        return photos.length;
+      }
+      if (current >= photos.length + 1) {
+        setAnimate(false);
+        return 1;
+      }
+      return current;
+    });
   }
 
   function onPointerDown(event: PointerEvent<HTMLDivElement>) {
@@ -83,7 +97,7 @@ export function GallerySection({ photos }: { photos: string[] }) {
         style={fade.style}
       >
         <p className="text-xs tracking-[0.3em] text-white uppercase">Gallery</p>
-        {photo ? (
+        {photos.length > 0 ? (
           <div className="relative mt-6 w-full">
             <div
               data-pager-allow=""
@@ -94,42 +108,31 @@ export function GallerySection({ photos }: { photos: string[] }) {
               }}
               className="relative h-[58dvh] w-full overflow-hidden"
             >
-              {slide ? (
-                <div
-                  onAnimationEnd={finishSlide}
-                  className={`flex h-full w-[200%] ${
-                    slide.direction === 1
-                      ? "gallery-slide-next"
-                      : "gallery-slide-prev"
-                  }`}
-                >
+              <div
+                onTransitionEnd={onTransitionEnd}
+                className={`flex h-full [backface-visibility:hidden] ${
+                  animate
+                    ? "transition-transform duration-[450ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+                    : ""
+                }`}
+                style={{
+                  width: `${frames.length * 100}%`,
+                  transform: `translate3d(-${(pos * 100) / frames.length}%, 0, 0)`,
+                }}
+              >
+                {frames.map((src, frameIndex) => (
                   <PhotoSlot
-                    src={slide.direction === 1 ? slide.from : slide.to}
+                    key={`${src}-${frameIndex}`}
+                    src={src}
                     alt=""
                     sizes="430px"
                     bare
                     instant
-                    className="h-full w-1/2 shrink-0 grow-0 basis-1/2"
+                    className="h-full shrink-0"
+                    style={{ width: `${100 / frames.length}%` }}
                   />
-                  <PhotoSlot
-                    src={slide.direction === 1 ? slide.to : slide.from}
-                    alt={`Gallery photo ${index + 1}`}
-                    sizes="430px"
-                    bare
-                    instant
-                    className="h-full w-1/2 shrink-0 grow-0 basis-1/2"
-                  />
-                </div>
-              ) : (
-                <PhotoSlot
-                  src={photo}
-                  alt={`Gallery photo ${index + 1}`}
-                  sizes="430px"
-                  bare
-                  instant
-                  className="h-full w-full"
-                />
-              )}
+                ))}
+              </div>
             </div>
             {looping ? (
               <>
@@ -156,6 +159,16 @@ export function GallerySection({ photos }: { photos: string[] }) {
       </div>
     </InvitationSection>
   );
+}
+
+function wrap(position: number, count: number) {
+  if (position <= 0) {
+    return count;
+  }
+  if (position >= count + 1) {
+    return 1;
+  }
+  return position;
 }
 
 function GalleryArrow({ direction }: { direction: "left" | "right" }) {

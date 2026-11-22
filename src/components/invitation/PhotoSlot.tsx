@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 
 type PhotoSlotProps = {
   src: string;
@@ -10,6 +10,7 @@ type PhotoSlotProps = {
   sizes?: string;
   bare?: boolean;
   instant?: boolean;
+  style?: CSSProperties;
 };
 
 export function PhotoSlot({
@@ -19,6 +20,7 @@ export function PhotoSlot({
   sizes = "200px",
   bare = false,
   instant = false,
+  style,
 }: PhotoSlotProps) {
   const [ready, setReady] = useState(instant);
 
@@ -26,18 +28,22 @@ export function PhotoSlot({
 
   if (!src) {
     return (
-      <div className={`relative overflow-hidden ${frame} ${className}`} />
+      <div
+        className={`relative overflow-hidden ${frame} ${className}`}
+        style={style}
+      />
     );
   }
 
   return (
-    <div className={`relative overflow-hidden ${frame} ${className}`}>
+    <div className={`relative overflow-hidden ${frame} ${className}`} style={style}>
       <Image
         src={src}
         alt={alt}
         fill
         sizes={sizes}
         className={`object-cover ${ready ? "opacity-100" : "opacity-0"}`}
+        priority={instant}
         onLoad={() => setReady(true)}
         onError={() => setReady(false)}
       />
