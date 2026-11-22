@@ -112,7 +112,35 @@ export function SectionPager({
       }
     });
     observer.observe(root);
-    return () => observer.disconnect();
+
+    function releaseGesture() {
+      const wasDragging = draggingRef.current || dragRef.current !== 0;
+      draggingRef.current = false;
+      startRef.current = null;
+      axisRef.current = null;
+      fieldSwipeRef.current = false;
+      listSwipeRef.current = null;
+      allowAreaRef.current = false;
+      dragRef.current = 0;
+      const root = rootRef.current;
+      if (wasDragging && root && root.clientHeight > 0) {
+        paint(false);
+      }
+    }
+
+    function onPageShow() {
+      releaseGesture();
+    }
+
+    document.addEventListener("visibilitychange", releaseGesture);
+    window.addEventListener("pagehide", releaseGesture);
+    window.addEventListener("pageshow", onPageShow);
+    return () => {
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", releaseGesture);
+      window.removeEventListener("pagehide", releaseGesture);
+      window.removeEventListener("pageshow", onPageShow);
+    };
   }, [enabled]);
 
   useEffect(() => {

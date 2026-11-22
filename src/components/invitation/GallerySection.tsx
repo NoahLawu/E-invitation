@@ -5,6 +5,7 @@ import {
   useRef,
   useState,
   type PointerEvent,
+  type TouchEvent,
   type TransitionEvent,
 } from "react";
 import { InvitationSection } from "@/components/invitation/InvitationSection";
@@ -12,12 +13,14 @@ import { lineFade, useSectionShown } from "@/components/invitation/line-fade";
 import { PhotoSlot } from "@/components/invitation/PhotoSlot";
 
 const SWIPE_PX = 48;
+const SLIDE_MS = 520;
 
 export function GallerySection({ photos }: { photos: string[] }) {
   const copyRef = useRef<HTMLDivElement>(null);
   const fade = lineFade(useSectionShown(copyRef), 0);
   const start = useRef<{ x: number; y: number } | null>(null);
   const moving = useRef(false);
+  const unlockTimer = useRef<number | null>(null);
   const looping = photos.length > 1;
   const frames = looping
     ? [photos[photos.length - 1], ...photos, photos[0]]
@@ -35,8 +38,56 @@ export function GallerySection({ photos }: { photos: string[] }) {
     return () => cancelAnimationFrame(frame);
   }, [animate]);
 
+  useEffect(() => {
+    function recover() {
+      if (unlockTimer.current != null) {
+        window.clearTimeout(unlockTimer.current);
+        unlockTimer.current = null;
+      }
+      moving.current = false;
+      start.current = null;
+      setAnimate(false);
+      setPos((current) => snap(current, photos.length));
+    }
+
+    function onVisibility() {
+      if (document.visibilityState === "visible") {
+        recover();
+      }
+    }
+
+    document.addEventListener("visibilitychange", onVisibility);
+    window.addEventListener("pageshow", recover);
+    return () => {
+      document.removeEventListener("visibilitychange", onVisibility);
+      window.removeEventListener("pageshow", recover);
+    };
+  }, [photos.length]);
+
+  function clearUnlockTimer() {
+    if (unlockTimer.current != null) {
+      window.clearTimeout(unlockTimer.current);
+      unlockTimer.current = null;
+    }
+  }
+
+  function finishMove() {
+    clearUnlockTimer();
+    moving.current = false;
+    setPos((current) => {
+      const next = snap(current, photos.length);
+      if (next !== current) {
+        setAnimate(false);
+      }
+      return next;
+    });
+  }
+
   function show(direction: -1 | 1) {
-    if (moving.current || photos.length < 2) {
+    if (photos.length < 2) {
+      return;
+    }
+    if (moving.current) {
       return;
     }
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -48,46 +99,90 @@ export function GallerySection({ photos }: { photos: string[] }) {
     moving.current = true;
     setAnimate(true);
     setPos((current) => current + direction);
+    clearUnlockTimer();
+    unlockTimer.current = window.setTimeout(() => {
+      unlockTimer.current = null;
+      moving.current = false;
+      setAnimate(false);
+      setPos((current) => snap(current, photos.length));
+    }, SLIDE_MS);
   }
 
   function onTransitionEnd(event: TransitionEvent<HTMLDivElement>) {
-    if (event.target !== event.currentTarget || event.propertyName !== "transform") {
+    if (event.target !== event.currentTarget) {
       return;
     }
-    moving.current = false;
-    setPos((current) => {
-      if (current <= 0) {
-        setAnimate(false);
-        return photos.length;
-      }
-      if (current >= photos.length + 1) {
-        setAnimate(false);
-        return 1;
-      }
-      return current;
-    });
+    if (!event.propertyName.toLowerCase().includes("transform")) {
+      return;
+    }
+    finishMove();
+  }
+
+  function rememberPoint(x: number, y: number) {
+    start.current = { x, y };
+  }
+
+  function finishSwipe(x: number, y: number) {
+    const origin = start.current;
+    start.current = null;
+    if (!origin || !looping) {
+      return;
+    }
+    const dx = x - origin.x;
+    const dy = y - origin.y;
+    if (Math.abs(dx) < SWIPE_PX || Math.abs(dx) < Math.abs(dy)) {
+      return;
+    }
+    show(dx < 0 ? 1 : -1);
   }
 
   function onPointerDown(event: PointerEvent<HTMLDivElement>) {
     if (event.button !== 0) {
       return;
     }
-    start.current = { x: event.clientX, y: event.clientY };
+    rememberPoint(event.clientX, event.clientY);
   }
 
   function onPointerUp(event: PointerEvent<HTMLDivElement>) {
-    const origin = start.current;
-    start.current = null;
-    if (!origin || !looping) {
-      return;
-    }
-    const dx = event.clientX - origin.x;
-    const dy = event.clientY - origin.y;
-    if (Math.abs(dx) < SWIPE_PX || Math.abs(dx) < Math.abs(dy)) {
-      return;
-    }
-    show(dx < 0 ? 1 : -1);
+    finishSwipe(event.clientX, event.clientY);
   }
+
+  function onTouchStart(event: TouchEvent<HTMLDivElement>) {
+    const touch = event.changedTouches[0];
+    if (!touch) {
+      return;
+    }
+    rememberPoint(touch.clientX, touch.clientY);
+  }
+
+  const finishSwipeRef = useRef<(x: number, y: number) => void>(() => {});
+  finishSwipeRef.current = finishSwipe;
+
+  useEffect(() => {
+    function endPointer(event: globalThis.PointerEvent) {
+      finishSwipeRef.current(event.clientX, event.clientY);
+    }
+    function endTouch(event: globalThis.TouchEvent) {
+      const touch = event.changedTouches[0];
+      if (!touch) {
+        return;
+      }
+      finishSwipeRef.current(touch.clientX, touch.clientY);
+    }
+    function cancelPoint() {
+      start.current = null;
+    }
+    window.addEventListener("pointerup", endPointer);
+    window.addEventListener("touchend", endTouch);
+    window.addEventListener("pointercancel", cancelPoint);
+    window.addEventListener("touchcancel", cancelPoint);
+    return () => {
+      window.removeEventListener("pointerup", endPointer);
+      window.removeEventListener("touchend", endTouch);
+      window.removeEventListener("pointercancel", cancelPoint);
+      window.removeEventListener("touchcancel", cancelPoint);
+    };
+  }, []);
 
   return (
     <InvitationSection section="gallery">
@@ -106,10 +201,15 @@ export function GallerySection({ photos }: { photos: string[] }) {
               onPointerCancel={() => {
                 start.current = null;
               }}
+              onTouchStart={onTouchStart}
+              onTouchCancel={() => {
+                start.current = null;
+              }}
               className="relative h-[58dvh] w-full overflow-hidden"
             >
               <div
                 onTransitionEnd={onTransitionEnd}
+                onTransitionCancel={onTransitionEnd}
                 className={`flex h-full [backface-visibility:hidden] ${
                   animate
                     ? "transition-transform duration-[450ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
@@ -169,6 +269,13 @@ function wrap(position: number, count: number) {
     return 1;
   }
   return position;
+}
+
+function snap(position: number, count: number) {
+  if (count < 2) {
+    return 0;
+  }
+  return wrap(position, count);
 }
 
 function GalleryArrow({ direction }: { direction: "left" | "right" }) {
