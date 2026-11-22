@@ -106,6 +106,7 @@ function PersonDetailSection({
       contentAlign="bottom-left"
       veil="bottom"
       priority
+      clipBottom={section === "groom"}
     >
       <div
         ref={copyRef}

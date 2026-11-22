@@ -11,6 +11,7 @@ type MediaBackdropProps = {
   priority?: boolean;
   veil?: "tint" | "bottom";
   cropBottom?: boolean;
+  clipBottom?: boolean;
 };
 
 export function SharedSectionVideo({
@@ -55,6 +56,7 @@ export function MediaBackdrop({
   priority = false,
   veil = "tint",
   cropBottom = false,
+  clipBottom = false,
 }: MediaBackdropProps) {
   const [imageFailed, setImageFailed] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
@@ -69,7 +71,7 @@ export function MediaBackdrop({
   }
 
   return (
-    <div className="absolute inset-0">
+    <div className={clipBottom ? "absolute inset-x-0 top-0 h-[122%]" : "absolute inset-0"}>
       {showImage ? (
         <Image
           src={image ?? ""}
@@ -78,7 +80,7 @@ export function MediaBackdrop({
           sizes="430px"
           quality={veil === "bottom" ? 95 : 75}
           unoptimized={veil === "bottom"}
-          className={frame}
+          className={clipBottom ? "object-cover object-top" : frame}
           fetchPriority={priority || veil === "bottom" ? "high" : "auto"}
           onError={() => setImageFailed(true)}
           {...(priority || veil === "bottom"

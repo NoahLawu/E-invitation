@@ -15,6 +15,7 @@ type InvitationSectionProps = {
   contentAlign?: "center" | "bottom-left" | "middle-left" | "top-left";
   veil?: "tint" | "bottom";
   cropBottom?: boolean;
+  clipBottom?: boolean;
 };
 
 export function InvitationSection({
@@ -27,6 +28,7 @@ export function InvitationSection({
   contentAlign = "center",
   veil = "tint",
   cropBottom = false,
+  clipBottom = false,
 }: InvitationSectionProps) {
   const visuals = useInviteVisuals();
   const backdrop = section ? visuals?.backdrops[section] : undefined;
@@ -40,6 +42,7 @@ export function InvitationSection({
         priority={priority}
         veil={veil}
         cropBottom={cropBottom}
+        clipBottom={clipBottom}
       />
       <div
         className={`relative z-10 flex h-full w-full flex-col px-8 ${
