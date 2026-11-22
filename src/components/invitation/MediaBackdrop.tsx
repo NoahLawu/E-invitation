@@ -60,10 +60,9 @@ export function MediaBackdrop({
   const [videoFailed, setVideoFailed] = useState(false);
   const showImage = Boolean(image) && !imageFailed;
   const showVideo = Boolean(video) && !videoFailed;
-  const frame =
-    veil === "bottom" || cropBottom
-      ? "origin-top scale-[1.1] object-cover object-top"
-      : "object-cover";
+  const frame = cropBottom
+    ? "origin-top scale-[1.1] object-cover object-top"
+    : "h-full w-full object-cover object-center";
 
   if (!showImage && !showVideo) {
     return null;
@@ -80,8 +79,11 @@ export function MediaBackdrop({
           quality={veil === "bottom" ? 95 : 75}
           unoptimized={veil === "bottom"}
           className={frame}
+          fetchPriority={priority || veil === "bottom" ? "high" : "auto"}
           onError={() => setImageFailed(true)}
-          {...(priority ? { priority: true } : { loading: "eager" as const })}
+          {...(priority || veil === "bottom"
+            ? { priority: true }
+            : { loading: "eager" as const })}
         />
       ) : null}
       {showVideo ? (

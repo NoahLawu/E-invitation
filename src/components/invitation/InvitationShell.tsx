@@ -75,6 +75,20 @@ export function InvitationShell({
   const soundtrackRef = useRef<HTMLVideoElement>(null);
   const shellRef = useRef<HTMLDivElement>(null);
   const soundtrackStarted = useRef(false);
+  const visuals = inviteVisuals(settings);
+
+  useEffect(() => {
+    const urls = [
+      visuals.backdrops.bride.image,
+      visuals.backdrops.groom.image,
+    ].filter(Boolean);
+    for (const url of urls) {
+      const image = new Image();
+      image.decoding = "sync";
+      image.src = url;
+      void image.decode?.().catch(() => undefined);
+    }
+  }, [visuals.backdrops.bride.image, visuals.backdrops.groom.image]);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -140,7 +154,6 @@ export function InvitationShell({
   }, []);
   const couple = settings.couple;
   const copy = settings.copy;
-  const visuals = inviteVisuals(settings);
 
   function renderSection(id: InviteSectionId): ReactNode {
     if (!isSectionVisible(settings, id)) {

@@ -105,6 +105,7 @@ function PersonDetailSection({
       mediaAlt={person.name}
       contentAlign="bottom-left"
       veil="bottom"
+      priority
     >
       <div
         ref={copyRef}
