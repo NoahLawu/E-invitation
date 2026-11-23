@@ -28,7 +28,9 @@ export function DressCodeSection({
             className="flex flex-col items-center gap-2"
           >
             <span
-              className="h-12 w-12 rounded-full border border-line"
+              className={`h-12 w-12 rounded-full${
+                /sage|olive/i.test(color.name) ? "" : " border border-line"
+              }`}
               style={{ backgroundColor: color.hex }}
               aria-hidden
             />
