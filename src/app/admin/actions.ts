@@ -282,12 +282,18 @@ export async function importGuestsCsv(formData: FormData) {
 }
 
 function guestTypeFromImport(raw: string) {
-  const value = raw.trim().toLowerCase();
-  if (value === "friend" || value === "teman") {
-    return "friend";
+  const value = raw.trim().toLowerCase().replace(/[\s-]+/g, "_");
+  if (value === "intan_friend" || value === "intan") {
+    return "intan_friend";
+  }
+  if (value === "noah_friend" || value === "noah") {
+    return "noah_friend";
   }
   if (value === "family" || value === "keluarga") {
     return "family";
+  }
+  if (value === "friend" || value === "teman") {
+    return "friend";
   }
   if (isGuestType(value)) {
     return value;

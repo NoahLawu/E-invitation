@@ -1,4 +1,12 @@
-export const GUEST_TYPES = ["friend", "family", "regular", "vip", "vendor"] as const;
+export const GUEST_TYPES = [
+  "intan_friend",
+  "noah_friend",
+  "family",
+  "friend",
+  "regular",
+  "vip",
+  "vendor",
+] as const;
 export const RSVP_STATUSES = ["pending", "yes", "no"] as const;
 export const INVITE_EVENTS = ["both", "ceremony", "reception"] as const;
 export const GIFT_KINDS = ["angpao", "physical"] as const;

@@ -257,8 +257,13 @@ export const defaultSiteSettings: SiteSettings = {
   },
   whatsappTemplates: [
     {
-      id: "friend",
-      name: "Friend",
+      id: "intan_friend",
+      name: "Intan friend",
+      body: "Hi {name},\n\nYou are invited to our wedding:\n{url}\nDoor code: {door_code}",
+    },
+    {
+      id: "noah_friend",
+      name: "Noah friend",
       body: "Hi {name},\n\nYou are invited to our wedding:\n{url}\nDoor code: {door_code}",
     },
     {
@@ -268,6 +273,8 @@ export const defaultSiteSettings: SiteSettings = {
     },
   ],
   guestTypes: {
+    intan_friend: { label: "Intan friend", bg: "#fce7f3", fg: "#9d174d" },
+    noah_friend: { label: "Noah friend", bg: "#dbeafe", fg: "#1e3a8a" },
     friend: { label: "Friend", bg: "#ecfccb", fg: "#3f6212" },
     family: { label: "Family", bg: "#e7e5e4", fg: "#44403c" },
     regular: { label: "Regular", bg: "#f4f4f5", fg: "#3f3f46" },
@@ -697,23 +704,38 @@ export function rsvpWindowState(
 
 export function shareMessageTemplates(raw: unknown): WhatsAppTemplate[] {
   const saved = Array.isArray(raw) ? (raw as WhatsAppTemplate[]) : [];
-  return defaultSiteSettings.whatsappTemplates.map((fallback, index) => {
-    const match =
-      saved.find((item) => item?.id === fallback.id) ??
-      saved.find(
-        (item) => item?.name?.trim().toLowerCase() === fallback.id,
-      ) ??
-      saved[index];
-    const body = typeof match?.body === "string" ? match.body : fallback.body;
+  return defaultSiteSettings.whatsappTemplates.map((fallback) => {
+    const match = savedTemplate(saved, fallback.id, fallback.name);
+    const legacyFriend =
+      fallback.id === "intan_friend" ? savedTemplate(saved, "friend", "Friend") : undefined;
+    const body =
+      typeof match?.body === "string"
+        ? match.body
+        : typeof legacyFriend?.body === "string"
+          ? legacyFriend.body
+          : fallback.body;
     return { id: fallback.id, name: fallback.name, body };
   });
+}
+
+function savedTemplate(saved: WhatsAppTemplate[], id: string, name: string) {
+  const label = name.trim().toLowerCase();
+  return saved.find(
+    (item) =>
+      item?.id === id || item?.name?.trim().toLowerCase() === label,
+  );
 }
 
 export function whatsAppTemplateForGuest(
   templates: WhatsAppTemplate[],
   guestType: string,
 ) {
-  const id = guestType === "family" ? "family" : "friend";
+  const id =
+    guestType === "family"
+      ? "family"
+      : guestType === "noah_friend"
+        ? "noah_friend"
+        : "intan_friend";
   return (
     shareMessageTemplates(templates).find((item) => item.id === id) ??
     shareMessageTemplates(templates)[0]

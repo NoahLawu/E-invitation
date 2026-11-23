@@ -1,6 +1,6 @@
 -- Run this in the Supabase SQL editor.
 
-create type guest_type as enum ('friend', 'family', 'regular', 'vip', 'vendor');
+create type guest_type as enum ('intan_friend', 'noah_friend', 'friend', 'family', 'regular', 'vip', 'vendor');
 create type rsvp_status as enum ('pending', 'yes', 'no');
 create type check_in_method as enum ('qr', 'manual');
 create type gift_kind as enum ('angpao', 'physical');

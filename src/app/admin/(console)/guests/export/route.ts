@@ -38,7 +38,7 @@ export async function GET() {
       [
         csvCell(guest.name),
         csvCell(guest.invite_name),
-        csvCell(guest.guest_type === "family" ? "family" : guest.guest_type === "friend" ? "friend" : guest.guest_type),
+        csvCell(guest.guest_type),
         csvCell(guest.guest_type),
         csvCell(guest.invited_to),
         csvCell(guest.invited_count),

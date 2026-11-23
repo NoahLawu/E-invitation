@@ -549,8 +549,9 @@ function WhatsAppForm({ settings }: { settings: SiteSettings }) {
     <Group id="messages" title="WhatsApp">
       <ItemHeading>Share messages</ItemHeading>
       <p className="mb-3 text-sm text-zinc-600">
-        Friends and family each get their own message when you send the invite
-        by WhatsApp. Placeholders: <code>{"{name}"}</code>{" "}
+        Intan’s friends, Noah’s friends, and family each get their own message
+        when you send the invite by WhatsApp. Placeholders:{" "}
+        <code>{"{name}"}</code>{" "}
         <code>{"{url}"}</code> <code>{"{door_code}"}</code>{" "}
         <code>{"{event}"}</code>.
       </p>
@@ -571,8 +572,8 @@ function WhatsAppForm({ settings }: { settings: SiteSettings }) {
         <SaveButton />
       </form>
       <p className="mt-4 text-sm text-zinc-600">
-        The guest list uses the friend message or the family message from the
-        type_guest column. Sending marks that guest as invite-sent.
+        The guest list uses the message that matches type_guest: intan_friend,
+        noah_friend, or family. Sending marks that guest as invite-sent.
       </p>
     </Group>
   );
@@ -896,8 +897,8 @@ function GuestTypesForm({ settings }: { settings: SiteSettings }) {
     <Group id="guest-types" title="Guest types" status="mixed">
       <ItemHeading>Labels and badge colors</ItemHeading>
       <p className="mb-3 text-sm text-zinc-600">
-        The types stay the same in the database. Friend and family choose which
-        WhatsApp message is sent. You can change each label and badge color.
+        Intan friend, Noah friend, and family choose which WhatsApp message is
+        sent. You can change each label and badge color.
       </p>
       <form action={saveInvitationSettings} className="space-y-3">
         <input type="hidden" name="section" value="guestTypes" />
